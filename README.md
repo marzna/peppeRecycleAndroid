@@ -1,2 +1,0 @@
-# backuPepper
-Backup Pepper
