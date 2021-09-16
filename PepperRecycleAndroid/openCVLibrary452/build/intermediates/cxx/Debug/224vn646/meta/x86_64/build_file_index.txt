@@ -1,0 +1,1 @@
+C:\Users\marzna\AndroidStudioProjects\ProvaCamera0913\openCVLibrary452\libcxx_helper\CMakeLists.txt
