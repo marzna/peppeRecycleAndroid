@@ -6,8 +6,8 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="21"
-8-->C:\Users\marzna\AndroidStudioProjects\PepperRecycleAndroid\openCVLibrary452\java\AndroidManifest.xml
+8-->C:\Users\marzna\backuPepper\PepperRecycleAndroid\openCVLibrary452\java\AndroidManifest.xml
 9        android:targetSdkVersion="26" />
-9-->C:\Users\marzna\AndroidStudioProjects\PepperRecycleAndroid\openCVLibrary452\java\AndroidManifest.xml
+9-->C:\Users\marzna\backuPepper\PepperRecycleAndroid\openCVLibrary452\java\AndroidManifest.xml
 10
 11</manifest>
