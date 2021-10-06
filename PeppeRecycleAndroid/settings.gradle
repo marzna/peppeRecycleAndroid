@@ -1,0 +1,3 @@
+include ':app'
+include 'openCVLibrary452'
+rootProject.name = "PeppeRecycleAndroid"

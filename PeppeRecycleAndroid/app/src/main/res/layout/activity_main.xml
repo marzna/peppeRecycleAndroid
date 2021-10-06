@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.pepperecycleandroid.MainActivity"
+    android:orientation="vertical">
+
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/my_camera_view"
+        android:layout_width="169dp"
+        android:layout_height="90dp"
+        android:visibility="visible" />
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/imgPath"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="Image Path Appears Here"-->
+    <!--        android:visibility="visible" />-->
+
+    <!--    <Button-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:onClick="selectImage"-->
+    <!--        android:text="Select Image"-->
+    <!--        android:visibility="visible" />-->
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="-6dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:contextClickable="true"
+        android:onClick="cliccato"
+        android:src="@drawable/ic_launcher_background"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"/>
+
+   <!-- <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible" />-->
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="connectServer"
+        android:text="@string/connettiti_al_server"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/responseText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/messaggio_dal_server"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/imageLoadedView"
+        android:layout_width="match_parent"
+        android:layout_height="132dp"
+        android:visibility="visible"
+        app:srcCompat="@drawable/ic_launcher_background"
+        />
+
+</LinearLayout>
