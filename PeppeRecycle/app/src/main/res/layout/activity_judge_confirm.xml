@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bkgr_bins"
+    tools:context=".JudgeConfirmActivity">
+
+    <ImageButton
+        android:id="@+id/buttonHelp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@id/buttonBack"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="-52dp"
+        android:layout_marginEnd="53dp"
+        android:background="@drawable/button_help"
+        android:fontFamily="@font/andika_regular"
+        android:onClick="buttonHome"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageButton
+        android:id="@+id/buttonBack"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@id/buttonHome"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="-52dp"
+        android:layout_marginEnd="53dp"
+        android:background="@drawable/button_back"
+        android:fontFamily="@font/andika_regular"
+        android:onClick="buttonBack"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageButton
+        android:id="@+id/buttonHome"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@id/buttonClose"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="-52dp"
+        android:layout_marginEnd="53dp"
+        android:background="@drawable/button_home"
+        android:onClick="buttonHome"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageButton
+        android:id="@+id/buttonClose"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_close"
+        android:onClick="buttonClose"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageView
+        android:id="@+id/selectedBin"
+        android:layout_width="230dp"
+        android:layout_height="338dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginBottom="95dp"
+        android:foreground="?android:attr/selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/textViewSelectedBinIs"
+        android:layout_width="471dp"
+        android:layout_height="183dp"
+        android:layout_marginStart="1dp"
+        android:layout_toEndOf="@id/selectedBin"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Il bidone selezionato è quello"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp" />
+
+    <TextView
+        android:id="@+id/textViewAskForConfirm"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/textViewSelectedBinIs"
+        android:layout_alignBottom="@id/textViewSelectedBinIs"
+        android:layout_marginStart="-4dp"
+        android:layout_marginBottom="-47dp"
+        android:text="Giudice, confermi?"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp" />
+
+    <Button
+        android:id="@+id/buttonAnswerYes"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignBottom="@id/selectedBin"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="50dp"
+        android:layout_toRightOf="@id/selectedBin"
+        android:background="@drawable/button_answer_img_yes"
+        android:onClick="buttonYes" />
+
+    <Button
+        android:id="@+id/buttonAnswerNo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignBottom="@id/selectedBin"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="50dp"
+        android:layout_toRightOf="@id/buttonAnswerYes"
+        android:background="@drawable/button_answer_img_no"
+        android:onClick="buttonNo" />
+
+
+</RelativeLayout>
