@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bkgr_activity_main"
+    tools:context=".PlayPepperTurnActivity">
+
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/my_camera_view"
+        android:layout_width="800dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true" />
+
+    <ImageView
+        android:id="@+id/imageViewPepperPhoto"
+        android:layout_width="800dp"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        app:srcCompat="@color/black" />
+
+    <Button
+        android:id="@+id/buttonTakePicture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/my_camera_view"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/pepper_take_picture"
+        android:onClick="classify"
+        android:text="Ecco"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp" />
+
+    <ImageButton
+        android:id="@+id/buttonHome"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@id/buttonClose"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="-52dp"
+        android:layout_marginEnd="53dp"
+        android:background="@drawable/button_home"
+        android:onClick="buttonHome"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageButton
+        android:id="@+id/buttonClose"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_close"
+        android:onClick="buttonClose"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <TextView
+        android:id="@+id/responseText"
+        android:layout_width="802dp"
+        android:layout_height="102dp"
+        android:layout_alignTop="@id/imageViewPepperPhoto"
+        android:layout_centerHorizontal="true"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal|bottom"/>
+
+    <TextView
+        android:id="@+id/textViewScore"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:text="Punteggio:"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textViewPepperScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/imageViewPepperScore"
+        android:gravity="center"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:id="@+id/imageViewUserScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/imageViewPepperScore"
+        android:layout_toRightOf="@id/textViewScore"
+        app:srcCompat="@drawable/user" />
+
+    <TextView
+        android:id="@+id/textViewUserScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:layout_below="@id/imageViewPepperScore"
+        android:layout_toRightOf="@id/imageViewUserScore"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/white"/>
+
+    <ImageView
+        android:id="@+id/imageViewPepperScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/textViewScore"
+        app:srcCompat="@drawable/pepper_face" />
+
+</RelativeLayout>
