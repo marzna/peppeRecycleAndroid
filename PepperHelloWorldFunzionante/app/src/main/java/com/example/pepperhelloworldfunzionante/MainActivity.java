@@ -1,4 +1,4 @@
-package com.example.pepperplsfunziona;
+package com.example.pepperhelloworldfunzionante;
 
 import androidx.appcompat.app.AppCompatActivity;
 
