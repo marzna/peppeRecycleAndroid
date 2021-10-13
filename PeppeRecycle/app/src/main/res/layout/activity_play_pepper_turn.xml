@@ -74,5 +74,49 @@
         android:textStyle="bold"
         android:gravity="center_horizontal|bottom"/>
 
+    <TextView
+        android:id="@+id/textViewScore"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:text="Punteggio:"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textViewPepperScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/imageViewPepperScore"
+        android:gravity="center"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:id="@+id/imageViewUserScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/imageViewPepperScore"
+        android:layout_toRightOf="@id/textViewScore"
+        app:srcCompat="@drawable/user" />
+
+    <TextView
+        android:id="@+id/textViewUserScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:layout_below="@id/imageViewPepperScore"
+        android:layout_toRightOf="@id/imageViewUserScore"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/white"/>
+
+    <ImageView
+        android:id="@+id/imageViewPepperScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/textViewScore"
+        app:srcCompat="@drawable/pepper_face" />
 
 </RelativeLayout>

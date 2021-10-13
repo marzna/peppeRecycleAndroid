@@ -15,7 +15,9 @@ import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
 
@@ -23,7 +25,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     byte wasteType, round;
     TextView selectedBinIs;
     ImageView selectedBin;
-    HashMap<String, String> scores;
+    Map<String, Byte> scores = new HashMap<String, Byte>();
+    static byte pepperScore, userScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             wasteType = extras.getByte("wasteType"); // The key argument here must match that used in the other activity
             round = extras.getByte("round");
             isPepperTurn = extras.getBoolean("isPepperTurn");
+            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
+            pepperScore = extras.getByte("pepperScore");
+            userScore = extras.getByte("userScore");
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
         startJudgeConfirm();
@@ -99,9 +105,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     }
 
     public void buttonYes(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+        //Il punteggio viene incrementato solo se la rispsota è corretta
         isAnswerCorrect = true;
         pressed = true;
         //TODO congratulazioni per la risp corretta
+        updateScore(isPepperTurn);
         nextTurn();
     }
     public void buttonNo(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
@@ -110,20 +118,35 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         //TODO risposta sbagliata
         nextTurn();
     }
+    public void updateScore(boolean isPepperTurn) {
+        if(isPepperTurn) {
+            ++pepperScore;//scores.put("score_pepper", (byte) (scores.get("score_pepper") + 1)); //Incrementa il punteggio di Pepper
+        } else {
+            ++userScore;//scores.put("score_user1", (byte) (scores.get("score_user1") + 1)); //Incrementa il punteggio dell'utente
+        }
+    }
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         Intent activity2Intent;
         isPepperTurn = !isPepperTurn; // Turno successivo
-        if (round < 6) {    // TODO sostituisci 6 con una costante
+        //if (round < 6) {    // TODO sostituisci 6 con una costante
+        //if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
+        if ( pepperScore < 3 && userScore < 3 )   {
             if (isPepperTurn) {
-                activity2Intent = new Intent(JudgeConfirmActivity.this, TodoActivity.class); // PlayPepperTurnActivity.class);
+                activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class); // PlayPepperTurnActivity.class);
             } else {
                 activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
             }
-            activity2Intent.putExtra("round", round);
-            //activity2Intent.putExtra("scores", scores);
+            /*pepperScore = activity2Intent.getExtras().getByte("pepperScore");
+            userScore = activity2Intent.getExtras().getByte("userScore");
+            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
+            */
         } else {            // Game over
-            activity2Intent = new Intent(JudgeConfirmActivity.this, TodoActivity.class);//TODO GameOverActivity
+            activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
         }
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("scores", (Serializable) scores);
         startActivity(activity2Intent);
         finish();
     }
@@ -134,9 +157,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
         } else {
             activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
-            activity2Intent.putExtra("round", round);
         }
-
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
