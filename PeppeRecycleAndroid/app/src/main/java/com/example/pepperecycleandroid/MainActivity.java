@@ -25,10 +25,18 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.aldebaran.qi.Future;
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
+import com.aldebaran.qi.sdk.builder.TakePictureBuilder;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
+import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
+import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
+import com.aldebaran.qi.sdk.object.camera.TakePicture;
+import com.aldebaran.qi.sdk.object.image.EncodedImage;
+import com.aldebaran.qi.sdk.object.image.EncodedImageHandle;
+import com.aldebaran.qi.sdk.object.image.TimestampedImageHandle;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -46,9 +54,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -79,10 +86,10 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
     // private boolean useTopCamera = true; //TODO ->  FAI PARTE topcamera/frontcamera in modo che vada messo a false per la camera tablet
 
     private boolean loaded = false;
-   // protected static String garbageType = null; //static
+    // protected static String garbageType = null; //static
     private String garbageType = null; //static
 
-    private String postUrl = "http://09ba-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://bfdb-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPepper0.jpg";
@@ -142,6 +149,10 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Per far sparire la barra grigia sopra
+        setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
+        setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
         // Register the RobotLifecycleCallbacks to this Activity.
         QiSDK.register(this, this);
@@ -361,9 +372,11 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
         }
     }
 
+    Future<TakePicture> takePictureFuture;
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-
+        // Build the action. TODO Rimuovi se non funziona (è per la fotocamera facciale)
+        takePictureFuture = TakePictureBuilder.with(qiContext).buildAsync();
     }
 
     @Override
@@ -394,7 +407,10 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
         try {
             //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             //checkIfPhotoExists();
-            savePhoto(mRGBATbitmap);
+
+
+            //savePhoto(mRGBATbitmap);
+            takePicture();
             //savePhotoRN7(mRGBATbitmap);
             responseText.setText("L'immagine dovrebbe esser stata salvata in:" + photoPath);
         } catch (Exception e) {
@@ -518,6 +534,48 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
     }
     private boolean garbageClassified = false;
 
+    // The QiContext provided by the QiSDK.
+    private QiContext qiContext;
+    // TimestampedImage future.
+    private Future<TimestampedImageHandle> timestampedImageHandleFuture;
+
+    public void takePicture() {
+        // Check that the Activity owns the focus.
+        if (qiContext == null) {
+            return;
+        }
+
+        /*Future<TimestampedImageHandle> */timestampedImageHandleFuture = takePictureFuture.andThenCompose(takePicture -> {
+            Log.i(TAG, "take picture launched!");
+            return takePicture.async().run();
+        });
+        fromByteBuffer2Bitmap();
+    }
+    Bitmap pictureBitmap;
+    private void fromByteBuffer2Bitmap(){
+        timestampedImageHandleFuture.andThenConsume(timestampedImageHandle -> {
+            // Consume take picture action when it's ready
+            Log.i(TAG, "Picture taken");
+            // get picture
+            EncodedImageHandle encodedImageHandle = timestampedImageHandle.getImage();
+
+            EncodedImage encodedImage = encodedImageHandle.getValue();
+            Log.i(TAG, "PICTURE RECEIVED!");
+
+            // get the byte buffer and cast it to byte array
+            ByteBuffer buffer = encodedImage.getData();
+            buffer.rewind();
+            final int pictureBufferSize = buffer.remaining();
+            final byte[] pictureArray = new byte[pictureBufferSize];
+            buffer.get(pictureArray);
+
+            Log.i(TAG, "PICTURE RECEIVED! (" + pictureBufferSize + " Bytes)");
+            // display picture
+            pictureBitmap = BitmapFactory.decodeByteArray(pictureArray, 0, pictureBufferSize);
+            runOnUiThread(() -> imageView.setImageBitmap(pictureBitmap));
+            savePhoto(pictureBitmap);
+        });
+    }
     /*private Thread thread = new Thread() {
         @Override
         public void run() {
@@ -598,6 +656,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
         }
     }
 
+    /*
     void postRequest() {
         OkHttpClient client = new OkHttpClient().newBuilder().build();
 
@@ -650,16 +709,15 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                     }
                 });
             }
-        });
+        });*/
         /* //TODO parte funzionante... rimettila se togli da "client.newcall..."
                 try {
                     Response response = client.newCall(request).execute();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-        */
-    }
-        /*TODO Si può eliminare, non dovrebbe più servire.
+        }
+        TODO Si può eliminare, non dovrebbe più servire.
     void postRequest(String postUrl, RequestBody postBody) {
         OkHttpClient client = new OkHttpClient().newBuilder() .build();
 

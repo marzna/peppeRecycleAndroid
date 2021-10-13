@@ -1,4 +1,4 @@
-package com.example.pepperplsfunziona;
+package com.example.pepperhelloworldfunzionante;
 
 import org.junit.Test;
 
