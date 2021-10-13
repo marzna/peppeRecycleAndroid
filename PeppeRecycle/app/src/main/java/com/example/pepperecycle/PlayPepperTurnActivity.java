@@ -44,6 +44,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 
@@ -60,20 +63,32 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private Bitmap mRGBATbitmap;
     private int activeCamera = CameraBridgeViewBase.CAMERA_ID_FRONT; //Attiva la fotocamera frontale (?)
     private String garbageType = null; //static
-
-    private String postUrl = "http://538c-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
+    static byte pepperScore, userScore;
+    private String postUrl = "http://1444-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPeppeRecycle.jpg";
     private String photoPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() ;
 
     private TextView responseText;
+
+    static final byte TYPE_ORGANIC = 0;
+    static final byte TYPE_PAPER_CARDBOARD = 1;
+    static final byte TYPE_PLASTIC_METAL = 2;
+    static final byte TYPE_GLASS = 3;
+    static final byte CLASSIFICATION_ERROR = -1;
+
+    TextView textViewUserScore, textViewPepperScore;
+    boolean isPepperTurn = true;
+
+    Map<String, Byte> scores = new HashMap<String, Byte>();
     /*
     private Mat mRGBA, mRGBAT, mGrey;
     private TextView responseText;
     private boolean loaded = false;
     */
-
+    byte round;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +101,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         javaCameraView = (JavaCameraView) findViewById(R.id.my_camera_view);
         responseText = (TextView) findViewById(R.id.responseText); //Conterrà i mex che verranno stampati sotto al pulsante di connessione al server
         imageViewPepperPhoto = (ImageView) findViewById(R.id.imageViewPepperPhoto);
+        textViewUserScore = findViewById(R.id.textViewUserScore);
+        textViewPepperScore = findViewById(R.id.textViewPepperScore);
 
         if (checkPermissions()) {
             Log.d(TAG, "Permissions granted");
@@ -107,8 +124,24 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         organic organico
         paper carta
         plastic plastica        */
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            round = extras.getByte("round");
+            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
+            pepperScore = extras.getByte("pepperScore");
+            userScore = extras.getByte("userScore");
+        }
+        showScore();
+/*        textViewPepperScore.setText(scores.get("score_pepper").toString());
+        textViewUserScore.setText(scores.get("score_user1").toString());*/
     }
 
+    void showScore () {/*
+        textViewPepperScore.setText(pepperScore);
+        textViewUserScore.setText(userScore);*/
+        textViewPepperScore.setText("" + pepperScore);
+        textViewUserScore.setText("" + userScore);
+    }
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
@@ -122,6 +155,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+
         return false;
     }
 
@@ -339,7 +373,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 thread.join();
             }*/
 
-            ClientManager clientManager = new ClientManager(photoPath, postUrl,garbageType);
+            ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
             Thread thread = new Thread(clientManager);
             thread.start();
             thread.join();
@@ -354,6 +388,44 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         responseText.setText("Tipo rifiuto:" + garbageType);
 
+        switch (garbageType) {
+            case "organic":
+                wasteType = TYPE_ORGANIC;
+                break;
+            case "plastic": case "metal":
+                wasteType = TYPE_PLASTIC_METAL;
+                break;
+            case "cardboard": case "paper":
+                wasteType = TYPE_PAPER_CARDBOARD;
+                break;
+            case "glass":
+                wasteType = TYPE_GLASS;
+                break;
+            default:
+                wasteType = CLASSIFICATION_ERROR;
+                break;
+        }
+
+        askForConfirm();
+
+    }
+
+    void askForConfirm() {
+        Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, JudgeConfirmActivity.class);
+        activity2Intent.putExtra("wasteType", wasteType);
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
+
+        startActivity(activity2Intent);
+        finish();
+        /* TODO Turno dell'utente:
+        Schermata con i bidoni. L'utente deve selezionare il bidone corretto.
+        Successivamente, c'è la schermata di richiesta conferma per il giudice
+        Se la risposta è affermativa, l'utente guadagna un punto.
+        */
     }
     private void checkIfPhotoExists() {
         File myFile = new File(photoPath);

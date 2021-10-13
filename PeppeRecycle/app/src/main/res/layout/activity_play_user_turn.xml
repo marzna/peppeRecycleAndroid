@@ -173,14 +173,6 @@
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
-    <ImageView
-        android:id="@+id/imageViewUserScore"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/imageViewPepperScore"
-        android:layout_toRightOf="@id/textViewScore"
-        app:srcCompat="@drawable/user" />
-
     <TextView
         android:id="@+id/textViewPepperScore"
         android:layout_width="40dp"
@@ -192,11 +184,12 @@
         android:textColor="@color/white" />
 
     <ImageView
-        android:id="@+id/imageViewPepperScore"
+        android:id="@+id/imageViewUserScore"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_below="@id/imageViewPepperScore"
         android:layout_toRightOf="@id/textViewScore"
-        app:srcCompat="@drawable/pepper_face" />
+        app:srcCompat="@drawable/user" />
 
     <TextView
         android:id="@+id/textViewUserScore"
@@ -208,4 +201,12 @@
         android:text="-"
         android:textAlignment="center"
         android:textColor="@color/white"/>
+
+    <ImageView
+        android:id="@+id/imageViewPepperScore"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/textViewScore"
+        app:srcCompat="@drawable/pepper_face" />
+
 </RelativeLayout>

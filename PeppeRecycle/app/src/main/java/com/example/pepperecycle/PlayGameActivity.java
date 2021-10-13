@@ -11,6 +11,7 @@ import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,10 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     // int N_PLAYERS = 2; int turn = new Random().nextInt(N_PLAYERS) ; //Ritorna un random int nel range [0, N_PLAYERS-1]
     int N_ROUNDS = 3;
     int N_TURNS = N_ROUNDS*2;
-    Map<Byte, Integer> scores = new HashMap<Byte, Integer>();
+    //    Map<String, Byte> scores = new HashMap<String, Byte>();
+    Map<String, Byte> scores = new HashMap<>();
+    static byte pepperScore = 0;
+    static byte userScore = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,25 +66,38 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     void startGame() {
          /*TODO Decommenta alla fine
         isPepperTurn = new Random().nextBoolean() ; //Ritorna un random boolean (Serve per stabilire randomicamente chi inizia a giocare)
-        */
+        *//*
+        scores.put("score_pepper", (byte) 0);
+        scores.put("score_user1", (byte) 0);*/
+        scores.put("score_pepper", pepperScore);
+        scores.put("score_user1", userScore);
 
         //isPepperTurn=false; //tocca all'utente //TODO RIMUOVI DOPO AVER TESTATO IL TURNO UTENTE
-        for (int round = 0; round<N_TURNS; round++ ) {
-            Intent activity2Intent;
-            if (isPepperTurn) {         // Se tocca a Pepper
-                //TODO turno di Pepper
-                activity2Intent = new Intent(PlayGameActivity.this, PlayPepperTurnActivity.class);
-                activity2Intent.putExtra("round", round);
-                // activity2Intent.putExtra("score", score);
-                // Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-            } else {                    // Se tocca all'utente
-                //TODO turno utente
-                activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
-            }
-            startActivity(activity2Intent);
-            //isPepperTurn = !isPepperTurn;
-            finish();
+        byte round = 0; //TODO non serve
+
+//        while ( (scores.get("score_pepper") < 3 ) || (scores.get("score_user1") < 3) ) { TODO NON SERVE PERCHÉ IL CHECK VA FATTO IN JudgeConfirmActivity
+        //TODO Unboxing of 'scores.get("score_pepper")' may produce 'NullPointerException'
+        //TODO Unboxing of 'scores.get("score_user1")' may produce 'NullPointerException'
+        //for (int round = 0; round<N_TURNS; round++ ) {
+        Intent activity2Intent;
+        if (isPepperTurn) {         // Se tocca a Pepper
+            //TODO turno di Pepper
+            activity2Intent = new Intent(PlayGameActivity.this, PlayPepperTurnActivity.class);
+            // activity2Intent.putExtra("score", score);
+            // Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
+        } else {                    // Se tocca all'utente
+            //TODO turno utente
+            activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
         }
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
+        startActivity(activity2Intent);
+        //isPepperTurn = !isPepperTurn;
+        finish();
+        //}
+
         /* TODO Gioco vero e proprio
         Variabile turno che si incrementa.
         Pensando al caso Pepper vs utente, può avere solo valore 0 (Pepper) o 1 (utente1).

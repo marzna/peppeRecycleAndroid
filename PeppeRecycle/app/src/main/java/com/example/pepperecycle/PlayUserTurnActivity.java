@@ -4,12 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
     byte round;
@@ -21,6 +26,10 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     static final byte TYPE_PAPER_CARDBOARD = 1;
     static final byte TYPE_PLASTIC_METAL = 2;
     static final byte TYPE_GLASS = 3;
+    Map<String, Byte> scores = new HashMap<String, Byte>();
+    static byte pepperScore;
+    static byte userScore;
+    TextView textViewUserScore, textViewPepperScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +41,34 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
 
         setContentView(R.layout.activity_play_user_turn);
 
+        textViewUserScore = findViewById(R.id.textViewUserScore);
+        textViewPepperScore = findViewById(R.id.textViewPepperScore);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             round = extras.getByte("round");
+            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
+            pepperScore = extras.getByte("pepperScore");
+            userScore = extras.getByte("userScore");
         }
-    }
+        showScore();
 
+        /*if (scores != null) { //TODO Per il momento uso i byte per segnare gli scores... Nel caso, poi, userò dizionari
+            textViewPepperScore.setText(scores.get("score_pepper"));
+            textViewUserScore.setText(scores.get("score_user1"));
+        } else {
+            textViewPepperScore.setText("Non valido");
+            textViewUserScore.setText("Non valido");
+        }*/
+    }
+    void showScore () {
+        textViewPepperScore.setText(""+pepperScore);
+        textViewUserScore.setText(""+userScore);
+        /*if ((pepperScore >= 0 && pepperScore <3) &&
+                (userScore >= 0 && userScore <3)        ) {
+            textViewPepperScore.setText(pepperScore);
+            textViewUserScore.setText(userScore);
+        }*/
+    }
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         return false;
@@ -86,6 +117,9 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
         startActivity(activity2Intent);
         finish();
         /* TODO Turno dell'utente:
