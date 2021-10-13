@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/bkgr_activity_main"
+    tools:context=".MainActivity">
+
+
+    <!--app:srcCompat="@android:color/holo_green_light"-->
+
+   <!-- <ImageView
+        android:id="@+id/imageViewMainBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />-->
+
+    <Button
+        android:id="@+id/buttonMenuPlay"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/button_play"
+        android:fontFamily="@font/andika_regular"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="buttonPlay"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <Button
+        android:id="@+id/buttonClose"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_close"
+        android:fontFamily="@font/andika_regular"
+        android:onClick="buttonClose"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <Button
+        android:id="@+id/buttonMenuStorytelling"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="232dp"
+        android:layout_marginTop="74dp"
+        android:layout_marginRight="626dp"
+        android:layout_marginBottom="133dp"
+        android:background="@drawable/button_storytelling"
+        android:fontFamily="@font/andika_regular"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="buttonStorytelling"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <Button
+        android:id="@+id/buttonMenuScores"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="595dp"
+        android:layout_marginTop="74dp"
+        android:layout_marginRight="263dp"
+        android:layout_marginBottom="133dp"
+        android:background="@drawable/button_scores"
+        android:fontFamily="@font/andika_regular"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="buttonScores"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageView
+        android:id="@+id/imageViewPeppeRecycle"
+        android:layout_width="620dp"
+        android:layout_height="171dp"
+        android:layout_centerHorizontal="true"
+        android:clickable="false"
+        android:contextClickable="false"
+        app:srcCompat="@drawable/text_pepperecycle" />
+
+</RelativeLayout>

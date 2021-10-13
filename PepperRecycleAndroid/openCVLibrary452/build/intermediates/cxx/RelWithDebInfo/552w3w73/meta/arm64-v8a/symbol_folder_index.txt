@@ -1,1 +1,0 @@
-C:\Users\marzna\AndroidStudioProjects\ProvaCamera0913\openCVLibrary452\build\intermediates\cxx\RelWithDebInfo\552w3w73\obj\arm64-v8a
