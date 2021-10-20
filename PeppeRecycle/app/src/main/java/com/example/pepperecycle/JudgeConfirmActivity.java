@@ -42,6 +42,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     static byte pepperScore, userScore;
     QiContext qiContext;
     String binType;
+    String wasteTypeString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
+            wasteTypeString = extras.getString(wasteTypeString);
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
         startJudgeConfirm();
@@ -218,7 +220,12 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         Animate animateAskForConfirm = AnimateBuilder.with(qiContext)
                 .withAnimation(askForConfirm)
                 .build();
-
+        if (isPepperTurn) {
+            Say sayPepperSelectBin = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                    .withText("Ci sono!. \\rspd=95\\" + wasteTypeString) // Set the text to say.
+                    .build(); // Build the say action.
+            sayPepperSelectBin.run();
+        }
         animateAskForConfirm.run();
         sayAskForConfirm.run();
     }
