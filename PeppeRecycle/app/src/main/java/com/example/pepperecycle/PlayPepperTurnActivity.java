@@ -25,9 +25,21 @@ import android.widget.Toast;
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
+import com.aldebaran.qi.sdk.builder.AnimateBuilder;
+import com.aldebaran.qi.sdk.builder.AnimationBuilder;
+import com.aldebaran.qi.sdk.builder.ListenBuilder;
+import com.aldebaran.qi.sdk.builder.PhraseSetBuilder;
+import com.aldebaran.qi.sdk.builder.SayBuilder;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
+import com.aldebaran.qi.sdk.object.actuation.Animate;
+import com.aldebaran.qi.sdk.object.actuation.Animation;
+import com.aldebaran.qi.sdk.object.conversation.Listen;
+import com.aldebaran.qi.sdk.object.conversation.ListenResult;
+import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
+import com.aldebaran.qi.sdk.object.conversation.Say;
+import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -65,7 +77,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private String garbageType = null; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
-    private String postUrl = "http://1444-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://f43e-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPeppeRecycle.jpg";
@@ -89,9 +101,14 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private boolean loaded = false;
     */
     byte round;
+
+    // Store the Animate action.
+    private Animate animate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        QiSDK.register(this, this);
         setContentView(R.layout.activity_play_pepper_turn);
 
         //Per far sparire la barra grigia sopra
@@ -161,7 +178,91 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
+        Say sayPepperTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                .withText("Ora è il mio turno! Per piacere, posso vedere il rifiuto da riciclare?") // Set the text to say.
+                .build(); // Build the say action.
+        //TODO Help ... in una dialog
+        Animation pepperTurn = AnimationBuilder.with(qiContext)
+                .withResources(R.raw.show_self_a001)
+                .build();
+        Animate animatePepperTurn = AnimateBuilder.with(qiContext)
+                .withAnimation(pepperTurn).build();
 
+        PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
+                .withTexts("Sì Pepper", "Si Pepper", "Ecco", "Ecco qui", "Tieni", "Sì", "Si")
+                .build();
+
+        PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
+                .withTexts("No", "Non voglio", "No Pepper", "Non mi va").build();
+
+        PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
+                .withTexts("Ripeti", "Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
+                .build();
+
+        PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
+                .withTexts("Torna", "Indietro", "Home")
+                .build();
+
+        PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
+                .withTexts("Chiudi il gioco", "Esci", "Basta")
+                .build();
+
+        sayPepperTurn.run();
+        animatePepperTurn.run();
+
+        Listen listenPlay = ListenBuilder
+                .with(qiContext)
+                .withPhraseSets(phraseSetYes, phraseSetNo, phraseSetRepeat, phraseSetClose, phraseSetHome)
+                .build();
+        ListenResult listenResult = listenPlay.run();
+        PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
+        if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {             // Utente mostra l'oggetto a Pepper
+            classify();
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {      // Utente non vuole mostrare l'oggetto a Pepper
+            // TODO chiede se si vuole interrompere il gioco
+            // Say sayPepperStopGame= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+            Say sayToDo = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                    .withText("Questa funzionalità è ancora da implementare.") // Set the text to say.
+                    .build(); // Build the say action.
+            // sayPepperStopGame.run();
+            sayToDo.run();
+
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.coughing_left_b001).build();
+            Animate animateCorrect = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+            animateCorrect.run();
+            Intent activity2Intent = new Intent(getApplicationContext(), PlayIntroActivity.class);
+            startActivity(activity2Intent); //Per ripetere
+            finish();
+
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.affirmation_a002).build();
+            Animate animateCorrect = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+            animateCorrect.run();
+            Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(activity2Intent); //Per iniziare il gioco.
+            finish();
+
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.hello_a004).build();
+            animate = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+
+            Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Va bene, sto chiudendo il gioco. Spero di rivederti presto!") // Set the text to say.
+                    .build(); // Build the say action.
+
+            sayGoodbye.run();
+            animate.run();
+
+            finish();
+
+        }
     }
 
     @Override
@@ -276,7 +377,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             System.out.println(ex.getMessage());
         }
             /* touched = false;
-
         }else {
             Log.e("TAG", "Immagine non premuta. No scatto.");
         }*/
@@ -338,7 +438,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-    public void classify(View v) {
+    public void buttonClassify(View v) {
+        classify();
+    }
+    public void classify() {
         responseText.setText("Classificazione in corso...");
 
         responseText.setText(postUrl);

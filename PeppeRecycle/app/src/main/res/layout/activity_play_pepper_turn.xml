@@ -28,7 +28,7 @@
         android:layout_below="@id/my_camera_view"
         android:layout_centerHorizontal="true"
         android:background="@drawable/pepper_take_picture"
-        android:onClick="classify"
+        android:onClick="buttonClassify"
         android:text="Ecco"
         android:textAlignment="center"
         android:textAllCaps="false"
