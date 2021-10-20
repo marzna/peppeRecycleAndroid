@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
+            android:name=".PepperClassifyingActivity"
+            android:exported="true" />
+        <activity
             android:name=".GameOverActivity"
             android:exported="true" />
         <activity
