@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -77,7 +78,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private String garbageType = null; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
-    private String postUrl = "http://f43e-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://85ad-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPeppeRecycle.jpg";
@@ -91,9 +92,17 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     static final byte TYPE_GLASS = 3;
     static final byte CLASSIFICATION_ERROR = -1;
 
+    static final String STRING_ORGANIC = "Organico";
+    static final String STRING_PAPER_CARDBOARD = "Carta e cartone";
+    static final String STRING_PLASTIC_METAL = "Plastica e metalli";
+    static final String STRING_GLASS = "Vetro";
+    static final String STRING_CLASSIFICATION_ERROR = "Si è verificato un errore";
+    String wasteTypeString;
+
     TextView textViewUserScore, textViewPepperScore;
     boolean isPepperTurn = true;
 
+    QiContext qiContxt;
     Map<String, Byte> scores = new HashMap<String, Byte>();
     /*
     private Mat mRGBA, mRGBAT, mGrey;
@@ -101,25 +110,29 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private boolean loaded = false;
     */
     byte round;
-
+    boolean classified=false;
     // Store the Animate action.
     private Animate animate;
-
+    Button buttonTakePicture;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
         setContentView(R.layout.activity_play_pepper_turn);
-
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
+        buttonTakePicture = (Button) findViewById(R.id.buttonTakePicture);
         javaCameraView = (JavaCameraView) findViewById(R.id.my_camera_view);
         responseText = (TextView) findViewById(R.id.responseText); //Conterrà i mex che verranno stampati sotto al pulsante di connessione al server
         imageViewPepperPhoto = (ImageView) findViewById(R.id.imageViewPepperPhoto);
         textViewUserScore = findViewById(R.id.textViewUserScore);
         textViewPepperScore = findViewById(R.id.textViewPepperScore);
+
+        photoTaken=false;
+        classified = false;
+        canTakePhoto=false;
 
         if (checkPermissions()) {
             Log.d(TAG, "Permissions granted");
@@ -178,6 +191,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
+        setQiContext(qiContext);
         Say sayPepperTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 .withText("Ora è il mio turno! Per piacere, posso vedere il rifiuto da riciclare?") // Set the text to say.
                 .build(); // Build the say action.
@@ -208,7 +222,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build();
 
         sayPepperTurn.run();
-        animatePepperTurn.run();
+        //animatePepperTurn.run(); //rimosso perché sennò ci sono troppi movimenti
 
         Listen listenPlay = ListenBuilder
                 .with(qiContext)
@@ -217,7 +231,45 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {             // Utente mostra l'oggetto a Pepper
-            classify();
+//            setQiContext(qiContext);
+            /*Say sayPepperThinks = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                    .withText("Grazie!. Uhm, fammi pensare...") // Set the text to say.
+                    .build();
+            Animation pepperThinks = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.scratch_top_of_head_right_b001)
+                    .build();
+            Animate animatePepperThinks = AnimateBuilder.with(qiContext)
+                    .withAnimation(pepperThinks).build();
+
+            animatePepperThinks.run();
+            sayPepperThinks.run();*/
+            canTakePhoto=true;
+
+            this.buttonTakePicture.performClick();
+            /*if(!classified) {
+                classify();
+                askForConfirm();
+            } else {
+                Log.e("CLASSIF", "ERRORE di classificazione.");
+            }*/
+
+
+            /*Say sayPepperSelectBin = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                    .withText("Ci sono!" + wasteTypeString) // Set the text to say.
+                    .build(); // Build the say action.
+            Animation pepperSelectsBin = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.scratch_top_of_head_right_b001)
+                    .build();
+            Animate animatePepperSelectBin = AnimateBuilder.with(qiContext)
+                    .withAnimation(pepperSelectsBin).build();
+
+            sayPepperSelectBin.run();
+            animatePepperSelectBin.run();*/
+
+            askForConfirm();
+
+            /*goToClassAct();*/
+
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {      // Utente non vuole mostrare l'oggetto a Pepper
             // TODO chiede se si vuole interrompere il gioco
             // Say sayPepperStopGame= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -355,24 +407,28 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         if (mRGBAT != null)
             mRGBAT.release(); //TODO???
     }
-
+    boolean canTakePhoto, photoTaken;
     @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRGBA = inputFrame.rgba();
-        mRGBAT = mRGBA.t();
 
+        mRGBAT = mRGBA.t();
         Core.flip(mRGBA, mRGBAT, 1);
         Imgproc.resize(mRGBAT, mRGBAT, mRGBA.size());
+//        Log.e("TAG", "Immagine premuta, foto scattata.");
 
         /*if (touched) {*/
-        Log.e("TAG", "Immagine premuta, foto scattata.");
 
         //Potrebbe servire qui, prima del try...catch? -> mRGBATbitmap = Bitmap.createBitmap(javaCameraView.getWidth()/4,javaCameraView.getHeight()/4, Bitmap.Config.ARGB_8888);
         try {
             mRGBATbitmap = Bitmap.createBitmap(mRGBAT.cols(), mRGBAT.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(mRGBAT, mRGBATbitmap);
             imageViewPepperPhoto.setImageBitmap(mRGBATbitmap);
-            imageViewPepperPhoto.invalidate();
+            //imageViewPepperPhoto.invalidate();
+//                photoTaken=true;
+            //javaCameraView.disableView();
+//                canTakePhoto=false;
+//
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
@@ -438,14 +494,44 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-    public void buttonClassify(View v) {
-        classify();
+    QiContext qiContext;
+
+    public QiContext getQiContext() {
+        return qiContext;
     }
+
+    public void setQiContext(QiContext qiContext) {
+        this.qiContext = qiContext;
+    }
+
+    public void buttonClassify(View v) {
+        if(!classified) {
+            classify();
+            askForConfirm();
+        } else {
+            Log.e("CLASSIF", "ERRORE di classificazione.");
+        }
+        /*Say sayPepperSelectBin = SayBuilder.with(getQiContext()) // Create the builder with the context. //TODO scelta di una fra più frasi
+                .withText("Ci sono!" + wasteTypeString) // Set the text to say.
+                .build(); // Build the say action.
+        Animation pepperSelectsBin = AnimationBuilder.with(getQiContext())
+                .withResources(R.raw.scratch_top_of_head_right_b001)
+                .build();
+        Animate animatePepperSelectBin = AnimateBuilder.with(getQiContext())
+                .withAnimation(pepperSelectsBin).build();
+
+        sayPepperSelectBin.run();
+        animatePepperSelectBin.run();*/
+
+        // Say sayPepperSelectBin = SayBuilder.with(qiContext) // Create the builder with the context.
+
+//        goToClassAct();
+    }
+
     public void classify() {
         responseText.setText("Classificazione in corso...");
-
+        Log.e("CLASSIF","Entrato in classify");
         responseText.setText(postUrl);
-
         MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -459,65 +545,95 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream); //TODO Rimuovi (o no?)
             //checkIfPhotoExists();
             savePhoto(mRGBATbitmap);
+            //photoTaken=true;
             responseText.setText("L'immagine dovrebbe esser stata salvata in:" + photoPath);
+            Log.e("CLASSIF","L'immagine dovrebbe esser stata salvata in:" + photoPath);
         } catch (Exception e) {
             responseText.setText("Errore. L'immagine non è stata catturata in modo corretto.");
+            Log.e("CLASSIF","Errore. L'immagine non è stata catturata in modo corretto");
+            restartActivity();
             return;
         }
         javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
-        loadPhoto(imageViewPepperPhoto); // Carica l'immagine nell'ImageView passata come parametro
+        //loadPhoto(imageViewPepperPhoto); // Carica l'immagine nell'ImageView passata come parametro
 
         try {
-            //postRequest();
-            /*if (//!thread.isAlive() &&
-                    !isThreadStarted) { //Controllo se il thread è stato già attivato
-                thread.start();
-                isThreadStarted=true;
-                thread.join();
+            /*if (//!thread.isAlive() && !isThreadStarted) { //Controllo se il thread è stato già attivato
+                thread.start(); isThreadStarted=true; thread.join();
             }*/
-
             ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
             Thread thread = new Thread(clientManager);
             thread.start();
             thread.join();
             garbageType = clientManager.getGarbageType();
+            responseText.setText("Tipo rifiuto:" + garbageType);
+            classified = true;
+            setWasteType();
             checkIfPhotoExists();
-
+            /*else {
+                    restartActivity();
+                }*/
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+                        /*responseText.setText("Tipo rifiuto:" + garbageType);
+                setWasteType();
+                checkIfPhotoExists();
+            */
         }
-
-        responseText.setText("Tipo rifiuto:" + garbageType);
-
+    }
+    void restartActivity() {
+        Intent activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
+        startActivity(activity2Intent); //Per ripetere
+        finish();
+    }
+    void setWasteType() {
         switch (garbageType) {
             case "organic":
                 wasteType = TYPE_ORGANIC;
+                wasteTypeString = STRING_ORGANIC;
                 break;
-            case "plastic": case "metal":
+            case "plastic":
+            case "metal":
                 wasteType = TYPE_PLASTIC_METAL;
+                wasteTypeString = STRING_PLASTIC_METAL;
                 break;
-            case "cardboard": case "paper":
+            case "cardboard":
+            case "paper":
                 wasteType = TYPE_PAPER_CARDBOARD;
+                wasteTypeString = STRING_PAPER_CARDBOARD;
                 break;
             case "glass":
                 wasteType = TYPE_GLASS;
+                wasteTypeString = STRING_GLASS;
                 break;
             default:
                 wasteType = CLASSIFICATION_ERROR;
+                wasteTypeString = STRING_CLASSIFICATION_ERROR;
                 break;
         }
-
-        askForConfirm();
-
     }
 
+    void goToClassAct(){
+        Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, PepperClassifyingActivity.class);
+        activity2Intent.putExtra("wasteType", wasteType);
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("wasteTypeString", wasteTypeString);
+        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
+
+        startActivity(activity2Intent);
+        finish();
+    }
     void askForConfirm() {
         Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, JudgeConfirmActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("wasteTypeString", wasteTypeString);
         activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
@@ -535,6 +651,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         if(myFile.exists()) {
             myFile.delete();
+
+            Log.e("CLASSIF","File eliminato dal path " + photoPath);
         }
     }
 
@@ -556,6 +674,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             Log.d(TAG, "Impossibile accedere al file: " + e.getMessage());
         }
         photoPath = "storage/emulated/0/DCIM/" + photoName; //pictureFile.toString(); ///storage/emulated/0/DCIM/PhotoPepper0.jpg
+
+        Log.e("CLASSIF","SavePhoto eseguita");
     }
 
     //Create a File for saving an image or video
