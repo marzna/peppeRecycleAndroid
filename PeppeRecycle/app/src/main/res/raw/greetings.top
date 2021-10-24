@@ -1,0 +1,6 @@
+topic: ~greetings()
+# Defining extra concepts out of words or group of words
+concept:(hello) [hello hi hey "good morning" greetings] #concept -> insieme di frasi da dire
+
+# Replying to speech
+u:(~hello) ~hello # Syntax user rule -> u:(human input) robot answer

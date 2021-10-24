@@ -81,8 +81,8 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {             // Risposta utente affermativa
-            Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class); //TODO TutorialActivity.class);
-            startActivity(activity2Intent); // fa partire il gioco
+            Intent activity2Intent = new Intent(getApplicationContext(), TutorialActivity.class);
+            startActivity(activity2Intent); // Spiega il gioco
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {       // Va direttamente al gioco, saltando il tutorial
             Say playGame= SayBuilder.with(qiContext) // Create the builder with the context.
@@ -151,13 +151,13 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
         return false;
     }
 
-    public void buttonPlay(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+    public void buttonPlay(View v) { //Pressione tasto "no" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-    public void buttonTutorial(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
-        Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
+    public void buttonTutorial(View v) { //Pressione tasto "yes" TODO Togli perché è un duplicato? [???]
+        Intent activity2Intent = new Intent(getApplicationContext(), TutorialActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
