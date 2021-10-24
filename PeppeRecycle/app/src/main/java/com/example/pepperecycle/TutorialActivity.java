@@ -122,8 +122,8 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 buttonPrev.setEnabled(false);
                 buttonPrev.setVisibility(View.INVISIBLE);
 
-                buttonNext.setText("Avanti     >");
-                buttonPrev.setText("");
+                /*buttonNext.setText("Avanti     >");
+                buttonPrev.setText("");*/
 
             } else if (position == mDots.length - 1) { //ultima pagina
                 Log.d("Tap", "Ultima pagina");
@@ -138,7 +138,9 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 buttonNext.setVisibility(View.INVISIBLE);
                 */
 
-                buttonNext.setText("Finito");
+                //buttonNext.setBackground();//TODO GIOCA!
+
+                               buttonNext.setText("Finito");
                 buttonPrev.setText("<     Indietro");
 
             } else { //pagine intermedie

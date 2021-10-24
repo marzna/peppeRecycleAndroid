@@ -27,11 +27,12 @@ import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 //Activity contenente il vero e proprio gioco
 public class PlayGameActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
 
-    boolean isPepperTurn=true;
+    boolean isPepperTurn;
     // int N_PLAYERS = 2; int turn = new Random().nextInt(N_PLAYERS) ; //Ritorna un random int nel range [0, N_PLAYERS-1]
     int N_ROUNDS = 3;
     int N_TURNS = N_ROUNDS*2;
@@ -58,6 +59,8 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
             put(String.valueOf(0), "b");
             put(1, "d");
         }};*/
+        isPepperTurn = new Random().nextBoolean() ; //Ritorna un random boolean (Serve per stabilire randomicamente chi inizia a giocare)
+
         /*TODO metti qui l'assegnazione del primo turno*/
         startGame();
     }
