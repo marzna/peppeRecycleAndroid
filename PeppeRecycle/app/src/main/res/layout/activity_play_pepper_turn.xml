@@ -25,7 +25,7 @@
         android:id="@+id/buttonTakePicture"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_below="@id/my_camera_view"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/pepper_take_picture"
         android:onClick="buttonClassify"

@@ -43,7 +43,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
+            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             round = extras.getByte("round");
             isPepperTurn = extras.getBoolean("isPepperTurn");
             pepperScore = extras.getByte("pepperScore");

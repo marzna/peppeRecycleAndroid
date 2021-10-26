@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
 
@@ -43,6 +45,9 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     QiContext qiContext;
     String binType;
     String wasteTypeString;
+    String factAboutRecycle;
+    boolean tutorialEnabled;
+    boolean pepperTeaches;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +69,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             wasteType = extras.getByte("wasteType"); // The key argument here must match that used in the other activity
             round = extras.getByte("round");
             isPepperTurn = extras.getBoolean("isPepperTurn");
-            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
+            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
             wasteTypeString = extras.getString(wasteTypeString);
+            tutorialEnabled = extras.getBoolean("tutorialEnabled");
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
         startJudgeConfirm();
@@ -126,8 +132,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
             //todo se l'utente ha sbagliato, insegna qualcosa
-            updateScore(isPepperTurn);
+            if(!tutorialEnabled)
+                updateScore(isPepperTurn);
             nextTurn();
+
+            //todo activity per insegnare qualcosa
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
             //todo se Pepper ha risp correttamente, insegna qualcosa
             nextTurn();
@@ -179,23 +188,32 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
     }
 
+    public String setFactRecycle(String[] factType) {
+        int randomFact = new Random().nextInt(factType.length);
+        return factType[randomFact];
+    }
+
     void startJudgeConfirm() {
         switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
             case 0: // case "organic":
                 selectedBinIs.setText("Il bidone selezionato è quello\ndell'organico");
                 selectedBin.setImageResource(R.drawable.bin_brown_shadow);
+//                factAboutRecycle = setFactRecycle(factsOrganic);
                 break;
             case 1: // case "paper": case "cardboard":
                 selectedBinIs.setText("Il bidone selezionato è quello\ndi carta e cartone");
                 selectedBin.setImageResource(R.drawable.bin_blue_shadow);
+//                factAboutRecycle = setFactRecycle(factsCardCardboard);
                 break;
             case 2: // case "plastic": case "metal":
                 selectedBinIs.setText("Il bidone selezionato è quello\ndi plastica e metalli");
                 selectedBin.setImageResource(R.drawable.bin_yellow_shadow);
+//                factAboutRecycle = setFactRecycle(factsPlasticMetal);
                 break;
             case 3: // case "glass":
                 selectedBinIs.setText("Il bidone selezionato è quello\ndel vetro");
                 selectedBin.setImageResource(R.drawable.bin_green_shadow);
+//                factAboutRecycle = setFactRecycle(factsGlass);
                 break;
             default:
                 selectedBinIs.setText("ERRORE.");
@@ -253,19 +271,27 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         //Il punteggio viene incrementato solo se la risposta è corretta
         isAnswerCorrect = true;
         pressed = true;
-        updateScore(isPepperTurn);
-        nextTurn();
+        if(!tutorialEnabled) {
+            updateScore(isPepperTurn);
+        }
+        Log.e("TAG", "Entrato nel buttonYes.");
+
+        //TODO Decommenta la riga successiva ed elimina quella dopo se hai finito di testare i random facts
+        //nextTurn();TODO DECOMMENTA
+        startPepperTeacher();//TODO ELIMINA
     }
     public void buttonNo(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         isAnswerCorrect = false;
         pressed = true;
         //TODO Se il turno era del bambino, fai dire a Pepper qualcosa random sul riciclo
+        pepperTeaches = pepperTeacher();
         nextTurn();
     }
     public void updateScore(boolean isPepperTurn) {
         if(isPepperTurn) {
             ++pepperScore;//scores.put("score_pepper", (byte) (scores.get("score_pepper") + 1)); //Incrementa il punteggio di Pepper
-            pepperTeaches();
+            pepperTeaches = pepperTeacher();
+            startPepperTeacher();
             //TODO inserisci nozioni relative all'oggetto classificato
         } else {
             ++userScore;//scores.put("score_user1", (byte) (scores.get("score_user1") + 1)); //Incrementa il punteggio dell'utente
@@ -280,14 +306,18 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
             // TODO sostituisci il 3 con una costante, tipo WINNER_SCORE o simili
             if (isPepperTurn) {
-                activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class); // PlayPepperTurnActivity.class);
+                if(tutorialEnabled) {
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
+                } else {
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class); // PlayPepperTurnActivity.class);
+                }
             } else {
                 activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
             }
             /*
             pepperScore = activity2Intent.getExtras().getByte("pepperScore");
             userScore = activity2Intent.getExtras().getByte("userScore");
-            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
+            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
             */
         } else {            // Game over
             activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
@@ -295,11 +325,25 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
-        activity2Intent.putExtra("scores", (Serializable) scores);
+        //activity2Intent.putExtra("scores", (Serializable) scores);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         startActivity(activity2Intent);
         finish();
     }
-
+    void startPepperTeacher() {
+        Log.e("TAG", "Entrato nella funzione startPepperTeacher.");
+        Intent activity2Intent = new Intent(JudgeConfirmActivity.this, PepperTeachesActivity.class);//TODO GameOverActivity
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("wasteType", wasteType);
+        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("wasteTypeString", wasteTypeString);
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
+        //activity2Intent.putExtra("scores", (Serializable) scores);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        startActivity(activity2Intent);
+        finish();
+    }
     public void buttonBack(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent;//Per andare alla pagina principale
         if(isPepperTurn) { //TODO Rimuovi il bottone back se il turno era di Pepper o lascialo se si vuole ri-scattare la foto?
@@ -308,7 +352,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
         }
         activity2Intent.putExtra("round", round);
-        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         startActivity(activity2Intent); //Per andare alla pagina principale
@@ -329,8 +373,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         //TODO Chiudi gioco */
     }
 
-    void pepperTeaches() {
+    boolean pepperTeacher() {
         //TODO Frasi che insegnano all'utente nozioni sulla raccolta differenziata
+        return true;
+
     }
 
 }

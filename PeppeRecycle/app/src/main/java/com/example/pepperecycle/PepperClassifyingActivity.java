@@ -143,7 +143,7 @@ public class PepperClassifyingActivity extends RobotActivity implements RobotLif
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             round = extras.getByte("round");
-            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
+            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
             wasteType = extras.getByte("wasteType");
@@ -268,7 +268,7 @@ public class PepperClassifyingActivity extends RobotActivity implements RobotLif
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
-        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
 

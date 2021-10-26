@@ -7,10 +7,22 @@
     android:background="@drawable/bkgr_activity_main"
     tools:context=".TutorialActivity">
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="A turno, il giudice ci mostrerà un oggetto\ne dovremo indovinare in quale bidone riciclarlo.\nUna volta scelto il tipo di bidone,\nil giudice dovrà dire se avremo indovinato o no.\nSe sì, si guadagnerà un punto!"
+        android:textAllCaps="false"
+        android:textSize="36sp" />
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/slideViewPager"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="invisible">
 
     </androidx.viewpager.widget.ViewPager>
 
@@ -21,7 +33,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:visibility="invisible">
 
     </LinearLayout>
 
@@ -48,5 +61,18 @@
         android:gravity="center"
         android:textAllCaps="false"
         android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/buttonPlay"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_play"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:visibility="invisible"/>
 
 </RelativeLayout>
