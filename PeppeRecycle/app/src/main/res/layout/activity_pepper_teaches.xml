@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bkgr_bins"
+    tools:context=".PepperTeachesActivity">
+
+    <ImageButton
+        android:id="@+id/buttonHome"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@id/buttonClose"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="-52dp"
+        android:layout_marginEnd="53dp"
+        android:background="@drawable/button_home"
+        android:onClick="buttonHome"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageButton
+        android:id="@+id/buttonClose"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_close"
+        android:onClick="buttonClose"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageView
+        android:id="@+id/selectedBin"
+        android:layout_width="230dp"
+        android:layout_height="338dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginBottom="95dp"
+        android:foreground="?android:attr/selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/textViewFactAbout"
+        android:layout_width="701dp"
+        android:layout_height="169dp"
+        android:layout_marginStart="-229dp"
+        android:layout_toEndOf="@id/selectedBin"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Curiosità"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp" />
+
+    <TextView
+        android:id="@+id/textViewRandomFact"
+        android:layout_width="532dp"
+        android:layout_height="333dp"
+        android:layout_alignStart="@id/textViewFactAbout"
+        android:layout_alignBottom="@id/textViewFactAbout"
+        android:layout_marginStart="226dp"
+        android:layout_marginBottom="-334dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp" />
+
+    <Button
+        android:id="@+id/buttonPlay"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_play"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:visibility="invisible" />
+
+</RelativeLayout>

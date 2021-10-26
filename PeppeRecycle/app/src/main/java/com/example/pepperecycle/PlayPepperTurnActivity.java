@@ -79,6 +79,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
     private String postUrl = "http://c6c0-5-88-202-147.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private boolean tutorialEnabled;
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPeppeRecycle.jpg";
@@ -157,9 +158,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             round = extras.getByte("round");
-            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
+            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
+            tutorialEnabled = extras.getBoolean("tutorialEnabled");
         }
         showScore();
 /*        textViewPepperScore.setText(scores.get("score_pepper").toString());
@@ -193,8 +195,17 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     public void onRobotFocusGained(QiContext qiContext) {
         setQiContext(qiContext);
         Say sayPepperTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Ora è il mio turno! Per piacere, posso vedere il rifiuto da riciclare?") // Set the text to say.
+                .withText("Ora è il mio turno!") // Set the text to say.
                 .build(); // Build the say action.
+
+        Say sayPepperTurnTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
+                .withText("Aspetto che il giudice mi mostri il rifiuto e prema il pulsante verde sul mio tablet!" ) // Set the text to say.
+                .build(); // Build the say action.;
+
+        Say showGarbage = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                .withText("Per piacere, posso vedere il rifiuto da riciclare?") // Set the text to say.
+                .build(); // Build the say action.
+
         //TODO Help ... in una dialog
         Animation pepperTurn = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.show_self_a001)
@@ -203,14 +214,16 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .withAnimation(pepperTurn).build();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Sì Pepper", "Si Pepper", "Ecco", "Ecco qui", "Tieni", "Sì", "Si")
+                .withTexts("Sì Pepper", "Si Pepper", "Ecco", "Ecco qui", "Ecco Pepper",
+                        "Ecco qui Pepper", "Tieni", "Tieni Pepper", "Pepper tieni", "Sì", "Si")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
                 .withTexts("No", "Non voglio", "No Pepper", "Non mi va").build();
 
         PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
-                .withTexts("Ripeti", "Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
+                .withTexts("Ripeti", "Ricominciamo", "Ricomincia", "Da capo",
+                        "Non ho capito", "Puoi ripetere")
                 .build();
 
         PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
@@ -221,7 +234,12 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-        sayPepperTurn.run();
+        sayPepperTurn.run();//TODO non ho capito perché lo dice due volte nell'emulatore... Verifica che non sia la stessa cosa con il robot
+        if (tutorialEnabled) {
+            sayPepperTurnTutorial.run();
+        }
+        showGarbage.run();
+
         //animatePepperTurn.run(); //rimosso perché sennò ci sono troppi movimenti
 
         Listen listenPlay = ListenBuilder
@@ -621,7 +639,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("wasteTypeString", wasteTypeString);
-        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
 
@@ -632,9 +651,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, JudgeConfirmActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("wasteTypeString", wasteTypeString);
-        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
 

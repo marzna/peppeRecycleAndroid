@@ -1,0 +1,32 @@
+topic: ~tutorial()
+# Defining extra concepts out of words or group of words
+# concept -> insieme di frasi da dire
+concept:(tutorialIntro)["Ecco come si gioca:
+                         a turno, il giudice ci mostra un oggetto.
+                         Noi dobbiamo indovinare in quale bidone riciclarlo.
+                         Poi, il giudice deve dire se la risposta è corretta o no.
+                         Chi indovina, guadagnerà un punto!
+                         Posso andare avanti?" ]
+concept:(nextPage) [si chiaro "prossima pagina" avanti ok okay ochei]
+concept:(backPage) ["torna indietro" indietro precedente]
+concept:(repeat) [no "non è chiaro" "non sei stato chiaro" "ripeti" "puoi ripetere" "non ho capito"]
+concept:(play) [giochiamo "voglio giocare" "salta il tutorial"]
+concept:(restartTutorial) ["torna all'inizio" "ripeti dall'inizio" ricomincia ricominciamo "da capo" "dall'inizio" "inizio"]
+concept:(backHome) [esci home menu "menu principale" basta]
+concept:(close) ["chiudi il gioco" "chiudi tutto" "addio" "arrivederci" "vado via"]
+
+# Replying to speech
+#The ^execute allows to execute a piece of code during the conversation. When reaching ^execute the associated QiChatExecutor will call its runWith method with the passed parameters. After the code execution the conversation will be resumed where it was stopped.
+u:({pepper} {~nextPage}) "va bene, allora vado avanti!" "okay, proseguo con la spiegazione" ^execute(myExecutor) ^endDiscuss(success)
+u:({pepper} {~backPage}) "va bene, allora ripeterò quest'ultima parte!" ^execute(myExecutor) ^endDiscuss(success)
+u:({pepper} {~repeat}) "Okay, ripeto!" ^execute(myExecutor) ^endDiscuss(success)
+u:({pepper} {~play}) "Bene, allora iniziamo a giocare!" ^execute(myExecutor) ^endDiscuss(success)
+u:({pepper} {~restartTutorial}) "va bene, ti spiego di nuovo come si gioca!" ^execute(myExecutor) ^endDiscuss(success)
+u:({pepper} {~backHome}) "Okay, torniamo alla Home!" ^execute(myExecutor) ^endDiscuss(success)
+u:({pepper} {~close}) "Okay, chiudiamo il gioco!" ^execute(myExecutor) ^endDiscuss(success)
+
+#u:({pepper} {~giocare} ~chetch) "ok giochiamo a chetch the ueist" ^execute(myExecutor,"chetch") ^endDiscuss(success)
+#u:({pepper} ~opzioni ) "Il primo gioco è chetch d ueist ovvero raccogli i rifiuti.
+#Il secondo gioco è cius d rait bin ovvero scegli il bidone giusto.
+#Il terzo gioco è it d ueist ovvero colpisci i rifiuti.
+#Il quarto gioco è speis combat uid ueist ovvero combattimento aereo con i rifiuti."

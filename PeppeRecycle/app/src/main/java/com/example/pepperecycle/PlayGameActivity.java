@@ -40,7 +40,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     Map<String, Byte> scores = new HashMap<>();
     static byte pepperScore = 0;
     static byte userScore = 0;
-
+    boolean tutorialEnabled = false;
     // Store the Animate action.
     private Animate animate;
 
@@ -60,6 +60,12 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
             put(1, "d");
         }};*/
         isPepperTurn = new Random().nextBoolean() ; //Ritorna un random boolean (Serve per stabilire randomicamente chi inizia a giocare)
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            tutorialEnabled = extras.getBoolean("tutorialEnabled");
+        }
+
 
         /*TODO metti qui l'assegnazione del primo turno*/
         startGame();
@@ -109,9 +115,10 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
             activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);//TODO turno utente
         }
         activity2Intent.putExtra("round", round);
-        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         startActivity(activity2Intent);
         //isPepperTurn = !isPepperTurn;
         finish();

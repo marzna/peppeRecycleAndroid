@@ -27,6 +27,7 @@ import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
     // Store the Animate action.
     private Animate animate;
+    boolean tutorialEnabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,10 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         // setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            tutorialEnabled = extras.getBoolean("tutorialEnabled");
+        }
         setContentView(R.layout.activity_play_intro);
     }
 
@@ -46,17 +51,23 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
                 .withText("Bene, vuoi sapere come si gioca?") // Set the text to say.
                 .build(); // Build the say action.
 
+        Say sayAskAgainTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
+                .withText("Il tutorial è finito. Vuoi che te lo spieghi di nuovo o vuoi iniziare a giocare?") // Set the text to say.
+                .build(); // Build the say action.
+
         Animation explain = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001).build();
         Animate animateAskTutorial = AnimateBuilder.with(qiContext)
                 .withAnimation(explain).build();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Si", "Voglio sapere", "Voglio saperlo", "tutorial", "ok", "okay", "ochei")
+                .withTexts("Si", "Voglio sapere", "ripeti il tutorial", "Voglio saperlo",
+                        "spiegamelo", "spiegalo", "spiega di nuovo", "voglio che me lo spieghi",
+                        "voglio che lo spieghi", "tutorial", "ok", "okay", "ochei")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
-                .withTexts("No", "Non voglio", "No Pepper", "Giochiamo", "Voglio giocare").build();
+                .withTexts("No", "Non voglio", "No Pepper", "Giochiamo", "Voglio giocare", "voglio iniziare a giocare").build();
 
         PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
                 .withTexts("Ripeti", "Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
@@ -70,7 +81,11 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-        sayAskTutorial.run();
+        if (tutorialEnabled) {
+            sayAskAgainTutorial.run();
+        } else {
+            sayAskTutorial.run();
+        }
         animateAskTutorial.run();
 
         Listen listenPlay = ListenBuilder
@@ -92,10 +107,11 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
                     .withResources(R.raw.exclamation_both_hands_a001).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
                     .withAnimation(correctAnswer).build();
-
+            tutorialEnabled=false;
             playGame.run();
             animateCorrect.run();
             Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
+            activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
             startActivity(activity2Intent); //Per iniziare il gioco.
             finish();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere

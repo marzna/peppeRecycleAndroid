@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
     byte round;
-    boolean isPepperTurn = false;
+    boolean isPepperTurn;
     byte wasteType=-1; //0=Organico, 1=Carta/Cartone, 2=Plastica/Metalli, 3=Vetro
     String binType;
     boolean binPressed=false;
@@ -44,7 +44,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     static byte pepperScore;
     static byte userScore;
     TextView textViewUserScore, textViewPepperScore;
-
+    boolean tutorialEnabled;
     // Store the Animate action.
     private Animate animate;
 
@@ -59,13 +59,14 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
         setContentView(R.layout.activity_play_user_turn);
-
+        isPepperTurn=false;
         textViewUserScore = findViewById(R.id.textViewUserScore);
         textViewPepperScore = findViewById(R.id.textViewPepperScore);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
+            tutorialEnabled = extras.getBoolean("tutorialEnabled");
             round = extras.getByte("round");
-            scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores"); //TODO Serializable(?)
+            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
         }
@@ -96,13 +97,21 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayUserTurn= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Adesso tocca a te!") // Set the text to say.
+                .withText("Tocca a te!") // Set the text to say.
                 .build(); // Build the say action.
         //TODO Help ... in una dialog
         Animation explain = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.raise_right_hand_a002).build();
         Animate animateUserTurn = AnimateBuilder.with(qiContext)
                 .withAnimation(explain).build();
+        Say sayUserTurnTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
+                .withText("Qui, sul mio tablet, ci sono quattro bidoni: " +
+                        "organico, plastica e metalli, carta e cartone, vetro." +
+                        "Il giudice ti mostrerà un rifiuto e tu dovrai dirmi in quale bidone buttarlo per un corretto smaltimento." +
+                        "Se indovinerai, guadagnerai un punto!" +
+                        "Giudice, per favore, mostraci l'oggetto, così da iniziare subito con un turno di prova! ") // Set the text to say.
+                .build(); // Build the say action.;
+
         Say sayUserTurnExplain= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 .withText("Qual è il bidone adatto a questo rifiuto?") // Set the text to say.
                 .build(); // Build the say action.
@@ -136,6 +145,9 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .build();
 
         sayUserTurn.run();
+        if(tutorialEnabled){
+            sayUserTurnTutorial.run();
+        }
         animateUserTurn.run();
         sayUserTurnExplain.run();
 
@@ -149,16 +161,16 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBrownBin)) {             // Utente seleziona il bidone dell'organico
             wasteType = TYPE_ORGANIC;
-            ackSelectedBin(qiContext);
+//            ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBlueBin)) {      // Utente seleziona il bidone carta e cartone
             wasteType = TYPE_PAPER_CARDBOARD;
-            ackSelectedBin(qiContext);
+//            ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectYellowBin)) {      // Utente seleziona il bidone plastica e metalli
             wasteType = TYPE_PLASTIC_METAL;
-            ackSelectedBin(qiContext);
+//            ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectGreenBin)) {      // Utente seleziona il bidone vetro
             wasteType = TYPE_GLASS;
-            ackSelectedBin(qiContext);
+//            ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
@@ -247,9 +259,10 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     void askForConfirm() {
         Intent activity2Intent = new Intent(PlayUserTurnActivity.this, JudgeConfirmActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
-        activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         startActivity(activity2Intent);
