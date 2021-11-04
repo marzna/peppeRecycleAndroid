@@ -54,7 +54,9 @@ public class ClientManager implements Runnable {
             System.out.println("Tipo di rifiuto: " + garbageType);
             //responseText.setText("Tipo rifiuto:" + garbageType); TODO È nel posto sbagliato
             //garbageClassified = true;
-            Log.d("Classificazione", "Classificazione riuscita.");
+            if(garbageType!=null) {
+                Log.d("Classificazione", "Classificazione riuscita.");
+            }
 
         } catch (IOException e) {
 

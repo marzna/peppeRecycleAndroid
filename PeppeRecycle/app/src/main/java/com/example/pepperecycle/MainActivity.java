@@ -1,18 +1,23 @@
 package com.example.pepperecycle;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.aldebaran.qi.Future;
 import com.aldebaran.qi.sdk.QiContext;
+import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
 import com.aldebaran.qi.sdk.builder.AnimateBuilder;
 import com.aldebaran.qi.sdk.builder.AnimationBuilder;
@@ -23,6 +28,7 @@ import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.object.actuation.Animate;
+import com.aldebaran.qi.sdk.object.actuation.Animation;
 import com.aldebaran.qi.sdk.object.conversation.Listen;
 import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
@@ -36,14 +42,18 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
     // Store the Animate action.
     private Animate animate;
     private ImageView imageViewMainBackground;
+//    CommonUtils commonUtils = new CommonUtils();
+    //    private QiContext qiContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        QiSDK.register(this, this);
 
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
-        setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
+        //setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
+        setContentView(R.layout.activity_main);
 
         if (!checkPermissions()) {
             // Richiesta permessi
@@ -54,13 +64,11 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 5);//??
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 6);
         }
-        setContentView(R.layout.activity_main);
 
     }
 
     private boolean checkPermissions(){
         //Controllo permessi
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1); //TODO Come si sceglie il requestCode?
         }
@@ -83,21 +91,28 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
     }
 
 
-
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-        Say sayHello = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Ciao, io sono Pepper e questo è Pepperisaichel!") // Set the text to say.
-                .build(); // Build the say action.
+        /*// The robot focus is gained.
+        this.qiContext = qiContext;*/
+        Animation hello = AnimationBuilder.with(qiContext)
+                .withResources(R.raw.hello_a007)
+                .build();
+        //Animate animateHello = AnimateBuilder.with(qiContext)
+        animate = AnimateBuilder.with(qiContext)
+                .withAnimation(hello)
+                .build();
 
-        com.aldebaran.qi.sdk.object.actuation.Animation hello = AnimationBuilder.with(qiContext)
-                .withResources(R.raw.hello_a007).build();
-        Animate animateHello = AnimateBuilder.with(qiContext)
-                .withAnimation(hello).build();
+        Say sayHello = SayBuilder.with(qiContext) // Create the builder with the context.
+                .withText("Ciao!\\rspd=95\\") // Set the text to say.
+                .build(); // Build the say action.
+        Say sayPresentation = SayBuilder.with(qiContext) // Create the builder with the context.
+                .withText("\\rspd=95\\io sono Pepper. e questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
+                .build(); // Build the say action.
 
         //TODO -> Bisognerà cambiare l'interazione nel caso dello storytelling
         Say sayPlay = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Giochiamo insieme?") // Set the text to say.
+                .withText("\\rspd=95\\Accetti la sfida?") // Set the text to say.
                 .build(); // Build the say action.
 
         /*Say sayOther = SayBuilder.with(qiContext) // Create the builder with the context.
@@ -119,43 +134,64 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .withTexts("", "Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
                 .build();
 
-        Listen listenPlay = ListenBuilder.with(qiContext).withPhraseSets(phraseSetYes, phraseSetNo).build();
+        PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
+                .withTexts("Chiudi il gioco", "Esci", "Basta")
+                .build();
+
+        Listen listenPlay = ListenBuilder.with(qiContext) // Create the builder with the QiContext.
+                .withPhraseSets(phraseSetYes, phraseSetRepeat, phraseSetClose) // Set the PhraseSets to listen to.
+                .build(); // Build the listen action
+
+/*
+        //Run Animazione Presentazione
+        Future<Void> animateFuture = animate.async().run();
+*/
+        sayHello.run(); // animateHello.run(); -> Sbagliato (?)
+        //animate.run();
+        sayPresentation.run();
+        sayPlay.run();
+
+        // Run the listen action and get the result.
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
-
-        sayHello.run();
-        animateHello.run();
-        sayPlay.run();
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {             // Risposta utente affermativa
             Intent activity2Intent = new Intent(getApplicationContext(), PlayIntroActivity.class);
             startActivity(activity2Intent); // fa partire il gioco
-            finish();
-        /*} else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {     // Risposta utente negativa
-            sayOther.run();*/
-
+            finish();/*} else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {     // Risposta utente negativa
+                            sayOther.run();*/
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) { // Richiesta utente di ripetere
-            com.aldebaran.qi.sdk.object.actuation.Animation correctAnswer = AnimationBuilder.with(qiContext)
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
-            Animate animateCorrect = AnimateBuilder.with(qiContext)
+            animate = AnimateBuilder.with(qiContext)
                     .withAnimation(correctAnswer).build();
-            animateCorrect.run();
+            animate.run();
             Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(activity2Intent); //Per ripetere la prima pagina
             finish();
-        } /*else {
-            // TODO Pepper non ha capito e chiede di ripetere FORSE È INUTILE ED È MEGLIO TOGLIERLO
-        }*/
+        }  else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) { // Richiesta utente di ripetere
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.hello_a004).build();
+            animate = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+
+            Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Va bene, sto chiudendo il gioco. Sarà per un'altra volta, ciaoo!") // Set the text to say.
+                    .build(); // Build the say action.
+
+            animate.run();
+            sayGoodbye.run();
+
+            finish();
+        }
     }
 
     @Override
     public void onRobotFocusLost() {
-
     }
 
     @Override
     public void onRobotFocusRefused(String reason) {
-
     }
 
     @Override
@@ -181,8 +217,8 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
         finish();
     }
 
-    public void buttonClose(View v) { //Pressione tasto "Chiudi" TODO Togli perché è un duplicato? [???]
-        finish();/*Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent); //TODO Chiudi gioco*/
+    public void buttonClose(View v) { //Pressione tasto "Chiudi"
+       CommonUtils.showDialogExit(this);
     }
+
 }
