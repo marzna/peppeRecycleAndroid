@@ -1,12 +1,15 @@
 package com.example.pepperecycle;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.core.app.ActivityCompat;
@@ -39,6 +42,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
     // Store the Animate action.
     private Animate animate;
     private ImageView imageViewMainBackground;
+//    CommonUtils commonUtils = new CommonUtils();
     //    private QiContext qiContext;
 
     @Override
@@ -103,13 +107,12 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .withText("Ciao!\\rspd=95\\") // Set the text to say.
                 .build(); // Build the say action.
         Say sayPresentation = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("\\rspd=95\\io sono Pepper e questo è \\rspd=95\\Pepperisàichel!.") // Set the text to say.
+                .withText("\\rspd=95\\io sono Pepper. e questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
                 .build(); // Build the say action.
-
 
         //TODO -> Bisognerà cambiare l'interazione nel caso dello storytelling
         Say sayPlay = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("\\rspd=95\\Giochiamo insieme?") // Set the text to say.
+                .withText("\\rspd=95\\Accetti la sfida?") // Set the text to say.
                 .build(); // Build the say action.
 
         /*Say sayOther = SayBuilder.with(qiContext) // Create the builder with the context.
@@ -144,7 +147,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
         Future<Void> animateFuture = animate.async().run();
 */
         sayHello.run(); // animateHello.run(); -> Sbagliato (?)
-        animate.run();
+        //animate.run();
         sayPresentation.run();
         sayPlay.run();
 
@@ -215,6 +218,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
     }
 
     public void buttonClose(View v) { //Pressione tasto "Chiudi"
-        finish();
+       CommonUtils.showDialogExit(this);
     }
+
 }

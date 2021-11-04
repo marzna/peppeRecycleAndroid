@@ -51,29 +51,29 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     Button buttonPlay;
     Animate animate;
     String[] factsOrganic = {
-            "L'organico è formato da scarti alimentari e altri rifiuti facilmente biodegradabili",
-            "Una torsolo di mela resta per circa 2 mesi nell'ambiente prima di degradarsi completamente",
-            "Circa un terzo dei rifiuti prodotti da una persona è composto da rifiuti organici?",
-            "Dalla decomposizione dei rifiuti organici, si ottiene il compost, un ottimo concime per il terreno",
-            "Il compost può essere prodotto sia su scala industriale che domestica"
+            "L'organico è formato da scarti alimentari e altri rifiuti facilmente biodegradabili.",
+            "Una torsolo di mela resta per circa 2 mesi nell'ambiente prima di degradarsi completamente.",
+            "Circa un terzo dei rifiuti prodotti da una persona è composto da rifiuti organici.",
+            "Dalla decomposizione dei rifiuti organici, si ottiene il compost, un ottimo concime per il terreno.",
+            "Il compost può essere prodotto sia su scala industriale che domestica."
     };
     String[] factsPlasticMetal = {
-            "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori o imballaggi dei prodotti che compriamo, come la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e tanto altro",
+            "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori o imballaggi dei prodotti che compriamo, come la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e tanto altro.",
             "Una mascherina impiegherebbe tra i 400 e i 450 anni per degradarsi completamente nell'ambiente. Durante questo processo, rilascerebbe micro-particelle di plastica, che, in mare, potrebbero essere ingerite dalle specie marine.",
             "Una lattina di alluminio resta dai 20 ai 100 anni nell'ambiente prima di degradarsi completamente, ecco perché sarebbe meglio riciclarla nell'apposita categoria!",
             "Moltissime creature marine muoiono ogni anno a causa delle buste di platica e della spazzatura che vengono gettate in mare.",
-            "Una bottiglia di plastica resta per circa 450 anni nell'ambiente prima di degradarsi completamente",
-            "L'alluminio può essere riciclato infinite volte, senza perdita di qualità",
+            "Una bottiglia di plastica resta per circa 450 anni nell'ambiente prima di degradarsi completamente.",
+            "L'alluminio può essere riciclato infinite volte, senza perdita di qualità.",
             "In soli due mesi, le lattine di alluminio possono essere riciclate e rimesse in commercio.",
-            "Riciclare una lattina di alluminio farebbe risparmiare l'energia necessaria per poter guardare la tv per circa 3h",
+            "Riciclare una lattina di alluminio farebbe risparmiare l'energia necessaria per poter guardare la tv per circa 3h.",
             "Una lattina di alluminio può essere riciclata usando solo il 5% dell'energia che bisognerebbe impiegare per fabbricarla da 0.",
             "Riciclare la plastica fa risparmiare il doppio dell'energia che verrebbe consumata per bruciarla in un inceneritore.",
             "Riciclare la plastica fa risparmiare l'88% dell'energia che verrebbe consumata per crearla dalle materie prime."
     };
     String[] factsCardCardboard = {
-            "Moltissimi oggetti che usiamo oggi rientrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste",
+            "Moltissimi oggetti che usiamo oggi rientrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
             "Molti degli scontrini attualmente in circolazione vanno gettati nell'indifferenziato, perché sono composti da carte termiche, che, se catalogate come carta e cartone, potrebbero causare problemi durante il riciclo.",
-            "Una scatola di cartone resta per circa 9 mesi nell'ambiente prima di decomporsi completamente",
+            "Una scatola di cartone resta per circa 9 mesi nell'ambiente prima di decomporsi completamente.",
             "Se riciclassimo tutti i giornali, potremmo salvare oltre 250 milioni di alberi ogni anno.",
             "Riciclare un cartone richiede solo il 75% dell'energia necessaria per produrne uno nuovo.",
             "La carta riciclata produce circa il 70% in meno di inquinamento atmosferico rispetto alla sua creazione a partire dalle materie prime."
@@ -83,7 +83,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             "Il vetro mantiene il suo colore anche dopo il riciclo, perciò viene suddiviso in colori.",
             "Una moderna bottiglia di vetro potrebbe impiegare più di 4000 anni per decomporsi del tutto, forse anche di più se si trova in discarica.",
             "Anche gli antichi Romani riciclavano il vetro.",
-            "Circa 7 bottiglie su 10 sono prodotte con vetro riciclato",
+            "Circa 7 bottiglie su 10 sono prodotte con vetro riciclato.",
             "Riciclando 1 chilo di rifiuti in vetro, si otterrà 1 chilo di nuovi prodotti in vetro riciclato, senza perdere nulla!",
 
     };
@@ -125,6 +125,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         Log.e(TAG, "Prima del selectFact.");
         selectFact();
         buttonPlay.setVisibility(View.VISIBLE);
+        buttonPlay.setEnabled(true);
     }
 
 
@@ -136,7 +137,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayRandomFact= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText(factAboutRecycle + ". Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
+                .withText(factAboutRecycle + "Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
                 .build(); // Build the say action.
         Animation sayRandomFactAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione
@@ -154,7 +155,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
                         "passa al prossimo turno", "giochiamo", "prosegui", "proseguiamo",
                         "prosegui con il gioco", "voglio proseguire con il gioco",
                         "voglio proseguire", "voglio andare avanti", "possiamo proseguire",
-                        "possiamo")
+                        "possiamo", "continua", "continuiamo")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
@@ -197,6 +198,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
                     .withAnimation(correctAnswer).build();
             animateCorrect.run();
             Intent activity2Intent = new Intent(getApplicationContext(), PepperTeachesActivity.class);
+            activity2Intent.putExtra("wasteType", wasteType);
             startActivity(activity2Intent);
             finish();
 
@@ -273,6 +275,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         Intent activity2Intent;
         isPepperTurn = !isPepperTurn;
+        tutorialEnabled=false;
         if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
             // TODO sostituisci il 3 con una costante, tipo WINNER_SCORE o simili
             if (isPepperTurn) {
@@ -293,6 +296,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             activity2Intent = new Intent(PepperTeachesActivity.this, GameOverActivity.class);//TODO GameOverActivity
         }
         activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         //activity2Intent.putExtra("scores", (Serializable) scores);
@@ -305,15 +309,13 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-    public void buttonClose(View v) { //Pressione tasto "Chiudi" TODO Togli perché è un duplicato? [???]
-        finish();
-        /* Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent);
-        //TODO Chiudi gioco */
+
+    public void buttonClose(View v) { //Pressione tasto "Chiudi"
+        CommonUtils.showDialogExit(this);
+        //finish();
     }
     public void buttonPlay(View v) {
         nextTurn();
-
     }
 
 }

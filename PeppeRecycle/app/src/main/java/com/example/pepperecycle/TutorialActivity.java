@@ -50,16 +50,12 @@ import java.util.Map;
 
 // Activity contenente il tutorial del gioco
 public class TutorialActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
-    private static final String TAG = "TutorialActivity" ;
+    private static final String TAG = "TutorialActivity";
     // Store the Chat action.
     private Chat chat;
-    private ViewPager mSlideViewPager;
-    private LinearLayout mDotLayout;
     private int pgIndex;//Indice della pagina
     boolean tutorialEnabled;
-    private TextView[] mDots;
 
-    private SliderAdapter sliderAdapter;
 
     private Button buttonNext, buttonPrev, buttonPlay;
     private int mCurrentPage;
@@ -77,57 +73,36 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
         setContentView(R.layout.activity_tutorial);
 
-        mSlideViewPager = (ViewPager) findViewById(R.id.slideViewPager);
-        mDotLayout = (LinearLayout) findViewById(R.id.dotsLayout);
-
-        buttonNext = (Button) findViewById(R.id.buttonNext);
+       /* buttonNext = (Button) findViewById(R.id.buttonNext);
         buttonPrev = (Button) findViewById(R.id.buttonPrev);
+       */
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
 
         pgIndex = 0;
         tutorialEnabled = true;
 
-       /* sliderAdapter = new SliderAdapter(this);
+        //OnClickListeners
+        buttonPlay.setOnClickListener(new View.OnClickListener() {
 
-        mSlideViewPager.setAdapter(sliderAdapter);
-
-        addDotsIndicator(0);
-        mSlideViewPager.addOnPageChangeListener(viewListener);
-
-        Bundle extras = getIntent().getExtras();
-
-        if (extras != null) {
-            mCurrentPage = extras.getByte("mCurrentPage"); // The key argument here must match that used in the other activity
-        }*/
+            @Override
+            public void onClick(View view) {
+                Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
+                activity2Intent.putExtra("tutorialEnabled", false); //TODO va cambiato?
+                startActivity(activity2Intent); //Per iniziare il gioco.
+                finish();
+            }
+        });
 
         //OnClickListeners
-        buttonNext.setOnClickListener(new View.OnClickListener() {
+      /*  buttonNext.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 mSlideViewPager.setCurrentItem(mCurrentPage + 1);
             }
-        });
-
-       /* buttonPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                mSlideViewPager.setCurrentItem(mCurrentPage - 1);
-
-            }
-        });
-
-        buttonPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
-                startActivity(activity2Intent); //Per andare alla pagina principale
-                finish();
-
-            }
         });*/
+
+
     }
 
     //TODO https://www.youtube.com/watch?v=byLKoPgB7yA&ab_channel=TVACStudio
@@ -141,31 +116,8 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
 //        mCurrentPage
         Say tutorialIntro = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Ecco come si gioca: " +
-                        "A turno, il giudice ci mostra un oggetto." +
-                        "Noi dobbiamo indovinare in quale bidone riciclarlo." +
-                        "Poi, il giudice deve dire se la risposta è corretta o no." +
-                        "Chi indovina, guadagnerà un punto!") // Set the text to say.
+                .withText("Ecco come si gioca. a turno, il giudice ci mostra un oggetto e noi dobbiamo indovinare in quale bidone riciclarlo. Poi, il giudice deve dire se la risposta è corretta o no.. Chi indovina, guadagnerà un punto!") // Set the text to say.
                 .build(); // Build the say action.
-        Say sayUserTurn = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Durante il tuo turno." +
-                        "Qui, sul mio tablet, ti mostrerò quattro bidoni: " +
-                        "organico, plastica e metalli, carta e cartone, vetro." +
-                        "Dovrai dirmi dove buttare il rifiuto mostrato dal giudice." +
-                        "Come si fa? È semplice!" +
-                        "Basta che tu mi indichi " +
-                        "la tipologia di rifiuto, il colore del bidone, oppure il numero." +
-                        "Una volta che avrai scelto il bidone," +
-                        "il giudice stabilirà se avrai indovinato o no!") // Set the text to say.
-                .build(); // Build the say action.;
-
-        Say sayPepperTurn = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Durante il mio turno," +
-                        "il giudice mi mostrerà l’oggetto " +
-                        "e dirò dove andrebbe gettato quel rifiuto, secondo me!" +
-                        "Una volta che avrò scelto il bidone," +
-                        "il giudice stabilirà se avrò indovinato o no!") // Set the text to say.
-                .build(); // Build the say action.;
 
         Say askForContinue = SayBuilder.with(qiContext) // Create the builder with the context.
                 .withText("Vuoi fare un turno di prova per imparare a giocare?") // Set the text to say.
@@ -177,7 +129,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .withAnimation(explain).build();
 
         PhraseSet phraseSetNextPage = PhraseSetBuilder.with(qiContext)
-                .withTexts("Si", "è chiaro", "sei stato chiaro", "Ho capito", "Vai avanti", "avanti", "ok", "okay", "ochei")
+                .withTexts("Si", "è chiaro", "sì", "sei stato chiaro", "Ho capito", "Vai avanti", "avanti", "ok", "okay", "ochei")
                 .build();
 
         PhraseSet phraseSetPlay = PhraseSetBuilder.with(qiContext)
@@ -207,29 +159,12 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         animateAskTutorial.run();
         tutorialIntro.run();
         askForContinue.run();
-        /*
-        switch (mCurrentPage) { //in base alla scelta, spiega la pagina diversa
-            case 0:
-                tutorialIntro.run();
-                askForContinue.run();
-                break;
-            case 1:
-                sayUserTurn.run();
-                askForContinue.run();
-                break;
-            case 2:
-                sayPepperTurn.run();
-                break;
-            default:
-                break;
-        }
-        */
 
         Listen listenPlay = ListenBuilder
                 .with(qiContext)
-                .withPhraseSets( phraseSetNextPage, phraseSetBackPage, phraseSetPlay,
+                .withPhraseSets(phraseSetNextPage, phraseSetBackPage, phraseSetPlay,
                         phraseSetRepeatPage, phraseSetRepeatFromPg0, phraseSetBackHome,
-                        phraseSetClose )
+                        phraseSetClose)
                 .build();
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
@@ -254,8 +189,8 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
             //onRobotFocusGained(qiContext);
 
-        }  else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlay)) {       // Va direttamente al gioco, saltando il tutorial
-            Say playGame= SayBuilder.with(qiContext) // Create the builder with the context.
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlay)) {       // Va direttamente al gioco, saltando il tutorial
+            Say playGame = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText("Ochei, allora iniziamo subito a giocare!") // Set the text to say.
                     .build(); // Build the say action.
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -266,7 +201,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
             playGame.run();
             animateCorrect.run();
             Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
-            activity2Intent.putExtra("tutorialEnabled", true);
+            activity2Intent.putExtra("tutorialEnabled", false); //TODO va cambiato?
             startActivity(activity2Intent); //Per iniziare il gioco.
             finish();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeatPage)) {   // Richiesta utente di ripetere
@@ -364,7 +299,20 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
 
     }
-
+    void buttonPlay(View view) {
+        Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
+        activity2Intent.putExtra("tutorialEnabled", false);
+        activity2Intent.putExtra("round", 0);
+        activity2Intent.putExtra("pepperScore", false);
+        activity2Intent.putExtra("userScore", 0);
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        startActivity(activity2Intent);
+        finish();
+        /*Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
+        activity2Intent.putExtra("tutorialEnabled", true);
+        startActivity(activity2Intent); //Per iniziare il gioco.
+        finish();*/
+    }
     @Override
     public void onRobotFocusLost() {
         // Remove on started listeners from the Chat action.
@@ -378,108 +326,15 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
     }
 
-
-/*
-    public void addDotsIndicator(int position) {
-        mDots = new TextView[3]; //TODO il 3?
-        mDotLayout.removeAllViews();
-
-        for(int i = 0; i< mDots.length; i++) {
-            mDots[i] = new TextView(this);
-            mDots[i].setText(Html.fromHtml("&#8226;"));
-            mDots[i].setTextSize(35);
-            mDots[i].setTextColor(getResources().getColor(R.color.colorTransparentWhite));
-            //mDots[i].setTextColor(getResources().getColor(R.color.colorGreenBtn));
-
-            mDotLayout.addView(mDots[i]);
-
-        }
-
-        if(mDots.length > 0) {
-            mDots[position].setTextColor(getResources().getColor(R.color.white));
-        }
+    public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
+        Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
+        activity2Intent.putExtra("tutorialEnabled", true);
+        activity2Intent.putExtra("round", 0);
+        activity2Intent.putExtra("pepperScore", false);
+        activity2Intent.putExtra("userScore", 0);
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        startActivity(activity2Intent);
+        finish();
     }
 
-    ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            addDotsIndicator(position);
-            mCurrentPage = position;
-
-            pgIndex = position; //TODO Rimuovi se inutile?
-            if (position == 0) { //prima pagina
-                Log.d("Tap", "Prima pagina");
-
-                buttonPrev.setEnabled(false);
-                buttonPrev.setVisibility(View.INVISIBLE);
-
-                buttonNext.setEnabled(true);
-
-                buttonPlay.setEnabled(false);
-
-                *//*buttonNext.setText("Avanti     >");
-                buttonPrev.setText("");*//*
-
-            } else if (position == mDots.length - 1) { //ultima pagina
-                Log.d("Tap", "Ultima pagina");
-                buttonPrev.setEnabled(true);
-                buttonPrev.setVisibility(View.VISIBLE);
-
-                buttonNext.setEnabled(false);
-                buttonNext.setVisibility(View.INVISIBLE);
-
-                buttonPlay.setEnabled(true);
-                buttonPlay.setVisibility(View.VISIBLE);
-                //https://youtu.be/byLKoPgB7yA?t=1168
-
-                *//*
-                buttonNext.setBackgroundResource(R.drawable.button_play);
-                buttonNext.setText("Finito");
-                buttonPrev.setText("<     Indietro");
-                *//*
-
-            } else { //pagine intermedie
-
-                Log.d("Tap", "Pagina intermedia");
-
-                buttonPrev.setEnabled(true);
-                buttonPrev.setVisibility(View.VISIBLE);
-
-                buttonNext.setEnabled(true);
-                buttonNext.setVisibility(View.VISIBLE);
-
-                buttonPlay.setEnabled(false);
-                buttonPlay.setVisibility(View.INVISIBLE);
-
-                *//*
-                buttonNext.setBackgroundResource(R.drawable.button_next);
-                buttonNext.setText("Avanti     >");
-                buttonPrev.setText("<     Indietro");
-                *//*
-
-            }
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };*/
-
-/*
-    public void goPrev(View view) {
-
-        mSlideViewPager.setCurrentItem(mCurrentPage - 1);
-    }
-
-    public void goNext(View view) {
-
-        mSlideViewPager.setCurrentItem(mCurrentPage + 1);
-    }*/
 }

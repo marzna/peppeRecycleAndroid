@@ -78,7 +78,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private String garbageType = null; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
-    private String postUrl = "http://c6c0-5-88-202-147.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://0132-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
     private boolean tutorialEnabled;
 
     private boolean isThreadStarted = false;
@@ -180,17 +180,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         finish();
     }
 
-    public void buttonClose(View v) { //Pressione tasto "Chiudi" TODO Togli perché è un duplicato? [???]
-        finish();/*Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent); //TODO Chiudi gioco*/
-    }
-
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
         return false;
     }
-
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         setQiContext(qiContext);
@@ -766,4 +760,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         }
     };
 
+    public void buttonClose(View v) { //Pressione tasto "Chiudi"
+        CommonUtils.showDialogExit(this);
+        //finish();
+    }
 }

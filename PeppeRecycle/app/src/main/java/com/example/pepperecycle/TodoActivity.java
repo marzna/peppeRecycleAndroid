@@ -48,8 +48,8 @@ public class TodoActivity extends RobotActivity implements RobotLifecycleCallbac
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
     }
-    public void buttonClose(View v) { //Pressione tasto "Chiudi" TODO Togli perché è un duplicato? [???]
-        finish();/*Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent); //TODO Chiudi gioco*/
+    public void buttonClose(View v) { //Pressione tasto "Chiudi"
+        CommonUtils.showDialogExit(this);
+        //finish();
     }
 }

@@ -2,13 +2,24 @@ package com.example.pepperecycle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.QiSDK;
@@ -30,11 +41,13 @@ import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
+public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
+    private static final String TAG = "JudgeConfirmActivity" ;//, CameraBridgeViewBase.CvCameraViewListener2{
 
     boolean isPepperTurn, isAnswerCorrect, pressed;
     byte wasteType, round;
@@ -48,6 +61,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     String factAboutRecycle;
     boolean tutorialEnabled;
     boolean pepperTeaches;
+    Dialog dialog;
+    String desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +77,12 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         selectedBinIs = findViewById(R.id.textViewSelectedBinIs);
         selectedBin = findViewById(R.id.selectedBin);
+        desc = "In questa fase del gioco,\n" +
+                "il giudice deve stabilire se la risposta è corretta.\n" +
+                "Chi ha indovinato guadagnerà un punto!";
+
+        dialog = new Dialog(this);
+
 
         Bundle extras = getIntent().getExtras();
 
@@ -274,17 +295,16 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         if(!tutorialEnabled) {
             updateScore(isPepperTurn);
         }
+        buttonye
         Log.e("TAG", "Entrato nel buttonYes.");
 
-        //TODO Decommenta la riga successiva ed elimina quella dopo se hai finito di testare i random facts
-        //nextTurn();TODO DECOMMENTA
-        startPepperTeacher();//TODO ELIMINA
+        nextTurn();//startPepperTeacher();//TODO ELIMINA tutta questa riga
     }
     public void buttonNo(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         isAnswerCorrect = false;
         pressed = true;
         //TODO Se il turno era del bambino, fai dire a Pepper qualcosa random sul riciclo
-        pepperTeaches = pepperTeacher();
+//        pepperTeaches = pepperTeacher();
         nextTurn();
     }
     public void updateScore(boolean isPepperTurn) {
@@ -359,18 +379,20 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         finish();
     }
     public void buttonHelp(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
-        //TODO spiegazione di cosa dovrebbe fare il giudice
+//        showDialog(desc);
+
+        CommonUtils.showDialog(JudgeConfirmActivity.this, desc);
+        //showDialog(desc);
     }
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-    public void buttonClose(View v) { //Pressione tasto "Chiudi" TODO Togli perché è un duplicato? [???]
-        finish();
-        /* Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent);
-        //TODO Chiudi gioco */
+
+    public void buttonClose(View v) { //Pressione tasto "Chiudi"
+        CommonUtils.showDialogExit(this);
+        //finish();
     }
 
     boolean pepperTeacher() {
@@ -379,4 +401,33 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
     }
 
+    public void showDialog(String mex) { //desc sarà il contenuto della finestra di dialogo
+        dialog.setContentView(R.layout.dialog_tutorial_layout);
+        Log.e(TAG, "Entrata nella showDialog");
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_window);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
+        TextView textViewDialogTutorial = (TextView) dialog.findViewById(R.id.textViewDialogTutorial);
+        ImageButton dialogButtonClose = (ImageButton) dialog.findViewById(R.id.dialogButtonClose);
+//TODOhttps://youtu.be/vDAO7H5w4_I
+        Log.e(TAG, "Prima di settext");
+        textViewDialogTutorial.setText(mex);
+        /*textViewDialogTutorial.setText("Qui, sul mio tablet, ci sono quattro bidoni:\n" +
+                "organico, plastica e metalli, carta e cartone, vetro.\n" +
+                "Il giudice ti mostrerà un rifiuto e tu dovrai dirmi in quale bidone buttarlo per un corretto smaltimento.\n" +
+                "Se indovinerai, guadagnerai un punto!");*/
+        Log.e(TAG, "Dopo settext");
+
+        dialogButtonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+
+        });
+
+        Log.e(TAG, "Prima di dialog.show");
+        dialog.show();
+        Log.e(TAG, "Dopo dialog.show");
+
+    }
 }
