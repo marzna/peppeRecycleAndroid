@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/titleTutorial"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:lineSpacingExtra="24sp"
+        android:text="Come si gioca:"
+        android:textSize="34sp" />
+
+    <TextView
+        android:id="@+id/tViewTutorial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleTutorial"
+        android:gravity="center"
+        android:lineSpacingExtra="20sp"
+        android:text="\n
+        A turno, il giudice ci mostrerà un oggetto \n
+        e dovremo indovinare in quale bidone riciclarlo.\n
+        Una volta scelto il tipo di bidone, \n
+        il giudice dovrà dire se la risposta è corretta o no.\n
+        Se sì, si guadagnerà un punto!\n"
+        android:textSize="34sp" />
+</RelativeLayout>

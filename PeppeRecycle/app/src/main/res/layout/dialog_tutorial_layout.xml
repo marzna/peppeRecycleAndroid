@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_centerHorizontal="true"
+    android:layout_centerVertical="true"
+    android:background="@drawable/bg_window">
+
+
+    <TextView
+        android:id="@+id/textViewDialogTutorial"
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialogButtonClose"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:lineSpacingExtra="14sp"
+        android:textSize="20sp" />
+
+    <ImageButton
+        android:id="@+id/dialogButtonClose"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignEnd="@id/textViewDialogTutorial"
+        android:layout_alignParentEnd="false"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/button_close"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+
+</RelativeLayout>

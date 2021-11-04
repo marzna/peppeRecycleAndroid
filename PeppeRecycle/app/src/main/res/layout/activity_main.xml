@@ -21,17 +21,12 @@
     <Button
         android:id="@+id/buttonMenuPlay"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@id/imageViewPeppeRecycle"
         android:layout_centerInParent="true"
-        android:background="@drawable/button_play"
-        android:fontFamily="@font/andika_regular"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:background="@drawable/pepperecyclelogo"
         android:onClick="buttonPlay"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
         android:verticalScrollbarPosition="defaultPosition"
         android:visibility="visible"
         tools:layout_editor_absoluteX="360dp"
@@ -77,7 +72,7 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:verticalScrollbarPosition="defaultPosition"
-        android:visibility="visible"
+        android:visibility="invisible"
         tools:layout_editor_absoluteX="360dp"
         tools:layout_editor_absoluteY="299dp" />
 
@@ -103,7 +98,7 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:verticalScrollbarPosition="defaultPosition"
-        android:visibility="visible"
+        android:visibility="invisible"
         tools:layout_editor_absoluteX="360dp"
         tools:layout_editor_absoluteY="299dp" />
 
@@ -112,6 +107,7 @@
         android:layout_width="620dp"
         android:layout_height="171dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
         android:clickable="false"
         android:contextClickable="false"
         app:srcCompat="@drawable/text_pepperecycle" />

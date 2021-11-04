@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/bg_window">
+
+    <TextView
+        android:id="@+id/textViewTitleCloseGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:lineSpacingExtra="8sp"
+        android:text="Chiusura gioco"
+        android:textColor="#BFFFFFFF"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textViewDialogTutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTitleCloseGame"
+        android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:lineSpacingExtra="14sp"
+        android:text="Vuoi davvero uscire?"
+        android:textColor="#FFFFFF"
+        android:textSize="48sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewDialogTutorial"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/dialogButtonCloseYes"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_answer_img_yes"
+            android:maxWidth="50dp"
+            android:maxHeight="50dp"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/dialogButtonCloseNo"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:background="@drawable/button_answer_img_no"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+</RelativeLayout>

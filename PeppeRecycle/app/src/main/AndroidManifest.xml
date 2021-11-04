@@ -22,6 +22,16 @@
         android:roundIcon="@mipmap/pepperecycle_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+
+        <activity
+            android:name=".TestDBActivity"
+            android:exported="true" />
+        <activity
+            android:name=".PepperTeachesActivity"
+            android:exported="true" />
+        <activity
+            android:name=".PepperClassifyingActivity"
+            android:exported="true" />
         <activity
             android:name=".GameOverActivity"
             android:exported="true" />

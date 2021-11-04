@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bkgr_activity_main"
+    tools:context=".PepperClassifyingActivity">
+
+
+    <TextView
+        android:id="@+id/responseText"
+        android:layout_width="802dp"
+        android:layout_height="102dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal|bottom"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
