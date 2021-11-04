@@ -2,22 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/bkgr_activity_main"
     tools:context=".PlayPepperTurnActivity">
 
     <org.opencv.android.JavaCameraView
         android:id="@+id/my_camera_view"
-        android:layout_width="800dp"
-        android:layout_height="400dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
     <ImageView
         android:id="@+id/imageViewPepperPhoto"
-        android:layout_width="800dp"
-        android:layout_height="400dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
         android:visibility="invisible"
         app:srcCompat="@color/black" />
 
@@ -70,9 +72,10 @@
         android:layout_height="102dp"
         android:layout_alignTop="@id/imageViewPepperPhoto"
         android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal|bottom"
         android:textSize="34sp"
         android:textStyle="bold"
-        android:gravity="center_horizontal|bottom"/>
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/textViewScore"
@@ -81,7 +84,8 @@
         android:gravity="center"
         android:text="Punteggio:"
         android:textColor="#FFFFFF"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/textViewPepperScore"
@@ -91,7 +95,8 @@
         android:gravity="center"
         android:text="-"
         android:textAlignment="center"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/imageViewUserScore"
@@ -99,24 +104,38 @@
         android:layout_height="40dp"
         android:layout_below="@id/imageViewPepperScore"
         android:layout_toRightOf="@id/textViewScore"
+        android:visibility="invisible"
         app:srcCompat="@drawable/user" />
 
     <TextView
         android:id="@+id/textViewUserScore"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:gravity="center"
         android:layout_below="@id/imageViewPepperScore"
         android:layout_toRightOf="@id/imageViewUserScore"
+        android:gravity="center"
         android:text="-"
         android:textAlignment="center"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/imageViewPepperScore"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_toRightOf="@id/textViewScore"
+        android:visibility="invisible"
         app:srcCompat="@drawable/pepper_face" />
+
+    <TextView
+        android:id="@+id/textViewShowMeObj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Per piacere, inquadra l'oggetto e premi sul pulsante verde, così posso vederlo bene!"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
 </RelativeLayout>

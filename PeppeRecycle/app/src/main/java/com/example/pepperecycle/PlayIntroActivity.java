@@ -182,8 +182,8 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-    public void buttonClose(View v) { //Pressione tasto "Chiudi" TODO Togli perché è un duplicato? [???]
-        finish();/*Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent); //TODO Chiudi gioco*/
+    public void buttonClose(View v) { //Pressione tasto "Chiudi"
+        CommonUtils.showDialogExit(this);
+        //finish();
     }
 }

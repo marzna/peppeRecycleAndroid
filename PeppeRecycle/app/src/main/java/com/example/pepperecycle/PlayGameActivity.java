@@ -66,7 +66,6 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
         }
 
-
         /*TODO metti qui l'assegnazione del primo turno*/
         startGame();
     }
@@ -107,12 +106,17 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         //TODO Unboxing of 'scores.get("score_user1")' may produce 'NullPointerException'
         //for (int round = 0; round<N_TURNS; round++ ) {
         Intent activity2Intent;
-        if (isPepperTurn) {         // Se tocca a Pepper
-            activity2Intent = new Intent(PlayGameActivity.this, PlayPepperTurnActivity.class);//TODO turno di Pepper
-            // activity2Intent.putExtra("score", score);
-            // Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        } else {                    // Se tocca all'utente
+        if(tutorialEnabled) {
+            isPepperTurn=false;
             activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);//TODO turno utente
+        } else {
+            if (isPepperTurn) {         // Se tocca a Pepper
+                activity2Intent = new Intent(PlayGameActivity.this, PlayPepperTurnActivity.class);//TODO turno di Pepper
+                // activity2Intent.putExtra("score", score);
+                // Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
+            } else {                    // Se tocca all'utente
+                activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);//TODO turno utente
+            }
         }
         activity2Intent.putExtra("round", round);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)

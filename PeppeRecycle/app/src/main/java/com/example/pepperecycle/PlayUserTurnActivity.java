@@ -1,9 +1,13 @@
 package com.example.pepperecycle;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiContext;
@@ -25,11 +29,14 @@ import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
+import org.w3c.dom.Text;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
+public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
+    private static final String TAG = "PlayUserTurnActivity" ;//, CameraBridgeViewBase.CvCameraViewListener2{
     byte round;
     boolean isPepperTurn;
     byte wasteType=-1; //0=Organico, 1=Carta/Cartone, 2=Plastica/Metalli, 3=Vetro
@@ -48,20 +55,28 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     // Store the Animate action.
     private Animate animate;
 
+    Dialog dialog;
 
+    CommonUtils commonUtils = new CommonUtils();
+    String desc;
+    ImageButton buttonHelp;
+    boolean canCloseApp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
 
+        setContentView(R.layout.activity_play_user_turn);
+
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
-        setContentView(R.layout.activity_play_user_turn);
         isPepperTurn=false;
         textViewUserScore = findViewById(R.id.textViewUserScore);
         textViewPepperScore = findViewById(R.id.textViewPepperScore);
+        dialog = new Dialog(this);
+        canCloseApp = false;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
@@ -79,6 +94,30 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             textViewPepperScore.setText("Non valido");
             textViewUserScore.setText("Non valido");
         }*/
+
+        desc = "Qui, sul mio tablet, ci sono quattro bidoni:\n" +
+                "organico, carta e cartone, plastica e metalli, vetro.\n" +
+                "Il giudice ti mostrerà un rifiuto e tu dovrai dirmi in quale bidone buttarlo per un corretto smaltimento.\n" +
+                "Se indovinerai, guadagnerai un punto.\n" +
+                "Buona fortuna!";
+
+
+        buttonHelp = findViewById(R.id.buttonHelp);
+        buttonHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CommonUtils.showDialog(PlayUserTurnActivity.this, desc);
+                //showDialog(desc);
+            }
+
+        });
+/*
+
+        if(canCloseApp) {
+            finish();
+        }
+*/
+
     }
     void showScore () {
         textViewPepperScore.setText(""+pepperScore);
@@ -105,11 +144,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         Animate animateUserTurn = AnimateBuilder.with(qiContext)
                 .withAnimation(explain).build();
         Say sayUserTurnTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Qui, sul mio tablet, ci sono quattro bidoni: " +
-                        "organico, plastica e metalli, carta e cartone, vetro." +
-                        "Il giudice ti mostrerà un rifiuto e tu dovrai dirmi in quale bidone buttarlo per un corretto smaltimento." +
-                        "Se indovinerai, guadagnerai un punto!" +
-                        "Giudice, per favore, mostraci l'oggetto, così da iniziare subito con un turno di prova! ") // Set the text to say.
+                .withText("Qui, sul mio tablet, ci sono quattro bidoni: organico, carta e cartone, plastica e metalli, vetro. Il giudice ti mostrerà un rifiuto e tu dovrai dirmi in quale bidone buttarlo per un corretto smaltimento. Se indovinerai, guadagnerai un punto.! Giudice, per favore, mostraci l'oggetto, così da iniziare subito con un turno di prova.! ") // Set the text to say.
                 .build(); // Build the say action.;
 
         Say sayUserTurnExplain= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -161,16 +196,16 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBrownBin)) {             // Utente seleziona il bidone dell'organico
             wasteType = TYPE_ORGANIC;
-//            ackSelectedBin(qiContext);
+            ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBlueBin)) {      // Utente seleziona il bidone carta e cartone
             wasteType = TYPE_PAPER_CARDBOARD;
-//            ackSelectedBin(qiContext);
+            ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectYellowBin)) {      // Utente seleziona il bidone plastica e metalli
             wasteType = TYPE_PLASTIC_METAL;
-//            ackSelectedBin(qiContext);
+            ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectGreenBin)) {      // Utente seleziona il bidone vetro
             wasteType = TYPE_GLASS;
-//            ackSelectedBin(qiContext);
+            ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
@@ -313,18 +348,77 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         askForConfirm();
     }
     public void buttonHelp(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
-        //TODO
+        showDialog(desc);
     }
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-    public void buttonClose(View v) { //Pressione tasto "Chiudi" TODO Togli perché è un duplicato? [???]
-        finish();
-        /* Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent);
-        //TODO Chiudi gioco
-           */
+
+    public void buttonClose(View v) { //Pressione tasto "Chiudi"
+        CommonUtils.showDialogExit(this);
+        //finish();
     }
+
+    public void showDialog(String mex) { //desc sarà il contenuto della finestra di dialogo
+        dialog.setContentView(R.layout.dialog_tutorial_layout);
+        Log.e(TAG, "Entrata nella showDialog");
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_window);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
+        TextView textViewDialogTutorial = (TextView) dialog.findViewById(R.id.textViewDialogTutorial);
+        ImageButton dialogButtonClose = (ImageButton) dialog.findViewById(R.id.dialogButtonClose);
+        //TODOhttps://youtu.be/vDAO7H5w4_I
+        Log.e(TAG, "Prima di settext");
+        textViewDialogTutorial.setText(mex);
+        /*textViewDialogTutorial.setText("Qui, sul mio tablet, ci sono quattro bidoni:\n" +
+                "organico, plastica e metalli, carta e cartone, vetro.\n" +
+                "Il giudice ti mostrerà un rifiuto e tu dovrai dirmi in quale bidone buttarlo per un corretto smaltimento.\n" +
+                "Se indovinerai, guadagnerai un punto!");*/
+        Log.e(TAG, "Dopo settext");
+
+        dialogButtonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+
+        });
+
+        Log.e(TAG, "Prima di dialog.show");
+        dialog.show();
+        Log.e(TAG, "Dopo dialog.show");
+
+    }
+
+/*
+    public void showDialogExit() { //desc sarà il contenuto della finestra di dialogo
+        dialog.setContentView(R.layout.dialog_exit_confirm_layout);
+        dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_window);
+        Log.e(TAG, "Entrata nella showDialog");
+//        dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_window);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
+
+        ImageButton dialogButtonCloseYes = (ImageButton) dialog.findViewById(R.id.dialogButtonCloseYes);
+        ImageButton dialogButtonCloseNo = (ImageButton) dialog.findViewById(R.id.dialogButtonCloseNo);
+
+        dialogButtonCloseYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+
+        });
+        dialogButtonCloseNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+
+        });
+        Log.e(TAG, "Prima di dialog.show");
+        dialog.show();
+        Log.e(TAG, "Dopo dialog.show");
+
+    }*/
 }

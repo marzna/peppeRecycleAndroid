@@ -80,6 +80,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_play"
+        android:onClick="buttonPlay"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:textAllCaps="false"

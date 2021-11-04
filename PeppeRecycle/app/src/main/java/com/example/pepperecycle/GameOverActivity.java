@@ -10,10 +10,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiContext;
+import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
+import com.aldebaran.qi.sdk.builder.AnimateBuilder;
+import com.aldebaran.qi.sdk.builder.AnimationBuilder;
+import com.aldebaran.qi.sdk.builder.ListenBuilder;
+import com.aldebaran.qi.sdk.builder.PhraseSetBuilder;
+import com.aldebaran.qi.sdk.builder.SayBuilder;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
+import com.aldebaran.qi.sdk.object.actuation.Animate;
+import com.aldebaran.qi.sdk.object.actuation.Animation;
+import com.aldebaran.qi.sdk.object.conversation.Listen;
+import com.aldebaran.qi.sdk.object.conversation.ListenResult;
+import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
+import com.aldebaran.qi.sdk.object.conversation.Say;
+import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +40,12 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     byte userScore;
     TextView textViewResult;
     ImageView imageViewResult;
-
+    String result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        QiSDK.register(this, this);
 
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
@@ -51,9 +66,10 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
         }
         if (pepperScore > userScore ) {     // if (pepperScore == 3 ) { //if(scores.get("score_pepper") == 3 ) {
             userLoser();
+            result = "Oh no, hai perso!";
         } else {//} else if (scores.get("score_user1") == 3) {
-            textViewResult.setText("pepper: " + pepperScore + "\nuser: " + userScore);
-            //userWinner();
+            userWinner();
+            result = "Congratulazioni, hai vinto!";
         }
 //        showScore();
     }
@@ -64,8 +80,85 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     }
 
     @Override
-    public void onRobotFocusGained(QiContext qiContext) {
+    public void onRobotFocusGained(QiContext qiContext) { //TODO TESTARE TUTTA QUESTA FUNZIONE
+        Say sayResult= SayBuilder.with(qiContext) // Create the builder with the context.
+                .withText(result + "Ti andrebbe di fare un'altra partita?") // Set the text to say.
+                .build(); // Build the say action.
+        Animation resultAnim = AnimationBuilder.with(qiContext)
+                .withResources(R.raw.question_right_hand_a001) //TODO Animazione triste
+                .build();
+        Animate animateResult = AnimateBuilder.with(qiContext)
+                .withAnimation(resultAnim)
+                .build();
 
+        sayResult.run();
+//      animateResult.run();
+
+        PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
+                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "ochei", "Giochiamo",
+                        "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita")
+                .build();
+
+        /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
+                .withTexts("Non lo so", "bo", "Aiutami Pepper").build(); //TODO idk */
+
+        PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
+                .withTexts("No", "no Pepper", "Pepper no", "non mi va", "non posso", "non voglio", "non mi andrebbe", "non voglio giocare")
+                .build();
+
+        PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
+                .withTexts("Ripeti", /*"Ricominciamo", "Ricomincia",*/ "Da capo", "Non ho capito", "Puoi ripetere")
+                .build();
+
+        PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
+                .withTexts("Torna", "Indietro", "Home")
+                .build();
+
+        PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
+                .withTexts("Chiudi il gioco", "Esci", "Basta", "voglio andare via")
+                .build();
+
+        Listen listenPlay = ListenBuilder
+                .with(qiContext)
+                .withPhraseSets(phraseSetYes, phraseSetNo, phraseSetClose, phraseSetHome)
+                .build();
+        ListenResult listenResult = listenPlay.run();
+        PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
+
+        if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
+            Say sayNewGame= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                    .withText("Perfetto, allora iniziamo subito un'altra partita!!") // Set the text to say.
+                    .build(); // Build the say action.
+            sayNewGame.run();
+            newGame();
+
+        } else if ( (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) ||
+                    (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome))) {     // Torna alla home
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.affirmation_a002).build();
+            Animate animateCorrect = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+            animateCorrect.run();
+            Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(activity2Intent); //Per iniziare il gioco.
+            finish();
+
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.hello_a004).build();
+            Animate animate = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+
+            Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Va bene, sto chiudendo il gioco. Spero di rivederti presto!") // Set the text to say.
+                    .build(); // Build the say action.
+
+            sayGoodbye.run();
+            animate.run();
+
+            finish();
+
+        }
     }
 
     @Override
@@ -83,7 +176,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     }*/
 
     void userWinner() {
-        textViewResult.setText("Congratulazioni,\nhai vinto!");
+        textViewResult.setText("Congratulazioni,\nhai vinto!\nPepper: " + pepperScore + "\nUser: " + userScore);
         imageViewResult.setImageResource(R.drawable.trophy);
     }
     void userLoser() {
@@ -96,10 +189,17 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-    public void buttonClose(View v) { //Pressione tasto "Chiudi" TODO Togli perché è un duplicato? [???]
-        finish();
-        /* Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent);
-        //TODO Chiudi gioco */
+
+    public void buttonClose(View v) { //Pressione tasto "Chiudi"
+        CommonUtils.showDialogExit(this);
+        //finish();
     }
+
+    void newGame() { //TODO Da testare
+        Intent activity2Intent = new Intent(GameOverActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
+        activity2Intent.putExtra("tutorialEnabled", false);
+        startActivity(activity2Intent);
+        finish();
+    }
+
 }
