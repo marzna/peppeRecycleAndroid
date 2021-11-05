@@ -22,7 +22,15 @@
         android:roundIcon="@mipmap/pepperecycle_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-
+        <activity
+            android:name=".TutorialEndActivity"
+            android:exported="true" />
+        <activity
+            android:name=".TutorialActivity2"
+            android:exported="true" />
+        <activity
+            android:name=".TutorialActivity1"
+            android:exported="true" />
         <activity
             android:name=".TestDBActivity"
             android:exported="true" />

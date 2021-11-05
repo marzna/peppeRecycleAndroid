@@ -1,0 +1,100 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.PeppeRecycleAndroid"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+8-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="31" />
+9-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.CAMERA" />
+11-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:5:5-64
+11-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:5:22-62
+12    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- >Per salvare la foto -->
+12-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:6:5-80
+12-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:6:22-78
+13    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- >Per caricare la foto -->
+13-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:7:5-79
+13-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:7:22-77
+14    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> <!-- >Per caricare la foto -->
+14-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:8:5-81
+14-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:8:22-79
+15    <uses-permission android:name="android.permission.INTERNET" />
+15-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:9:5-66
+15-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:9:22-64
+16    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+16-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:10:5-78
+16-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:10:22-76
+17
+18    <uses-feature android:name="android.hardware.camera" />
+18-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:12:5-59
+18-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:12:19-57
+19    <uses-feature android:name="android.hardware.camera.autofocus" />
+19-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:13:5-69
+19-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:13:19-67
+20    <uses-feature android:name="android.hardware.camera.front" />
+20-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:14:5-65
+20-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:14:19-63
+21    <uses-feature android:name="android.hardware.camera.front.autofocus" />
+21-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:15:5-75
+21-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:15:19-73
+22"
+23    <uses-feature android:name="com.softbank.hardware.pepper" />
+23-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:18:5-64
+23-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:18:19-62
+24
+25    <uses-permission android:name="com.aldebaran.permission.ROBOT" /> <!-- android:usesCleartextTraffic="true" dovrebbe risolvere il problema CLEARTEXT communication to 0332-37-162-36-43.ngrok.io not permitted by network security policy -->
+25-->[com.aldebaran:qisdk:1.7.5] C:\Users\marzna\.gradle\caches\transforms-2\files-2.1\9283d7284cb59d0434b19b86b0f0a364\jetified-qisdk-1.7.5\AndroidManifest.xml:10:5-70
+25-->[com.aldebaran:qisdk:1.7.5] C:\Users\marzna\.gradle\caches\transforms-2\files-2.1\9283d7284cb59d0434b19b86b0f0a364\jetified-qisdk-1.7.5\AndroidManifest.xml:10:22-67
+26    <application
+26-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:20:5-38:19
+27        android:allowBackup="true"
+27-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:23:9-35
+28        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+28-->[androidx.core:core:1.5.0] C:\Users\marzna\.gradle\caches\transforms-2\files-2.1\5c4786bccfbaefa0f187e0e56044e26d\core-1.5.0\AndroidManifest.xml:24:18-86
+29        android:debuggable="true"
+30        android:extractNativeLibs="false"
+31        android:icon="@mipmap/icon_pepper_recycle0"
+31-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:24:9-52
+32        android:label="@string/app_name"
+32-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:25:9-41
+33        android:requestLegacyExternalStorage="true"
+33-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:22:9-52
+34        android:roundIcon="@mipmap/icon_pepper_recycle0_round"
+34-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:26:9-63
+35        android:supportsRtl="true"
+35-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:27:9-35
+36        android:theme="@android:style/Theme.NoTitleBar"
+36-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:28:9-56
+37        android:usesCleartextTraffic="true" >
+37-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:21:9-44
+38        <activity
+38-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:29:9-37:20
+39            android:name="com.example.pepperecycleandroid.MainActivity"
+39-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:30:13-72
+40            android:exported="true" >
+40-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:31:13-36
+41            <intent-filter>
+41-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:32:13-36:29
+42                <action android:name="android.intent.action.MAIN" />
+42-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:33:17-69
+42-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:33:25-66
+43
+44                <category android:name="android.intent.category.LAUNCHER" />
+44-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:35:17-77
+44-->C:\Users\marzna\backuPepper\PeppeRecycleAndroid\app\src\main\AndroidManifest.xml:35:27-74
+45            </intent-filter>
+46        </activity>
+47
+48        <meta-data
+48-->[com.aldebaran:qisdk:1.7.5] C:\Users\marzna\.gradle\caches\transforms-2\files-2.1\9283d7284cb59d0434b19b86b0f0a364\jetified-qisdk-1.7.5\AndroidManifest.xml:16:9-18:53
+49            android:name="qisdk_version"
+49-->[com.aldebaran:qisdk:1.7.5] C:\Users\marzna\.gradle\caches\transforms-2\files-2.1\9283d7284cb59d0434b19b86b0f0a364\jetified-qisdk-1.7.5\AndroidManifest.xml:17:13-41
+50            android:value="@string/qisdk_version" />
+50-->[com.aldebaran:qisdk:1.7.5] C:\Users\marzna\.gradle\caches\transforms-2\files-2.1\9283d7284cb59d0434b19b86b0f0a364\jetified-qisdk-1.7.5\AndroidManifest.xml:18:13-50
+51    </application>
+52
+53</manifest>

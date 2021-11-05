@@ -1,0 +1,2 @@
+ninja: Entering directory `C:\Users\marzna\AndroidStudioProjects\ProvaCamera0913\openCVLibrary452\.cxx\Debug\224vn646\x86'
+ninja: no work to do.

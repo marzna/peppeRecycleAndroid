@@ -1,0 +1,9 @@
+com/example/pepperecycleandroid/BuildConfig.java
+ com.example.pepperecycleandroid.BuildConfig
+com/example/pepperecycleandroid/ClientManager.java
+ com.example.pepperecycleandroid.ClientManager
+com/example/pepperecycleandroid/imageUtils.java
+ com.example.pepperecycleandroid.imageUtils
+com/example/pepperecycleandroid/MainActivity.java
+ com.example.pepperecycleandroid.MainActivity
+ com.example.pepperecycleandroid.MainActivity$1

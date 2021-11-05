@@ -1,0 +1,39 @@
+{
+  "stringTable": {},
+  "buildFiles": [
+    "C:\\Users\\marzna\\AndroidStudioProjects\\ProvaCamera0913\\openCVLibrary452\\libcxx_helper\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\marzna\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\marzna\\AndroidStudioProjects\\ProvaCamera0913\\openCVLibrary452\\.cxx\\Debug\\224vn646\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\marzna\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\marzna\\AndroidStudioProjects\\ProvaCamera0913\\openCVLibrary452\\.cxx\\Debug\\224vn646\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "opencv_jni_shared-Debug-x86": {
+      "buildCommandComponents": [
+        "C:\\Users\\marzna\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+        "-C",
+        "C:\\Users\\marzna\\AndroidStudioProjects\\ProvaCamera0913\\openCVLibrary452\\.cxx\\Debug\\224vn646\\x86",
+        "opencv_jni_shared"
+      ],
+      "buildType": "debug",
+      "abi": "x86",
+      "artifactName": "opencv_jni_shared",
+      "output": "C:\\Users\\marzna\\AndroidStudioProjects\\ProvaCamera0913\\openCVLibrary452\\.cxx\\Debug\\224vn646\\x86\\libopencv_jni_shared.a"
+    }
+  },
+  "toolchains": {},
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

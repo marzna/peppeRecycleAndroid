@@ -1,0 +1,7 @@
+Executable : C:\Users\marzna\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\ninja.exe
+arguments : 
+-C
+C:\Users\marzna\backuPepper\PeppeRecycleAndroid\openCVLibrary452\.cxx\cmake\debug\arm64-v8a
+opencv_jni_shared
+jvmArgs : 
+
