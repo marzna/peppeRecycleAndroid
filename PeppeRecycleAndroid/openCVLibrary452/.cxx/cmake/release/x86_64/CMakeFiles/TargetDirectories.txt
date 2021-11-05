@@ -1,3 +1,0 @@
-C:/Users/marzna/AndroidStudioProjects/TestPepperOk/openCVLibrary452/.cxx/cmake/release/x86_64/CMakeFiles/opencv_jni_shared.dir
-C:/Users/marzna/AndroidStudioProjects/TestPepperOk/openCVLibrary452/.cxx/cmake/release/x86_64/CMakeFiles/edit_cache.dir
-C:/Users/marzna/AndroidStudioProjects/TestPepperOk/openCVLibrary452/.cxx/cmake/release/x86_64/CMakeFiles/rebuild_cache.dir
