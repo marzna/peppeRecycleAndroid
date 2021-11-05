@@ -8,6 +8,7 @@
     android:layout_alignRight="@id/binBrown"
     android:layout_centerHorizontal="true"
     android:background="@drawable/bkgr_bins"
+    android:animateLayoutChanges="true"
     tools:context=".PlayUserTurnActivity">
 
     <!--   android:background="@drawable/bkgr_bins_wrong"-->
@@ -57,105 +58,157 @@
         tools:layout_editor_absoluteX="360dp"
         tools:layout_editor_absoluteY="299dp"/>
 
-    <ImageButton
-        android:id="@+id/binBrown"
-        android:layout_width="230dp"
-        android:layout_height="338dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="0dp"
-        android:background="@drawable/bin_brown_shadow"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="selectBinBrown"/>
+    <!--Sezione Bidoni-->
+    <LinearLayout
+        android:id="@+id/binsTVLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/guessBin"
+        android:layout_centerHorizontal="false"
+        android:layout_marginStart="15dp"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal">
 
-    <ImageButton
-        android:id="@+id/binBlue"
-        android:layout_width="230dp"
-        android:layout_height="338dp"
-        android:layout_alignBottom="@id/binBrown"
-        android:layout_marginBottom="0dp"
-        android:layout_toRightOf="@id/binBrown"
-        android:background="@drawable/bin_blue_shadow"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="selectBinBlue" />
 
-    <ImageButton
-        android:id="@+id/binYellow"
-        android:layout_width="230dp"
-        android:layout_height="338dp"
-        android:layout_alignBottom="@id/binBlue"
-        android:layout_marginBottom="0dp"
-        android:layout_toRightOf="@id/binBlue"
-        android:background="@drawable/bin_yellow_shadow"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="selectBinYellow"/>
+        <TextView
+            android:id="@+id/textViewBinBrown"
+            android:layout_width="230dp"
+            android:layout_height="29dp"
+            android:text="Organico"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
 
-    <ImageButton
-        android:id="@+id/binGreen"
-        android:layout_width="230dp"
-        android:layout_height="338dp"
-        android:layout_alignBottom="@id/binYellow"
-        android:layout_marginBottom="0dp"
-        android:layout_toRightOf="@id/binYellow"
-        android:background="@drawable/bin_green_shadow"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="selectBinGreen"/>
+        <TextView
+            android:id="@+id/textViewBinBlue"
+            android:layout_width="230dp"
+            android:layout_height="29dp"
+            android:text="Carta e Cartone"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewBinYellow"
+            android:layout_width="230dp"
+            android:layout_height="29dp"
+            android:text="Plastica e Metalli"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewBinGreen"
+            android:layout_width="230dp"
+            android:layout_height="29dp"
+            android:text="Vetro"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/binsIVLayout"
+        android:layout_width="920dp"
+        android:layout_height="1352dp"
+        android:layout_below="@id/binsTVLayout"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/binBrown"
+            android:layout_width="230dp"
+            android:layout_height="338dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/closed_bin_brown_shadow"
+            android:maxWidth="230dp"
+            android:maxHeight="338dp"
+            android:onClick="selectBinBrown"
+            android:scaleType="center" />
+
+        <ImageButton
+            android:id="@+id/binBlue"
+            android:layout_width="230dp"
+            android:layout_height="338dp"
+            android:layout_alignBottom="@id/binBrown"
+            android:layout_toRightOf="@id/binBrown"
+            android:background="@drawable/closed_bin_blue_shadow"
+            android:maxWidth="230dp"
+            android:maxHeight="338dp"
+            android:onClick="selectBinBlue"
+            android:scaleType="center" />
+
+        <ImageButton
+            android:id="@+id/binYellow"
+            android:layout_width="230dp"
+            android:layout_height="338dp"
+            android:layout_alignBottom="@id/binBlue"
+            android:layout_toRightOf="@id/binBlue"
+            android:background="@drawable/closed_bin_yellow_shadow"
+            android:maxWidth="230dp"
+            android:maxHeight="338dp"
+            android:onClick="selectBinYellow"
+            android:scaleType="center" />
+
+        <ImageButton
+            android:id="@+id/binGreen"
+            android:layout_width="230dp"
+            android:layout_height="338dp"
+            android:layout_toRightOf="@id/binYellow"
+            android:background="@drawable/closed_bin_green_shadow"
+            android:maxWidth="230dp"
+            android:maxHeight="338dp"
+            android:onClick="selectBinGreen"
+            android:scaleType="center" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/textViewBinBrown"
-        android:layout_width="166dp"
-        android:layout_height="29dp"
-        android:layout_above="@id/binBrown"
-        android:layout_alignLeft="@id/binBrown"
-        android:text="Organico"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp" />
+        android:id="@+id/tvTutorial"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="false"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Turno di prova"
+        android:textAllCaps="true"
+        android:textColor="#FFEB3B"
+        android:textSize="30dp"
+        android:textStyle="bold|italic" />
+    <!-- -->
 
     <TextView
-        android:id="@+id/textViewBinBlue"
-        android:layout_width="166dp"
-        android:layout_height="29dp"
-        android:layout_above="@id/binBlue"
-        android:layout_alignLeft="@id/binBlue"
-        android:text="Carta e Cartone"
-        android:textAlignment="center"
+        android:id="@+id/tvYourTurn"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="false"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/textViewUserScore"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="È il tuo turno!"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/textViewBinYellow"
-        android:layout_width="166dp"
-        android:layout_height="29dp"
-        android:layout_above="@id/binYellow"
-        android:layout_alignLeft="@id/binYellow"
-        android:text="Plastica e Metalli"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/textViewBinGreen"
-        android:layout_width="166dp"
-        android:layout_height="29dp"
-        android:layout_above="@id/binGreen"
-        android:layout_alignLeft="@id/binGreen"
-        android:text="Vetro"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"/>
+        android:textSize="34sp"
+        android:textStyle="bold|italic" />
 
     <TextView
         android:id="@+id/guessBin"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/textViewBinBrown"
         android:layout_below="@id/imageViewUserScore"
         android:layout_centerHorizontal="true"
+        android:layout_margin="25dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="35dp"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:lineSpacingExtra="8sp"
-        android:text="È il tuo turno!\nIn quale bidone dobbiamo buttare questo rifiuto?"
+        android:text="In quale bidone dobbiamo buttare questo rifiuto?"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
@@ -172,7 +225,8 @@
         android:gravity="center"
         android:text="-"
         android:textAlignment="center"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="34sp" />
 
     <ImageView
         android:id="@+id/imageViewUserScore"
@@ -191,14 +245,15 @@
         android:gravity="center"
         android:text="-"
         android:textAlignment="center"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="34sp" />
 
     <ImageView
         android:id="@+id/imageViewPepperScore"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/textViewScore"
         app:srcCompat="@drawable/pepper_face" />
+
 
 </RelativeLayout>
