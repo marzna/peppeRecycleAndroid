@@ -11,9 +11,17 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+<<<<<<< HEAD
+import android.view.ViewPropertyAnimator;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+=======
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -63,6 +71,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     boolean pepperTeaches;
     Dialog dialog;
     String desc;
+<<<<<<< HEAD
+    Button buttonYes, buttonNo;
+=======
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +89,13 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         selectedBinIs = findViewById(R.id.textViewSelectedBinIs);
         selectedBin = findViewById(R.id.selectedBin);
+<<<<<<< HEAD
+
+        buttonYes = findViewById(R.id.buttonAnswerYes);
+        buttonNo = findViewById(R.id.buttonAnswerNo);
+
+=======
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         desc = "In questa fase del gioco,\n" +
                 "il giudice deve stabilire se la risposta è corretta.\n" +
                 "Chi ha indovinato guadagnerà un punto!";
@@ -97,6 +116,51 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
+<<<<<<< HEAD
+
+        //OnClickListeners
+        buttonYes.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Log.e("TAG", "buttonYes cliccato");
+                //Il punteggio viene incrementato solo se la risposta è corretta
+                isAnswerCorrect = true;
+                pressed = true;
+                if(!tutorialEnabled) { // Incrementa il punteggio solo se non si tratta di un turno di prova
+                    updateScore(isPepperTurn);
+                    Log.e("TAG", "Punteggio incrementato.");
+                } else {
+                    Log.e("TAG", "Turno di prova. Punteggio non incrementato.");
+                }
+                //Rendo i bottoni non cliccabili per evitare di incrementare ulteriormente i punteggi
+//                buttonYes.setClickable(false);
+//                buttonNo.setClickable(false);
+
+                nextTurn(); //startPepperTeacher();//TODO ELIMINA tutta questa riga
+            }
+        });
+
+        buttonNo.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Log.e("TAG", "buttonNo cliccato");
+                isAnswerCorrect = false;
+                pressed = true;
+                //TODO Se il turno era dell'utente, fai dire a Pepper qualcosa random sul riciclo o no?
+                //pepperTeaches = pepperTeacher();
+
+                //Rendo i bottoni non cliccabili
+//                buttonYes.setClickable(false);
+//                buttonNo.setClickable(false);
+
+                nextTurn();
+            }
+        });
+
+=======
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         startJudgeConfirm();
     }
 
@@ -109,7 +173,14 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     public void onRobotFocusGained(QiContext qiContext) {
         //        ackSelectedBin(qiContext); // Pepper dice all'utente qual è il bidone selezionato
         checkBin();
+<<<<<<< HEAD
+        Say selectedBin = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                .withText(typeBinSelectedIs) // Set the text to say.
+                .build(); // Build the say action.
+        Say sayAskForConfirm = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+=======
         Say sayAskForConfirm= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
                 .withText("Giudice, la risposta è corretta?") // Set the text to say.
                 .build(); // Build the say action.
         Animation askForConfirm = AnimationBuilder.with(qiContext)
@@ -119,6 +190,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 .withAnimation(askForConfirm)
                 .build();
 
+<<<<<<< HEAD
+        selectedBin.run();
+=======
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         sayAskForConfirm.run();
         animateAskForConfirm.run();
 
@@ -213,33 +288,69 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         int randomFact = new Random().nextInt(factType.length);
         return factType[randomFact];
     }
+<<<<<<< HEAD
+    String typeBinSelectedIs ;
+    void startJudgeConfirm() {
+        switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
+            case 0: // case "organic":
+                typeBinSelectedIs = "Il bidone selezionato è quello dell'organico.";
+//                selectedBinIs.setText("Il bidone selezionato è quello\ndell'organico");
+=======
 
     void startJudgeConfirm() {
         switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
             case 0: // case "organic":
                 selectedBinIs.setText("Il bidone selezionato è quello\ndell'organico");
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
                 selectedBin.setImageResource(R.drawable.bin_brown_shadow);
 //                factAboutRecycle = setFactRecycle(factsOrganic);
                 break;
             case 1: // case "paper": case "cardboard":
+<<<<<<< HEAD
+                typeBinSelectedIs = "Il bidone selezionato è quello di carta e cartone.";
+//                selectedBinIs.setText("Il bidone selezionato è quello\ndi carta e cartone");
+=======
                 selectedBinIs.setText("Il bidone selezionato è quello\ndi carta e cartone");
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
                 selectedBin.setImageResource(R.drawable.bin_blue_shadow);
 //                factAboutRecycle = setFactRecycle(factsCardCardboard);
                 break;
             case 2: // case "plastic": case "metal":
+<<<<<<< HEAD
+                typeBinSelectedIs = "Il bidone selezionato è quello di plastica e metalli.";
+//                selectedBinIs.setText("Il bidone selezionato è quello\ndi plastica e metalli");
+=======
                 selectedBinIs.setText("Il bidone selezionato è quello\ndi plastica e metalli");
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
                 selectedBin.setImageResource(R.drawable.bin_yellow_shadow);
 //                factAboutRecycle = setFactRecycle(factsPlasticMetal);
                 break;
             case 3: // case "glass":
+<<<<<<< HEAD
+                typeBinSelectedIs = "Il bidone selezionato è quello del vetro.";
+//                selectedBinIs.setText("Il bidone selezionato è quello\ndel vetro");
+=======
                 selectedBinIs.setText("Il bidone selezionato è quello\ndel vetro");
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
                 selectedBin.setImageResource(R.drawable.bin_green_shadow);
 //                factAboutRecycle = setFactRecycle(factsGlass);
                 break;
             default:
+<<<<<<< HEAD
+                typeBinSelectedIs = "Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno";
+                //TODO GOBACK
+                selectedBin.setVisibility(View.INVISIBLE);
+                buttonYes.setVisibility(View.INVISIBLE);
+                buttonNo.setVisibility(View.INVISIBLE);
+                //selectedBinIs.setText("ERRORE.");
+                break;
+        }
+        selectedBinIs.setText(typeBinSelectedIs);
+=======
                 selectedBinIs.setText("ERRORE.");
                 break;
         }
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 
         if(pressed) {
             // TODO Incrementa score
@@ -288,6 +399,27 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 break;
         }
     }
+<<<<<<< HEAD
+    /* public void buttonYes(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+         //Il punteggio viene incrementato solo se la risposta è corretta
+         isAnswerCorrect = true;
+         pressed = true;
+         if(!tutorialEnabled) {
+             updateScore(isPepperTurn);
+         }
+
+         Log.e("TAG", "Entrato nel buttonYes.");
+
+         nextTurn();//startPepperTeacher();//TODO ELIMINA tutta questa riga
+     }
+     public void buttonNo(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+         isAnswerCorrect = false;
+         pressed = true;
+         //TODO Se il turno era del bambino, fai dire a Pepper qualcosa random sul riciclo
+ //        pepperTeaches = pepperTeacher();
+         nextTurn();
+     }*/
+=======
     public void buttonYes(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         //Il punteggio viene incrementato solo se la risposta è corretta
         isAnswerCorrect = true;
@@ -307,6 +439,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //        pepperTeaches = pepperTeacher();
         nextTurn();
     }
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
     public void updateScore(boolean isPepperTurn) {
         if(isPepperTurn) {
             ++pepperScore;//scores.put("score_pepper", (byte) (scores.get("score_pepper") + 1)); //Incrementa il punteggio di Pepper
@@ -346,7 +479,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         //activity2Intent.putExtra("scores", (Serializable) scores);
+<<<<<<< HEAD
+        activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
+=======
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         startActivity(activity2Intent);
         finish();
     }

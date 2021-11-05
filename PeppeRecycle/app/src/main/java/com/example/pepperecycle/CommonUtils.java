@@ -72,6 +72,11 @@ public class CommonUtils {
 
     }
 
+<<<<<<< HEAD
+    /*public static void showScore(Activity activity) {
+//TODO
+    }*/
+=======
     public static void showScore(Activity activity) { //desc sarà il contenuto della finestra di dialogo
         Dialog dialog = new Dialog(activity);
         dialog.setContentView(R.layout.dialog_tutorial_layout);
@@ -98,6 +103,7 @@ public class CommonUtils {
         Log.e(TAG, "Dopo dialog.show");
 
     }
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 
 
 

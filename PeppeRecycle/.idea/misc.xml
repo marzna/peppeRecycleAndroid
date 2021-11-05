@@ -16,12 +16,21 @@
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_play_game.xml" value="0.536" />
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_play_intro.xml" value="0.1" />
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_play_pepper_turn.xml" value="0.4" />
+<<<<<<< HEAD
+        <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_play_user_turn.xml" value="0.536" />
+=======
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_play_user_turn.xml" value="0.4" />
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_splash.xml" value="0.25625" />
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_test_db.xml" value="0.1" />
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_todo.xml" value="0.4" />
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_tutorial.xml" value="0.264" />
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_tutorial0.xml" value="0.24453125" />
+<<<<<<< HEAD
+        <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_tutorial1.xml" value="0.36328125" />
+        <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/activity_tutorial_end.xml" value="0.209375" />
+=======
+>>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/dialog_exit_confirm.xml" value="1.6" />
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/dialog_exit_confirm_layout.xml" value="0.8" />
         <entry key="..\:/Users/marzna/backuPepper/PeppeRecycle/app/src/main/res/layout/dialog_tutorial_layout.xml" value="0.264" />
