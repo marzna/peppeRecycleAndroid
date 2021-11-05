@@ -1,19 +1,12 @@
 package com.example.pepperecycle;
 
-<<<<<<< HEAD
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-=======
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-<<<<<<< HEAD
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,11 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 
-=======
-import android.widget.ImageButton;
-import android.widget.TextView;
-
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
@@ -45,12 +33,6 @@ import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
-<<<<<<< HEAD
-=======
-import org.w3c.dom.Text;
-
-import java.io.Serializable;
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,21 +51,14 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     Map<String, Byte> scores = new HashMap<String, Byte>();
     static byte pepperScore;
     static byte userScore;
-<<<<<<< HEAD
     TextView textViewUserScore, textViewPepperScore, tvTutorial;
     ImageView imageViewUserScore, imageViewPepperScore;
-=======
-    TextView textViewUserScore, textViewPepperScore;
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
     boolean tutorialEnabled;
     // Store the Animate action.
     private Animate animate;
 
-<<<<<<< HEAD
     ImageView binBrown, binBlue, binYellow, binGreen;
 
-=======
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
     Dialog dialog;
 
     CommonUtils commonUtils = new CommonUtils();
@@ -104,7 +79,6 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         isPepperTurn=false;
         textViewUserScore = findViewById(R.id.textViewUserScore);
         textViewPepperScore = findViewById(R.id.textViewPepperScore);
-<<<<<<< HEAD
         imageViewUserScore = findViewById(R.id.imageViewUserScore);
         imageViewPepperScore = findViewById(R.id.imageViewPepperScore);
         tvTutorial = findViewById(R.id.tvTutorial);
@@ -114,8 +88,6 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         binYellow = findViewById(R.id.binYellow);
         binGreen = findViewById(R.id.binGreen);
 
-=======
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         dialog = new Dialog(this);
         canCloseApp = false;
         Bundle extras = getIntent().getExtras();
@@ -127,7 +99,6 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             userScore = extras.getByte("userScore");
         }
         showScore();
-<<<<<<< HEAD
         if(tutorialEnabled) {
             /*    tvTutorial.setEnabled(true);*/
             textViewUserScore.setVisibility(View.INVISIBLE);
@@ -141,9 +112,6 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             imageViewUserScore.setEnabled(true);
             imageViewPepperScore.setEnabled(true);*/
         }
-=======
-
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         /*if (scores != null) { //TODO Per il momento uso i byte per segnare gli scores... Nel caso, poi, userò dizionari
             textViewPepperScore.setText(scores.get("score_pepper"));
             textViewUserScore.setText(scores.get("score_user1"));
@@ -253,7 +221,6 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBrownBin)) {             // Utente seleziona il bidone dell'organico
             wasteType = TYPE_ORGANIC;
-<<<<<<< HEAD
             fading(binBrown, getDrawable(R.drawable.bin_brown_shadow));
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBlueBin)) {      // Utente seleziona il bidone carta e cartone
@@ -267,17 +234,6 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectGreenBin)) {      // Utente seleziona il bidone vetro
             wasteType = TYPE_GLASS;
             fading(binGreen, getDrawable(R.drawable.bin_green_shadow));
-=======
-            ackSelectedBin(qiContext);
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBlueBin)) {      // Utente seleziona il bidone carta e cartone
-            wasteType = TYPE_PAPER_CARDBOARD;
-            ackSelectedBin(qiContext);
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectYellowBin)) {      // Utente seleziona il bidone plastica e metalli
-            wasteType = TYPE_PLASTIC_METAL;
-            ackSelectedBin(qiContext);
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectGreenBin)) {      // Utente seleziona il bidone vetro
-            wasteType = TYPE_GLASS;
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -381,7 +337,6 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         Se la risposta è affermativa, l'utente guadagna un punto.
         */
     }
-<<<<<<< HEAD
     /*void imageAnimation(ImageView imageStart, ImageView imageEnd) {
         imageEnd.setVisibility(View.INVISIBLE); //TODO Inutile?
         android.view.animation.Animation imgStart = new AlphaAnimation(1.00f, 0.00f);
@@ -445,8 +400,6 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
 
         });
     }
-=======
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
     void checkBin() {
         switch (wasteType) {
             case 0: // case "organic":
@@ -462,53 +415,35 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 binType = "Vetro";
                 break;
             default:
-<<<<<<< HEAD
                 binType = "Errore"; //TODO RIPETI o fai altro
-=======
-                binType = "Errore";
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
                 break;
         }
     }
     public void selectBinBrown(View v) {    // 0 = Organico
         wasteType = TYPE_ORGANIC;
         // binPressed=true;
-<<<<<<< HEAD
         fading(binBrown, getDrawable(R.drawable.bin_brown_shadow));
-=======
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         askForConfirm();
     }
     public void selectBinBlue(View v) {     // 1 = Carta / Cartone
         wasteType = TYPE_PAPER_CARDBOARD;
         // binPressed=true;
-<<<<<<< HEAD
         fading(binBlue, getDrawable(R.drawable.bin_blue_shadow));
-=======
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         askForConfirm();
     }
     public void selectBinYellow(View v) {   // 2 = Plastica / Metalli
         wasteType = TYPE_PLASTIC_METAL;
         // binPressed=true;
-<<<<<<< HEAD
         fading(binYellow, getDrawable(R.drawable.bin_yellow_shadow));
-=======
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         askForConfirm();
     }
     public void selectBinGreen(View v) {    // 3 = Vetro
         wasteType = TYPE_GLASS;
         // binPressed=true;
-<<<<<<< HEAD
         fading(binGreen, getDrawable(R.drawable.bin_green_shadow));
         askForConfirm();
     }
 
-=======
-        askForConfirm();
-    }
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
     public void buttonHelp(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         showDialog(desc);
     }

@@ -8,10 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-<<<<<<< HEAD
 import android.widget.ImageView;
-=======
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -59,19 +56,11 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
     private Chat chat;
     private int pgIndex;//Indice della pagina
     boolean tutorialEnabled;
-<<<<<<< HEAD
     TextView tvExplaination;
 
     private Button buttonNext, buttonPrev, buttonPlay;
     private int mCurrentPage;
 ImageView ivTutorial;
-=======
-
-
-    private Button buttonNext, buttonPrev, buttonPlay;
-    private int mCurrentPage;
-
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
     private Animate animate;
 
     @Override
@@ -85,7 +74,6 @@ ImageView ivTutorial;
 
         setContentView(R.layout.activity_tutorial);
 
-<<<<<<< HEAD
         buttonNext = (Button) findViewById(R.id.buttonNext);
         buttonPrev = (Button) findViewById(R.id.buttonPrev);
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
@@ -98,35 +86,16 @@ ImageView ivTutorial;
         checkPage(pgIndex);
 
         /*//OnClickListeners
-=======
-       /* buttonNext = (Button) findViewById(R.id.buttonNext);
-        buttonPrev = (Button) findViewById(R.id.buttonPrev);
-       */
-        buttonPlay = (Button) findViewById(R.id.buttonPlay);
-
-        pgIndex = 0;
-        tutorialEnabled = true;
-
-        //OnClickListeners
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         buttonPlay.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
-<<<<<<< HEAD
                 activity2Intent.putExtra("tutorialEnabled", tutorialEnabled); //TODO va cambiato?
                 startActivity(activity2Intent); //Per iniziare il gioco.
                 finish();
             }
         });*/
-=======
-                activity2Intent.putExtra("tutorialEnabled", false); //TODO va cambiato?
-                startActivity(activity2Intent); //Per iniziare il gioco.
-                finish();
-            }
-        });
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 
         //OnClickListeners
       /*  buttonNext.setOnClickListener(new View.OnClickListener() {
@@ -151,14 +120,10 @@ ImageView ivTutorial;
 
 //        mCurrentPage
         Say tutorialIntro = SayBuilder.with(qiContext) // Create the builder with the context.
-<<<<<<< HEAD
                 //.withText("Ecco come si gioca. a turno, il giudice ci mostra un oggetto e noi dobbiamo indovinare in quale bidone riciclarlo. Poi, il giudice deve dire se la risposta è corretta o no.. Chi indovina, guadagnerà un punto!") // Set the text to say.
                 .withText("Ecco come si gioca. a turno, il giudice ci mostra un oggetto e noi dobbiamo indovinare in quale bidone riciclarlo. "/* +
                         "Poi, il giudice deve dire se la risposta è corretta o no.. " +
                         "Chi indovina, guadagnerà un punto!"*/) // Set the text to say.
-=======
-                .withText("Ecco come si gioca. a turno, il giudice ci mostra un oggetto e noi dobbiamo indovinare in quale bidone riciclarlo. Poi, il giudice deve dire se la risposta è corretta o no.. Chi indovina, guadagnerà un punto!") // Set the text to say.
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
                 .build(); // Build the say action.
 
         Say askForContinue = SayBuilder.with(qiContext) // Create the builder with the context.
@@ -212,10 +177,6 @@ ImageView ivTutorial;
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNextPage)) {             // Risposta utente affermativa
-<<<<<<< HEAD
-=======
-            //if(mCurrentPage >= 0 && mCurrentPage <= 1) { //Se ci si trova alla prima pagg o in una delle pagg intermedie
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
             //Va alla pagina successiva
             Say nextPage = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText("Perfetto, vado avanti!") // Set the text to say.
@@ -223,26 +184,16 @@ ImageView ivTutorial;
             nextPage.run();
             //buttonNext.performClick();
 
-<<<<<<< HEAD
             nextTurn();
            /* Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
-=======
-            Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
             activity2Intent.putExtra("tutorialEnabled", true);
             activity2Intent.putExtra("round", 0);
             activity2Intent.putExtra("pepperScore", false);
             activity2Intent.putExtra("userScore", 0);
             //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
             startActivity(activity2Intent);
-<<<<<<< HEAD
             finish();*/
 
-=======
-            finish();
-
-            //onRobotFocusGained(qiContext);
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlay)) {       // Va direttamente al gioco, saltando il tutorial
             Say playGame = SayBuilder.with(qiContext) // Create the builder with the context.
@@ -355,24 +306,15 @@ ImageView ivTutorial;
 
     }
     void buttonPlay(View view) {
-<<<<<<< HEAD
         nextTurn();
         /*Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-=======
-        Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
-        activity2Intent.putExtra("tutorialEnabled", false);
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("pepperScore", false);
         activity2Intent.putExtra("userScore", 0);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         startActivity(activity2Intent);
-<<<<<<< HEAD
         finish();*/
-=======
-        finish();
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         /*Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
         activity2Intent.putExtra("tutorialEnabled", true);
         startActivity(activity2Intent); //Per iniziare il gioco.
@@ -391,7 +333,6 @@ ImageView ivTutorial;
 
     }
 
-<<<<<<< HEAD
     public void nextTurn() { // Avvia la activity relativa al prossimo turno
         Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
@@ -480,21 +421,10 @@ ImageView ivTutorial;
         activity2Intent.putExtra("pepperScore", false);
         activity2Intent.putExtra("userScore", 0);
         activity2Intent.putExtra("isPepperTurn", false); //toccherà all'utente in quanto è tutorial
-=======
-    public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
-        Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
-        activity2Intent.putExtra("tutorialEnabled", true);
-        activity2Intent.putExtra("round", 0);
-        activity2Intent.putExtra("pepperScore", false);
-        activity2Intent.putExtra("userScore", 0);
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         startActivity(activity2Intent);
         finish();
     }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 }
