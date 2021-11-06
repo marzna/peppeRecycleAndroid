@@ -117,7 +117,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-
+    //TODO Aggiungi dialoghi
     }
 
     @Override

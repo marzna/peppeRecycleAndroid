@@ -50,6 +50,15 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     boolean pepperTeaches;
     Button buttonPlay;
     Animate animate;
+    String exclamation;
+    String[] pepperExclamations = {
+            "Evvài, ho indovinato! .",
+            "Mi sto impegnando! .",
+            "Questa cosa la sapevo proprio bene! . ",
+            "Si vede che ho studiato! .",
+            "Certo che sono proprio bravo! ."
+    };
+
     String[] factsOrganic = {
             "L'organico è formato da scarti alimentari e altri rifiuti facilmente biodegradabili.",
             "Una torsolo di mela resta per circa 2 mesi nell'ambiente prima di degradarsi completamente.",
@@ -124,6 +133,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 
         Log.e(TAG, "Prima del selectFact.");
         selectFact();
+        selectExclamation();
         buttonPlay.setVisibility(View.VISIBLE);
         buttonPlay.setEnabled(true);
     }
@@ -137,7 +147,8 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayRandomFact= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText(factAboutRecycle + "Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
+                .withText(factAboutRecycle + exclamation +
+                        "Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
                 .build(); // Build the say action.
         Animation sayRandomFactAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione
@@ -240,35 +251,42 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 
     }
 
+    void selection(String typeForTV, int res, String[] factsAboutSmth ) {
+        textViewFactAbout.setText(typeForTV);
+        selectedBin.setBackground(getDrawable(res));
+        factAboutRecycle = factsAboutSmth[ new Random().nextInt(factsAboutSmth.length)];
+    }
+
     void selectFact() {
         Log.e(TAG, "Entrato nel selectFact.");
         switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
             case 0: // case "organic":
-                textViewFactAbout.setText("Curiosità - ORGANICO"); //TODO MODIFICA
-                selectedBin.setImageResource(R.drawable.bin_brown_shadow);
-                factAboutRecycle = factsOrganic[ new Random().nextInt(factsOrganic.length)];
+                selection("Curiosità - ORGANICO", R.drawable.bin_brown_shadow, factsOrganic);
                 break;
             case 1: // case "paper": case "cardboard":
-                textViewFactAbout.setText("Curiosità - CARTA E CARTONE");
-                selectedBin.setImageResource(R.drawable.bin_blue_shadow);
-                factAboutRecycle = factsCardCardboard[ new Random().nextInt(factsCardCardboard.length)];
+                selection("Curiosità - CARTA E CARTONE", R.drawable.bin_blue_shadow, factsCardCardboard);
                 break;
             case 2: // case "plastic": case "metal":
-                textViewFactAbout.setText("Curiosità - PLASTICA E METALLI");
-                selectedBin.setImageResource(R.drawable.bin_yellow_shadow);
-                factAboutRecycle = factsPlasticMetal[ new Random().nextInt(factsPlasticMetal.length)];
+                selection("Curiosità - PLASTICA E METALLI", R.drawable.bin_yellow_shadow, factsPlasticMetal);
                 break;
             case 3: // case "glass":
-                textViewFactAbout.setText("Curiosità - VETRO");
-                selectedBin.setImageResource(R.drawable.bin_green_shadow);
-                factAboutRecycle = factsGlass[ new Random().nextInt(factsGlass.length)];
+                selection("Curiosità - VETRO", R.drawable.bin_green_shadow, factsGlass);
                 break;
             default:
-                textViewFactAbout.setText("ERRORE.");
+                textViewFactAbout.setText("Errore"); //TODO MODIFICA
+                selectedBin.setBackground(getDrawable(R.drawable.bin_unknown_shadow));
+                factAboutRecycle = "Si è verificato un errore."; //textViewFactAbout.setText("ERRORE.");
                 break;
         }
         Log.e(TAG, "factAboutRecycle" + factAboutRecycle);
         textViewRandomFact.setText(factAboutRecycle);
+
+    }
+    void selectExclamation() {
+        Log.e(TAG, "Entrato nel selectExclamation.");
+        exclamation = pepperExclamations[ new Random().nextInt(pepperExclamations.length)];
+
+        Log.e(TAG, "exclamation: " + exclamation);
 
     }
 
@@ -317,5 +335,35 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     public void buttonPlay(View v) {
         nextTurn();
     }
+/* void selectFact() {
+        Log.e(TAG, "Entrato nel selectFact.");
+        switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
+            case 0: // case "organic":
+                textViewFactAbout.setText("Curiosità - ORGANICO"); //TODO MODIFICA
+                selectedBin.setImageResource(R.drawable.bin_brown_shadow);
+                factAboutRecycle = factsOrganic[ new Random().nextInt(factsOrganic.length)];
+                break;
+            case 1: // case "paper": case "cardboard":
+                textViewFactAbout.setText("Curiosità - CARTA E CARTONE");
+                selectedBin.setImageResource(R.drawable.bin_blue_shadow);
+                factAboutRecycle = factsCardCardboard[ new Random().nextInt(factsCardCardboard.length)];
+                break;
+            case 2: // case "plastic": case "metal":
+                textViewFactAbout.setText("Curiosità - PLASTICA E METALLI");
+                selectedBin.setImageResource(R.drawable.bin_yellow_shadow);
+                factAboutRecycle = factsPlasticMetal[ new Random().nextInt(factsPlasticMetal.length)];
+                break;
+            case 3: // case "glass":
+                textViewFactAbout.setText("Curiosità - VETRO");
+                selectedBin.setImageResource(R.drawable.bin_green_shadow);
+                factAboutRecycle = factsGlass[ new Random().nextInt(factsGlass.length)];
+                break;
+            default:
+                textViewFactAbout.setText("ERRORE.");
+                break;
+        }
+        Log.e(TAG, "factAboutRecycle" + factAboutRecycle);
+        textViewRandomFact.setText(factAboutRecycle);
 
+    }*/
 }
