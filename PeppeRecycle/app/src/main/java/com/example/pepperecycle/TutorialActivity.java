@@ -116,7 +116,6 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 nextPage();
             }
         });
-        //OnClickListeners
         buttonPrev.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -439,7 +438,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 currPhrase = "Il tutorial è finito! Vogliamo fare un turno di prova?";
                 endOfTutorial = true;
 
-                tvExplaination.setText("Il tutorial è finito! Vogliamo fare un turno di prova?");
+                tvExplaination.setText("Il tutorial è finito!\nVogliamo fare un turno di prova?");
                 ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
                 /*TODO Metti bottoni sì no.
                    Se l'utente risponde di sì, vai avanti con il turno di prova,
