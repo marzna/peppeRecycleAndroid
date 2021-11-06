@@ -56,13 +56,14 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
     private Chat chat;
     private int pgIndex;//Indice della pagina
     boolean tutorialEnabled;
+    boolean endOfTutorial;
     TextView tvExplaination;
 
     private Button buttonNext, buttonPrev, buttonPlay;
     private int mCurrentPage;
-ImageView ivTutorial;
+    ImageView ivTutorial;
     private Animate animate;
-
+    String currPhrase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,28 +84,46 @@ ImageView ivTutorial;
 
         pgIndex = 0;
         tutorialEnabled = true;
-        checkPage(pgIndex);
+        endOfTutorial = false;
 
-        /*//OnClickListeners
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            endOfTutorial = extras.getBoolean("endOfTutorial");
+            pgIndex = extras.getInt("pgIndex");
+//            tutorialEnabled = extras.getBoolean("tutorialEnabled");
+            //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
+        }
+
+        checkPage(pgIndex);
+        Log.d(TAG, "Indice pagina:" + pgIndex);
+
+        //OnClickListeners
         buttonPlay.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
-                activity2Intent.putExtra("tutorialEnabled", tutorialEnabled); //TODO va cambiato?
-                startActivity(activity2Intent); //Per iniziare il gioco.
-                finish();
+//                nextTurn();
+                endOfTutorial = true; //TODO Inutile? Forse è già stato inizializzato a true?
+                nextPage();
             }
-        });*/
+        });
 
         //OnClickListeners
-      /*  buttonNext.setOnClickListener(new View.OnClickListener() {
+        buttonNext.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                mSlideViewPager.setCurrentItem(mCurrentPage + 1);
+                nextPage();
             }
-        });*/
+        });
+        //OnClickListeners
+        buttonPrev.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                prevPage();
+            }
+        });
 
 
     }
@@ -305,21 +324,21 @@ ImageView ivTutorial;
 
 
     }
-    void buttonPlay(View view) {
+    /*void buttonPlay(View view) {
         nextTurn();
-        /*Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
+        *//*Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("pepperScore", false);
         activity2Intent.putExtra("userScore", 0);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         startActivity(activity2Intent);
-        finish();*/
-        /*Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
+        finish();*//*
+     *//*Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
         activity2Intent.putExtra("tutorialEnabled", true);
         startActivity(activity2Intent); //Per iniziare il gioco.
-        finish();*/
-    }
+        finish();*//*
+    }*/
     @Override
     public void onRobotFocusLost() {
         // Remove on started listeners from the Chat action.
@@ -335,6 +354,7 @@ ImageView ivTutorial;
 
     public void nextTurn() { // Avvia la activity relativa al prossimo turno
         Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
+        activity2Intent.putExtra("endOfTutorial", endOfTutorial);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("pepperScore", false);
@@ -345,12 +365,25 @@ ImageView ivTutorial;
         finish();
     }
 
+    int nPages = 4;
 
-    public void buttonPlay() {
-        Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
-        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled); //TODO va cambiato?
-        startActivity(activity2Intent); //Per iniziare il gioco.
-        finish();
+    // Incrementa la pagina. Se è l'ultima, ritorna -1
+    public int increasesPage(int currPage) {
+        if (currPage < (nPages-1)) {
+            return ++currPage;
+        } else {
+            endOfTutorial = true;
+            return -1;
+        }
+    }
+    // Decrementa la pagina. Se è la prima, ritorna -1
+    public int decreasesPage(int currPage) {
+        if (currPage > 0) {
+            endOfTutorial=false;
+            return --currPage;
+        } else {
+            return -1;
+        }
     }
 
     public void checkPage(int pgIndex) {
@@ -360,6 +393,8 @@ ImageView ivTutorial;
                 buttonNext.setVisibility(View.VISIBLE);
 
                 buttonPlay.setVisibility(View.INVISIBLE);
+
+                currPhrase = "A turno, il giudice ci mostrerà un oggetto e dovremo indovinare in quale bidone riciclarlo.";
 
                 tvExplaination.setText("A turno, il giudice ci mostrerà un oggetto" +
                         "\ne dovremo indovinare in quale bidone riciclarlo.");
@@ -375,6 +410,8 @@ ImageView ivTutorial;
 
                 buttonPlay.setVisibility(View.INVISIBLE);
 
+                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto.";
+
                 tvExplaination.setText("Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto.");
                 ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
 
@@ -382,45 +419,124 @@ ImageView ivTutorial;
 
             case 2: // Ultima pagina
                 buttonPrev.setVisibility(View.VISIBLE);
-                buttonNext.setVisibility(View.INVISIBLE);
+                buttonNext.setVisibility(View.VISIBLE);
 
-                buttonPlay.setVisibility(View.VISIBLE);
+                buttonPlay.setVisibility(View.INVISIBLE);
+
+                currPhrase = "Se la risposta è corretta, chi ha indovinato guadagnerà un punto! .";
 
                 tvExplaination.setText("Se la risposta è corretta, chi ha indovinato guadagnerà un punto!");
                 ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
 
                 break;
 
-            default: //case 3:
+            case 3: // Ultima pagina
+                buttonPrev.setVisibility(View.VISIBLE);
+                buttonNext.setVisibility(View.INVISIBLE);
+
+                buttonPlay.setVisibility(View.VISIBLE);
+
+                currPhrase = "Il tutorial è finito! Vogliamo fare un turno di prova?";
+                endOfTutorial = true;
+
+                tvExplaination.setText("Il tutorial è finito! Vogliamo fare un turno di prova?");
+                ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
+                /*TODO Metti bottoni sì no.
+                   Se l'utente risponde di sì, vai avanti con il turno di prova,
+                    altrimenti inizia a giocare direttamente
+                 */
+
+                break;
+
+            default: //case 4:
                 break;
         }
     }
 
-    public void prevPage(View v) {
-        Intent activity2Intent = new Intent(TutorialActivity.this, TutorialActivity1.class);
+    int enterAnim, exitAnim;
+    public void prevPage() {
+     /* Va all'altra pagina, a meno che non ci troviamo nella prima.
+    In quel caso, non fa nulla, anche se non dovrebbe verificarsi
+    perché il bottone correlato non dovrebbe essere visibile
+    */
+        pgIndex = decreasesPage(pgIndex);
+        enterAnim = R.anim.slide_in_left;
+        exitAnim = R.anim.slide_out_right;
+        startPage(pgIndex);
+    }
+
+    public void nextPage() {
+    /* Va all'altra pagina, a meno che non ci troviamo nell'ultima.
+    In quel caso, non fa nulla, anche se non dovrebbe verificarsi
+    perché il bottone correlato non dovrebbe essere visibile
+    */
+        pgIndex = increasesPage(pgIndex);
+        enterAnim = R.anim.slide_in_right;
+        exitAnim = R.anim.slide_out_left;
+        startPage(pgIndex);
+        /* if (pgIndex != -1) { ... TODO Ricorda di testarlo,
+                                      l'ho spostato nella funzione startPage bc era uguale per nextPage e prevPage
+                                      se ci son problemi, rimettilo qui.*/
+    }
+
+    public void startPage(int pgIndex) {
+
+        Intent activity2Intent = null;
+        if (endOfTutorial) {
+            activity2Intent = new Intent(TutorialActivity.this, TutorialEndActivity.class);
+        } else if (pgIndex != -1) {
+//            Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
+            activity2Intent = new Intent(TutorialActivity.this, TutorialActivity.class);
+        }
+        if (activity2Intent != null) {
+            activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+            activity2Intent.putExtra("pgIndex", pgIndex); //passa il numero di pagina
+            activity2Intent.putExtra("endOfTutorial", endOfTutorial);
+            startActivity(activity2Intent);
+            overridePendingTransition(enterAnim, exitAnim);
+            finish();
+        }
+
+    }
+
+    public void buttonPlay() {
+        //Todo metti inizio gioco in caso di turno prova e no
+        Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("pepperScore", false);
         activity2Intent.putExtra("userScore", 0);
         activity2Intent.putExtra("isPepperTurn", false); //toccherà all'utente in quanto è tutorial
+        activity2Intent.putExtra("endOfTutorial", endOfTutorial);
+        startActivity(activity2Intent); //Per iniziare il gioco.
+        finish();
+    }
+
+    public void lastPage(View v) { //TODO Serve?
+        endOfTutorial = true;
+        Intent activity2Intent = new Intent(TutorialActivity.this, TutorialActivity.class);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("round", 0);
+        activity2Intent.putExtra("pepperScore", false);
+        activity2Intent.putExtra("userScore", 0);
+        activity2Intent.putExtra("isPepperTurn", false); //toccherà all'utente in quanto è tutorial
+        activity2Intent.putExtra("endOfTutorial", endOfTutorial);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         startActivity(activity2Intent);
         finish();
     }
 
-    public void nextPage(View v) {
+    public void endTutorial() { //TODO Serve?
+        endOfTutorial = true;
+        //TODO fai distinzione turno di prova e non
         Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
-        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-        startActivity(activity2Intent);
-        finish();
-    }
-    public void lastPage(View v) { //TODO Serve?
-        Intent activity2Intent = new Intent(TutorialActivity.this, TutorialActivity2.class);
+//        Intent activity2Intent = new Intent(TutorialActivity.this, TutorialActivity2.class);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("pepperScore", false);
         activity2Intent.putExtra("userScore", 0);
         activity2Intent.putExtra("isPepperTurn", false); //toccherà all'utente in quanto è tutorial
+        activity2Intent.putExtra("endOfTutorial", endOfTutorial);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         startActivity(activity2Intent);
         finish();

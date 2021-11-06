@@ -87,7 +87,6 @@
         android:background="@drawable/button_play"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
-        android:onClick="buttonPlay"
         android:textAllCaps="false"
         android:textSize="20sp"
         android:visibility="invisible" />
