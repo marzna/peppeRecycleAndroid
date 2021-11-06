@@ -9,6 +9,7 @@
 
     <TextView
         android:id="@+id/tvTutorialTitle"
+        android:layout_marginTop="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -87,7 +88,6 @@
         android:background="@drawable/button_play"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
-        android:onClick="buttonPlay"
         android:textAllCaps="false"
         android:textSize="20sp"
         android:visibility="invisible" />

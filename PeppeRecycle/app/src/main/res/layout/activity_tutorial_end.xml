@@ -1,9 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bkgr_activity_main"
     tools:context=".TutorialEndActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvTrialTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="TURNO DI PROVA"
+
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/tvTrialQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTrialTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Vuoi giocare un turno di prova?"
+        android:textAllCaps="false"
+        android:textSize="36sp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTrialQuestion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonTrialYes"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/trial_play"
+            android:fontFamily="@font/andika_regular"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/buttonTrialNo"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/trial_skip"
+            android:fontFamily="@font/andika_regular"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!--<Button
+        android:id="@+id/buttonPrev"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_prev"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:visibility="visible" />-->
+
+    <ImageButton
+        android:id="@+id/buttonBack"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@id/buttonHome"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="-52dp"
+        android:layout_marginEnd="53dp"
+        android:background="@drawable/button_back"
+        android:verticalScrollbarPosition="defaultPosition"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageButton
+        android:id="@+id/buttonHome"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@id/buttonClose"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="-52dp"
+        android:layout_marginEnd="53dp"
+        android:background="@drawable/button_home"
+        android:verticalScrollbarPosition="defaultPosition"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+    <ImageButton
+        android:id="@+id/buttonClose"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_close"
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="299dp" />
+
+
+</RelativeLayout>

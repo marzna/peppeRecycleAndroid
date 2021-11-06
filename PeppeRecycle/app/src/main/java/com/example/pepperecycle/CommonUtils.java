@@ -72,38 +72,9 @@ public class CommonUtils {
 
     }
 
-<<<<<<< HEAD
     /*public static void showScore(Activity activity) {
 //TODO
     }*/
-=======
-    public static void showScore(Activity activity) { //desc sarà il contenuto della finestra di dialogo
-        Dialog dialog = new Dialog(activity);
-        dialog.setContentView(R.layout.dialog_tutorial_layout);
-        Log.e(TAG, "Entrata nella showDialog");
-        dialog.getWindow().setBackgroundDrawableResource(R.drawable.bg_window);
-        dialog.getWindow().getAttributes().windowAnimations = R.style.animation;
-        TextView textViewDialogTutorial = (TextView) dialog.findViewById(R.id.textViewDialogTutorial);
-        ImageButton dialogButtonClose = (ImageButton) dialog.findViewById(R.id.dialogButtonClose);
-//TODOhttps://youtu.be/vDAO7H5w4_I
-        Log.e(TAG, "Prima di settext");
-        textViewDialogTutorial.setText(mex);
-        Log.e(TAG, "Dopo settext");
-
-        dialogButtonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-
-        });
-
-        Log.e(TAG, "Prima di dialog.show");
-        dialog.show();
-        Log.e(TAG, "Dopo dialog.show");
-
-    }
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
 
 
 

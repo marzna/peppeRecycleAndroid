@@ -40,11 +40,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     Map<String, Byte> scores = new HashMap<>();
     static byte pepperScore = 0;
     static byte userScore = 0;
-<<<<<<< HEAD
     boolean tutorialEnabled;
-=======
-    boolean tutorialEnabled = false;
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
     // Store the Animate action.
     private Animate animate;
 
@@ -69,13 +65,9 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
         }
-<<<<<<< HEAD
         if(tutorialEnabled) {
             isPepperTurn = false;
         }
-=======
-
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         /*TODO metti qui l'assegnazione del primo turno*/
         startGame();
     }
@@ -116,7 +108,6 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         //TODO Unboxing of 'scores.get("score_user1")' may produce 'NullPointerException'
         //for (int round = 0; round<N_TURNS; round++ ) {
         Intent activity2Intent;
-<<<<<<< HEAD
         /*if(tutorialEnabled) {
 //            isPepperTurn=false;
             activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);//TODO turno utente
@@ -129,20 +120,6 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
             activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);//TODO turno utente
         }
         /*}*/
-=======
-        if(tutorialEnabled) {
-            isPepperTurn=false;
-            activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);//TODO turno utente
-        } else {
-            if (isPepperTurn) {         // Se tocca a Pepper
-                activity2Intent = new Intent(PlayGameActivity.this, PlayPepperTurnActivity.class);//TODO turno di Pepper
-                // activity2Intent.putExtra("score", score);
-                // Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-            } else {                    // Se tocca all'utente
-                activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);//TODO turno utente
-            }
-        }
->>>>>>> f96443c050f3ec4c641a302197cd2349a7f3d427
         activity2Intent.putExtra("round", round);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
