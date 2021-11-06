@@ -38,20 +38,105 @@
         tools:layout_editor_absoluteY="299dp" />
 
     <TextView
-        android:id="@+id/textViewResult"
+        android:id="@+id/tvGameOver"
         android:layout_width="800dp"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/buttonHome"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
-        android:textSize="24sp" />
+        android:text="GAME OVER!"
+        android:textColor="@color/white"
+        android:textSize="50sp" />
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/imageViewResult"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_below="@id/textViewResult"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true" />-->
+
+
+    <LinearLayout
+        android:id="@+id/scores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvGameOver"
+        android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/pepperScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="250dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewPepperScore"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                app:srcCompat="@drawable/pepper_face" />
+
+            <TextView
+                android:id="@+id/textViewPepperScore"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/imageViewPepperScore"
+                android:fontFamily="@font/andika_regular"
+                android:gravity="center"
+                android:text="-"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="100sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/userScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewUserScore"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/textViewPepperScore"
+                app:srcCompat="@drawable/user" />
+
+            <TextView
+                android:id="@+id/textViewUserScore"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/andika_regular"
+                android:layout_toRightOf="@id/imageViewUserScore"
+                android:gravity="center"
+                android:text="-"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="100sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Hai ...?"
+        android:fontFamily="@font/andika_regular"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="50sp" />
+
 
 </RelativeLayout>
