@@ -34,8 +34,8 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
 
     boolean isPepperTurn;
     // int N_PLAYERS = 2; int turn = new Random().nextInt(N_PLAYERS) ; //Ritorna un random int nel range [0, N_PLAYERS-1]
-    int N_ROUNDS = 3;
-    int N_TURNS = N_ROUNDS*2;
+    static final int N_ROUNDS = 6;
+    byte currentRound;
     //    Map<String, Byte> scores = new HashMap<String, Byte>();
     Map<String, Byte> scores = new HashMap<>();
     static byte pepperScore = 0;
@@ -60,10 +60,11 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
             put(1, "d");
         }};*/
         isPepperTurn = new Random().nextBoolean() ; //Ritorna un random boolean (Serve per stabilire randomicamente chi inizia a giocare)
-
+        currentRound = 0;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
+            currentRound = extras.getByte("currentRound");
         }
         if(tutorialEnabled) {
             isPepperTurn = false;
@@ -101,8 +102,8 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         scores.put("score_user1", userScore);
 
         //isPepperTurn=false; //tocca all'utente //TODO RIMUOVI DOPO AVER TESTATO IL TURNO UTENTE
-        byte round = 0; //TODO non serve
-
+        //byte round = 0; //TODO non serve
+        currentRound = 0;
 //        while ( (scores.get("score_pepper") < 3 ) || (scores.get("score_user1") < 3) ) { TODO NON SERVE PERCHÉ IL CHECK VA FATTO IN JudgeConfirmActivity
         //TODO Unboxing of 'scores.get("score_pepper")' may produce 'NullPointerException'
         //TODO Unboxing of 'scores.get("score_user1")' may produce 'NullPointerException'
@@ -120,11 +121,12 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
             activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);//TODO turno utente
         }
         /*}*/
-        activity2Intent.putExtra("round", round);
+//        activity2Intent.putExtra("round", round);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("currentRound", currentRound);
         startActivity(activity2Intent);
         //isPepperTurn = !isPepperTurn;
         finish();

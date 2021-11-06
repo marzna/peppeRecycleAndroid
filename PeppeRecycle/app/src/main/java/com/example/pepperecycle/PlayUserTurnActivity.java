@@ -65,6 +65,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     String desc;
     ImageButton buttonHelp;
     boolean canCloseApp;
+    byte currentRound;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +99,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
+            currentRound = extras.getByte("currentRound");
         }
         showScore();
         if(tutorialEnabled) {
@@ -329,6 +332,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("currentRound", currentRound);
         startActivity(activity2Intent);
         finish();
         /* TODO Turno dell'utente:

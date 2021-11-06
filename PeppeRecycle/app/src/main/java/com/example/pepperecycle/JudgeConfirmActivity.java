@@ -1,5 +1,7 @@
 package com.example.pepperecycle;
 
+import static com.example.pepperecycle.PlayGameActivity.N_ROUNDS;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
@@ -9,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
@@ -66,6 +69,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     Dialog dialog;
     String desc;
     Button buttonYes, buttonNo;
+    TextView textViewAskForConfirm;
+    byte currentRound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         selectedBinIs = findViewById(R.id.textViewSelectedBinIs);
         selectedBin = findViewById(R.id.selectedBin);
+        textViewAskForConfirm = findViewById(R.id.textViewAskForConfirm);
 
         buttonYes = findViewById(R.id.buttonAnswerYes);
         buttonNo = findViewById(R.id.buttonAnswerNo);
@@ -102,6 +108,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             userScore = extras.getByte("userScore");
             wasteTypeString = extras.getString(wasteTypeString);
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
+            currentRound = extras.getByte("currentRound");
+
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
 
@@ -294,11 +302,13 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsGlass);
                 break;
             default:
-                typeBinSelectedIs = "Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno";
+                typeBinSelectedIs = "Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno.";
+                selectedBinIs.setGravity(Gravity.CENTER);
+                textViewAskForConfirm.setVisibility(View.GONE); //View.INVISIBLE
+                selectedBin.setVisibility(View.GONE); //View.INVISIBLE
+                buttonYes.setVisibility(View.GONE); //View.INVISIBLE
+                buttonNo.setVisibility(View.GONE); //View.INVISIBLE
                 //TODO GOBACK
-                selectedBin.setVisibility(View.INVISIBLE);
-                buttonYes.setVisibility(View.INVISIBLE);
-                buttonNo.setVisibility(View.INVISIBLE);
                 //selectedBinIs.setText("ERRORE.");
                 break;
         }
@@ -384,16 +394,19 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         Intent activity2Intent;
         isPepperTurn = !isPepperTurn; // Turno successivo
+        ++currentRound;
         // if (round < 6) {    // TODO sostituisci 6 con una costante
         // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
-        if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
-            // TODO sostituisci il 3 con una costante, tipo WINNER_SCORE o simili
+        // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
+        if (currentRound < N_ROUNDS) {
+            // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili
             if (isPepperTurn) {
-                if(tutorialEnabled) {
+                if (tutorialEnabled) {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
                 } else {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class); // PlayPepperTurnActivity.class);
                 }
+
             } else {
                 activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
             }
@@ -402,14 +415,17 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             userScore = activity2Intent.getExtras().getByte("userScore");
             //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
             */
-        } else {            // Game over
+        } else {
+            // Game over
             activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
         }
+
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         //activity2Intent.putExtra("scores", (Serializable) scores);
         activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
+        activity2Intent.putExtra("currentRound", currentRound);
         startActivity(activity2Intent);
         finish();
     }
@@ -424,6 +440,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("userScore", userScore);
         //activity2Intent.putExtra("scores", (Serializable) scores);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("currentRound", currentRound);
+
         startActivity(activity2Intent);
         finish();
     }
@@ -438,6 +456,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("currentRound", currentRound);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }

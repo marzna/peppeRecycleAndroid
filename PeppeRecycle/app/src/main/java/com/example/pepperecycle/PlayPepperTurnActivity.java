@@ -78,7 +78,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private String garbageType = null; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
-    private String postUrl = "http://754e-2-44-142-90.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://7929-2-44-142-90.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
     private boolean tutorialEnabled;
 
     private boolean isThreadStarted = false;
@@ -111,6 +111,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private boolean loaded = false;
     */
     byte round;
+    byte currentRound;
     boolean classified=false;
     // Store the Animate action.
     private Animate animate;
@@ -162,6 +163,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
+            currentRound = extras.getByte("currentRound");
         }
         showScore();
 /*        textViewPepperScore.setText(scores.get("score_pepper").toString());
@@ -637,6 +639,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("currentRound", currentRound);
 
         startActivity(activity2Intent);
         finish();
@@ -651,6 +654,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("currentRound", currentRound);
 
         startActivity(activity2Intent);
         finish();

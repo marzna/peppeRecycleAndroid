@@ -38,9 +38,14 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     boolean isPepperTurn;
     byte pepperScore;
     byte userScore;
-    TextView textViewResult;
-    ImageView imageViewResult;
+    TextView tvGameOver;
+    TextView tvResult;
+    TextView tvPepperScore, tvUserScore; //score che verrà mostrato
+    String resultPhrase; //frase che dirà Pepper
+    //    ImageView imageViewResult;
     String result;
+    byte currentRound;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +58,11 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
         setContentView(R.layout.activity_game_over);
 
-        textViewResult = findViewById(R.id.textViewResult);
-        imageViewResult= findViewById(R.id.imageViewResult);
+        tvGameOver = findViewById(R.id.tvGameOver);
+//        imageViewResult= findViewById(R.id.imageViewResult); TODO RIMUOVI ALTRE REFERENCES A QUESTA VARIABILE
+        tvPepperScore = findViewById(R.id.textViewPepperScore);
+        tvUserScore = findViewById(R.id.textViewUserScore);
+        tvResult = findViewById(R.id.tvResult);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -63,14 +71,23 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             isPepperTurn = extras.getBoolean("isPepperTurn");
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
+            currentRound = extras.getByte("currentRound");
         }
-        if (pepperScore > userScore ) {     // if (pepperScore == 3 ) { //if(scores.get("score_pepper") == 3 ) {
+        if (pepperScore > userScore ) { // Utente perde
+            // if (pepperScore == 3 ) { //if(scores.get("score_pepper") == 3 ) {
             userLoser();
-            result = "Oh no, hai perso!";
-        } else {//} else if (scores.get("score_user1") == 3) {
+            // result = "Oh no, hai perso!";
+        } else if(userScore > pepperScore){ // Utente vince
+            //} else if (scores.get("score_user1") == 3) {
             userWinner();
-            result = "Congratulazioni, hai vinto!";
+            // result = "Congratulazioni, hai vinto!";
+        } else {    // Pareggio
+            userDraw();
+            // result = "Siamo stati bravissimi entrambi!";;
         }
+
+        tvPepperScore.setText(" " + pepperScore + " ");
+        tvUserScore.setText(" " + userScore + " ");
 //        showScore();
     }
 
@@ -82,7 +99,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     @Override
     public void onRobotFocusGained(QiContext qiContext) { //TODO TESTARE TUTTA QUESTA FUNZIONE
         Say sayResult= SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText(result + "Ti andrebbe di fare un'altra partita?") // Set the text to say.
+                .withText(resultPhrase + "Ti andrebbe di fare un'altra partita?") // Set the text to say.
                 .build(); // Build the say action.
         Animation resultAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione triste
@@ -133,7 +150,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             newGame();
 
         } else if ( (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) ||
-                    (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome))) {     // Torna alla home
+                (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome))) {     // Torna alla home
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.affirmation_a002).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -174,15 +191,22 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     /*void showScore() {
 
     }*/
-
     void userWinner() {
-        textViewResult.setText("Congratulazioni,\nhai vinto!\nPepper: " + pepperScore + "\nUser: " + userScore);
-        imageViewResult.setImageResource(R.drawable.trophy);
+        resultPhrase = "Congratulazioni,hai vinto! Conosci molte informazioni sul riciclo!"; //TODO metti una frase migliore per quando l'utente vince
+        tvResult.setText("Hai vinto!");
+        /*tvGameOver.setText("Congratulazioni,\nhai vinto!\nPepper: " + pepperScore + "\nUser: " + userScore);
+        imageViewResult.setImageResource(R.drawable.trophy);*/
     }
     void userLoser() {
-        textViewResult.setText("Uhm,\ncredo che sia meglio rivedere qualcosa!");
-        imageViewResult.setImageResource(R.drawable.sad_face);
+        resultPhrase = "Hai perso. Stavolta sono stato più bravo di te!";
+        tvResult.setText("Hai perso!");
+        /*tvGameOver.setText("Uhm,\ncredo che sia meglio rivedere qualcosa!");
+        imageViewResult.setImageResource(R.drawable.sad_face);*/
 
+    }
+    void userDraw() { //In caso di pareggio
+        resultPhrase = "Siamo stati bravissimi entrambi!";
+        tvResult.setText("Pareggio!");
     }
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
