@@ -28,6 +28,7 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
     // Store the Animate action.
     private Animate animate;
     boolean tutorialEnabled = false;
+    byte trialState = -1; //TODO forse qui è inutile
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,12 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
 
         // Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
-        // setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
+        setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
+            trialState = extras.getByte("trialState");
         }
         setContentView(R.layout.activity_play_intro);
     }

@@ -54,6 +54,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     TextView textViewUserScore, textViewPepperScore, tvTutorial;
     ImageView imageViewUserScore, imageViewPepperScore;
     boolean tutorialEnabled;
+
+    byte trialState;
     // Store the Animate action.
     private Animate animate;
 
@@ -67,6 +69,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     boolean canCloseApp;
     byte currentRound;
 
+    boolean roundTutorial;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +83,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
         isPepperTurn=false;
+        roundTutorial=false;
         textViewUserScore = findViewById(R.id.textViewUserScore);
         textViewPepperScore = findViewById(R.id.textViewPepperScore);
         imageViewUserScore = findViewById(R.id.imageViewUserScore);
@@ -100,9 +105,12 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
             currentRound = extras.getByte("currentRound");
+            roundTutorial = extras.getBoolean("roundTutorial");
+            trialState = extras.getByte("trialState");
         }
         showScore();
-        if(tutorialEnabled) {
+//        if(tutorialEnabled) {
+        if(trialState == 0) {
             /*    tvTutorial.setEnabled(true);*/
             textViewUserScore.setVisibility(View.INVISIBLE);
             textViewPepperScore.setVisibility(View.INVISIBLE);
@@ -208,7 +216,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .build();
 
         sayUserTurn.run();
-        if(tutorialEnabled){
+//        if(tutorialEnabled) {
+        if(trialState == 0) {
             sayUserTurnTutorial.run();
         }
         animateUserTurn.run();
@@ -327,7 +336,9 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         Intent activity2Intent = new Intent(PlayUserTurnActivity.this, JudgeConfirmActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("roundTutorial", roundTutorial);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);

@@ -20,6 +20,8 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
     ImageButton buttonBack, buttonHome, buttonClose;
     boolean endOfTutorial;
     int pgIndex; //Non serve??
+    byte trialState = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,11 +101,15 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         if(tutorialEnabled) { //Se il tutorial è attivo, toccherà all'utente
             activity2Intent.putExtra("isPepperTurn", false); //toccherà all'utente in quanto è tutorial
+            trialState = 0;
         }
         //TODO Servono?
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("pepperScore", false);
         activity2Intent.putExtra("userScore", 0);
+        activity2Intent.putExtra("roundTutorial", true);
+        activity2Intent.putExtra("trialState", trialState);
+
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
 
         startActivity(activity2Intent);
@@ -117,7 +123,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-    //TODO Aggiungi dialoghi
+        //TODO Aggiungi dialoghi
     }
 
     @Override

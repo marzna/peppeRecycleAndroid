@@ -4,14 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bkgr_activity_main"
+    android:background="@drawable/bkgr_game_over"
     tools:context=".PlayPepperTurnActivity">
 
     <org.opencv.android.JavaCameraView
         android:id="@+id/my_camera_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="888px"
+        android:layout_height="500px"
         android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/tvTutorialPepper"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="false"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Turno di prova"
+        android:textAllCaps="true"
+        android:textColor="#FFEB3B"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/imageViewPepperPhoto"
@@ -29,9 +44,9 @@
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/pepper_take_picture"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/camera_button"
         android:onClick="buttonClassify"
-        android:text="Ecco"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
@@ -130,8 +145,10 @@
     <TextView
         android:id="@+id/textViewShowMeObj"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
+        android:layout_toLeftOf="@id/buttonHome"
+        android:layout_toRightOf="@id/tvTutorialPepper"
         android:gravity="center"
         android:text="Per piacere, inquadra l'oggetto e premi sul pulsante verde, così posso vederlo bene!"
         android:textAlignment="center"
