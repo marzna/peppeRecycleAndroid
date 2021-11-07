@@ -12,8 +12,8 @@
         android:id="@+id/tvTrialTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:text="TURNO DI PROVA"
@@ -118,5 +118,14 @@
         tools:layout_editor_absoluteX="360dp"
         tools:layout_editor_absoluteY="299dp" />
 
+    <Button
+        android:id="@+id/buttonPlayEndTutorial"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/tvTrialQuestion"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_play"
+        android:visibility="invisible" />
 
 </RelativeLayout>

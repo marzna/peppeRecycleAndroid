@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
@@ -16,11 +17,12 @@ import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayP
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 
 public class TutorialEndActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
-    Button buttonYes, buttonNo;
+    Button buttonYes, buttonNo, buttonPlayEndTutorial;
     ImageButton buttonBack, buttonHome, buttonClose;
     boolean endOfTutorial;
     int pgIndex; //Non serve??
     byte trialState = -1;
+    TextView tvTrialTitle, tvTrialQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +35,35 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
 
         buttonYes = findViewById(R.id.buttonTrialYes);
         buttonNo = findViewById(R.id.buttonTrialNo);
+        buttonPlayEndTutorial = findViewById(R.id.buttonPlayEndTutorial);
         buttonBack = findViewById(R.id.buttonBack);
         buttonHome = findViewById(R.id.buttonHome);
         buttonClose = findViewById(R.id.buttonClose);
-
+        tvTrialTitle = findViewById(R.id.tvTrialTitle);
+        tvTrialQuestion = findViewById(R.id.tvTrialQuestion);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             endOfTutorial = extras.getBoolean("endOfTutorial");
             pgIndex = extras.getInt("pgIndex");
+            trialState = extras.getByte("trialState");
+        }
+
+        if(trialState == 2) {
+            buttonPlayEndTutorial.setEnabled(true);
+            buttonPlayEndTutorial.setVisibility(View.VISIBLE);
+            buttonYes.setVisibility(View.INVISIBLE);
+            buttonNo.setVisibility(View.INVISIBLE);
+
+            tvTrialTitle.setText("Turno di prova - FINE");
+            tvTrialQuestion.setText("Il turno di prova è finito.\nAdesso giochiamo sul serio!");
+            trialState = -1;
+        } else {
+            buttonPlayEndTutorial.setEnabled(false);
+            buttonPlayEndTutorial.setVisibility(View.INVISIBLE);
+
+            tvTrialTitle.setText("Turno di prova - INIZIO");
+            tvTrialQuestion.setText("Vuoi giocare un turno di prova?");
         }
 
         //OnClickListeners
@@ -94,15 +116,25 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
             }
         });
 
+        buttonPlayEndTutorial.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                playGame(false);
+            }
+        });
+
     }
 
     public void playGame(boolean tutorialEnabled) {
         Intent activity2Intent = new Intent(TutorialEndActivity.this, PlayUserTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-        if(tutorialEnabled) { //Se il tutorial è attivo, toccherà all'utente
+        //if(tutorialEnabled) { //Se il tutorial è attivo, toccherà all'utente
+        if (tutorialEnabled) {
             activity2Intent.putExtra("isPepperTurn", false); //toccherà all'utente in quanto è tutorial
             trialState = 0;
         }
+
         //TODO Servono?
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("pepperScore", false);
