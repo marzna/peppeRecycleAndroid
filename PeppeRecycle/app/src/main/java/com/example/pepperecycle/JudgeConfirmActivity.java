@@ -59,18 +59,22 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     TextView selectedBinIs;
     ImageView selectedBin;
     Map<String, Byte> scores = new HashMap<String, Byte>();
+    //    Map<Byte, String> tutorialStates = new HashMap<Byte, String>();
     static byte pepperScore, userScore;
     QiContext qiContext;
     String binType;
     String wasteTypeString;
     String factAboutRecycle;
     boolean tutorialEnabled;
+    boolean roundTutorial;
     boolean pepperTeaches;
     Dialog dialog;
     String desc;
     Button buttonYes, buttonNo;
-    TextView textViewAskForConfirm;
+    TextView textViewAskForConfirm, tvTutorialJudge;
     byte currentRound;
+    byte tutorialState = -1;
+    byte trialState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         selectedBinIs = findViewById(R.id.textViewSelectedBinIs);
         selectedBin = findViewById(R.id.selectedBin);
         textViewAskForConfirm = findViewById(R.id.textViewAskForConfirm);
+        tvTutorialJudge = findViewById(R.id.tvTutorialJudge);
 
         buttonYes = findViewById(R.id.buttonAnswerYes);
         buttonNo = findViewById(R.id.buttonAnswerNo);
@@ -109,8 +114,19 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             wasteTypeString = extras.getString(wasteTypeString);
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             currentRound = extras.getByte("currentRound");
-
+            tutorialState = extras.getByte("tutorialState");
+            trialState = extras.getByte("trialState");
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
+        }
+
+        if(trialState == 0 || trialState == 1) {
+            tvTutorialJudge.setVisibility(View.VISIBLE);
+        } else {
+            tvTutorialJudge.setVisibility(View.INVISIBLE);
+            /*textViewUserScore.setEnabled(true);
+            textViewPepperScore.setEnabled(true);
+            imageViewUserScore.setEnabled(true);
+            imageViewPepperScore.setEnabled(true);*/
         }
 
         //OnClickListeners
@@ -122,8 +138,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 //Il punteggio viene incrementato solo se la risposta è corretta
                 isAnswerCorrect = true;
                 pressed = true;
-                if(!tutorialEnabled) { // Incrementa il punteggio solo se non si tratta di un turno di prova
+
+                // Incrementa il punteggio solo se non si tratta di un turno di prova
+                if(trialState == -1) {//                if(!tutorialEnabled) {
                     updateScore(isPepperTurn);
+                    /*trialState = 1;*/ //Pronto per passare al turno di Pepper
                     Log.e("TAG", "Punteggio incrementato.");
                 } else {
                     Log.e("TAG", "Turno di prova. Punteggio non incrementato.");
@@ -131,7 +150,6 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 //Rendo i bottoni non cliccabili per evitare di incrementare ulteriormente i punteggi
 //                buttonYes.setClickable(false);
 //                buttonNo.setClickable(false);
-
                 nextTurn(); //startPepperTeacher();//TODO ELIMINA tutta questa riga
             }
         });
@@ -149,7 +167,6 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 //Rendo i bottoni non cliccabili
 //                buttonYes.setClickable(false);
 //                buttonNo.setClickable(false);
-
                 nextTurn();
             }
         });
@@ -214,7 +231,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
             //todo se l'utente ha sbagliato, insegna qualcosa
-            if(!tutorialEnabled)
+            if(trialState == -1) // if(!tutorialEnabled)
                 updateScore(isPepperTurn);
             nextTurn();
 
@@ -317,6 +334,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         if(pressed) {
             // TODO Incrementa score
             nextTurn();
+            /*if(trialState != 2)
+                nextTurn();
+            else
+                endTutorial();*/
         }
 
 
@@ -381,7 +402,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
          nextTurn();
      }*/
     public void updateScore(boolean isPepperTurn) {
-        if(isPepperTurn) {
+        if(isPepperTurn && trialState != 1 ) {
             ++pepperScore;//scores.put("score_pepper", (byte) (scores.get("score_pepper") + 1)); //Incrementa il punteggio di Pepper
             pepperTeaches = pepperTeacher();
             startPepperTeacher();
@@ -391,16 +412,38 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             //TODO inserisci congratulazioni
         }
     }
+    byte nextTrialState(byte state) {
+        switch(state) {
+            case 0:     // è appena stato effettuato il turno utente.
+                state = 1;
+                break;
+            case 1:     // è appena stato effettuato il turno di Pepper, perciò si va a 2, in cui si chiede di nuovo di iniziare il tutorial.
+                state = 2;
+                break;
+            default: //case -1
+                break;
+        }
+        return state;
+    }
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         Intent activity2Intent;
-        isPepperTurn = !isPepperTurn; // Turno successivo
-        ++currentRound;
-        // if (round < 6) {    // TODO sostituisci 6 con una costante
-        // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
-        // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
-        if (currentRound < N_ROUNDS) {
-            // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili
-            if (isPepperTurn) {
+        trialState = nextTrialState(trialState);
+        if (trialState == 2) {
+            endTutorial();
+        } else {
+            isPepperTurn = !isPepperTurn; // Turno successivo
+            ++currentRound;
+            // if (round < 6) {    // TODO sostituisci 6 con una costante
+            // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
+            // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
+            if (currentRound < N_ROUNDS) {
+                // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
+                if(isPepperTurn) {
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class);
+                } else {
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
+                }
+            /*if (isPepperTurn) { TODO se non va bene rimetti come stava
                 if (tutorialEnabled) {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
                 } else {
@@ -409,23 +452,41 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
             } else {
                 activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
-            }
+            }*/
+
             /*
             pepperScore = activity2Intent.getExtras().getByte("pepperScore");
             userScore = activity2Intent.getExtras().getByte("userScore");
             //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
             */
-        } else {
-            // Game over
-            activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
-        }
+            } else {
+                // Game over
+                activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
+            }
 
-        activity2Intent.putExtra("round", round);
-        activity2Intent.putExtra("pepperScore", pepperScore);
-        activity2Intent.putExtra("userScore", userScore);
-        //activity2Intent.putExtra("scores", (Serializable) scores);
-        activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-        activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("round", round);
+            activity2Intent.putExtra("pepperScore", pepperScore);
+            activity2Intent.putExtra("userScore", userScore);
+            //activity2Intent.putExtra("scores", (Serializable) scores);
+            activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
+            activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("trialState", trialState);
+            startActivity(activity2Intent);
+            finish();
+        }
+    }
+    public void endTutorial() {
+        Intent activity2Intent = new Intent(JudgeConfirmActivity.this, TutorialEndActivity.class);
+        activity2Intent.putExtra("endOfTutorial", true); // Tutorial finito
+        activity2Intent.putExtra("pgIndex", 0); //TODO SOSTITUISCI NUMERO MAGICO
+        activity2Intent.putExtra("trialState", trialState);
+        /*
+
+         endOfTutorial = extras.getBoolean("endOfTutorial");
+            pgIndex = extras.getInt("pgIndex");
+            trialState = extras.getByte("trialState");
+         */
+
         startActivity(activity2Intent);
         finish();
     }
@@ -457,6 +518,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("trialState", trialState);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }

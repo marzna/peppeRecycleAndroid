@@ -8,6 +8,21 @@
     android:background="@drawable/bkgr_bins"
     tools:context=".JudgeConfirmActivity">
 
+    <TextView
+        android:id="@+id/tvTutorialJudge"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="false"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Turno di prova"
+        android:textAllCaps="true"
+        android:textColor="#FFEB3B"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"
+        android:visibility="invisible" />
+
     <ImageButton
         android:id="@+id/buttonHelp"
         style="@style/Widget.AppCompat.Button.Colored"

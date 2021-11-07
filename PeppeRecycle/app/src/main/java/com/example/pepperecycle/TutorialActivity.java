@@ -58,6 +58,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
     boolean tutorialEnabled;
     boolean endOfTutorial;
     TextView tvExplaination;
+    byte trialState; //Qui dovrebbe essere 0
 
     private Button buttonNext, buttonPrev, buttonPlay;
     private int mCurrentPage;
@@ -85,6 +86,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         pgIndex = 0;
         tutorialEnabled = true;
         endOfTutorial = false;
+        trialState = 0;
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -416,7 +418,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 break;
 
-            case 2: // Ultima pagina
+            case 2:
                 buttonPrev.setVisibility(View.VISIBLE);
                 buttonNext.setVisibility(View.VISIBLE);
 
@@ -435,7 +437,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.VISIBLE);
 
-                currPhrase = "Il tutorial è finito! Vogliamo fare un turno di prova?";
+                currPhrase = "Il tutorial è finito! Vogliamo fare un turno di prova?"; //TODO non serve?
                 endOfTutorial = true;
 
                 tvExplaination.setText("Il tutorial è finito!\nVogliamo fare un turno di prova?");

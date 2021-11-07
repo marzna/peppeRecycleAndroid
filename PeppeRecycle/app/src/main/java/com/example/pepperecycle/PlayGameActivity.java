@@ -41,6 +41,8 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     static byte pepperScore = 0;
     static byte userScore = 0;
     boolean tutorialEnabled;
+    byte tutorialState = -1;
+
     // Store the Animate action.
     private Animate animate;
 
@@ -65,6 +67,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             currentRound = extras.getByte("currentRound");
+
         }
         if(tutorialEnabled) {
             isPepperTurn = false;

@@ -78,8 +78,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private String garbageType = null; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
-    private String postUrl = "http://7929-2-44-142-90.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://d396-2-44-142-90.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
     private boolean tutorialEnabled;
+    byte trialState;
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPeppeRecycle.jpg";
@@ -100,7 +101,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     static final String STRING_CLASSIFICATION_ERROR = "Si è verificato un errore";
     String wasteTypeString;
 
-    TextView textViewUserScore, textViewPepperScore;
+    TextView textViewUserScore, textViewPepperScore, tvTutorialPepper;
     boolean isPepperTurn = true;
 
     QiContext qiContxt;
@@ -131,6 +132,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         imageViewPepperPhoto = (ImageView) findViewById(R.id.imageViewPepperPhoto);
         textViewUserScore = findViewById(R.id.textViewUserScore);
         textViewPepperScore = findViewById(R.id.textViewPepperScore);
+        tvTutorialPepper = findViewById(R.id.tvTutorialPepper);
 
         photoTaken=false;
         classified = false;
@@ -164,7 +166,18 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             userScore = extras.getByte("userScore");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             currentRound = extras.getByte("currentRound");
+            trialState = extras.getByte("trialState");
         }
+        if(trialState == 1) {
+            tvTutorialPepper.setVisibility(View.VISIBLE);
+        } else {
+            tvTutorialPepper.setVisibility(View.INVISIBLE);
+            /*textViewUserScore.setEnabled(true);
+            textViewPepperScore.setEnabled(true);
+            imageViewUserScore.setEnabled(true);
+            imageViewPepperScore.setEnabled(true);*/
+        }
+
         showScore();
 /*        textViewPepperScore.setText(scores.get("score_pepper").toString());
         textViewUserScore.setText(scores.get("score_user1").toString());*/
@@ -231,7 +244,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build();
 
         sayPepperTurn.run();//TODO non ho capito perché lo dice due volte nell'emulatore... Verifica che non sia la stessa cosa con il robot
-        if (tutorialEnabled) {
+        if (trialState == 1) { // if (tutorialEnabled) {
             sayPepperTurnTutorial.run();
         }
         showGarbage.run();
@@ -640,6 +653,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("trialState", trialState);
 
         startActivity(activity2Intent);
         finish();
@@ -655,6 +669,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("trialState", trialState);
 
         startActivity(activity2Intent);
         finish();
