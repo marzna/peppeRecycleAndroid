@@ -208,7 +208,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build(); // Build the say action.
 
         Say sayPepperTurnTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Aspetto che il giudice mi mostri il rifiuto e prema il pulsante verde sul mio tablet!" ) // Set the text to say.
+                .withText("Aspetto che il giudice mi mostri il rifiuto e prema il pulsante sul mio tablet, così da permettermi di vedere il rifiuto! ." ) // Set the text to say.
                 .build(); // Build the say action.;
 
         Say showGarbage = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi

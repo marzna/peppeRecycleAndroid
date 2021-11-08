@@ -196,6 +196,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 .withAnimation(askForConfirm)
                 .build();
 
+
         selectedBin.run();
         sayAskForConfirm.run();
         animateAskForConfirm.run();
