@@ -153,7 +153,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 //Rendo i bottoni non cliccabili per evitare di incrementare ulteriormente i punteggi
 //                buttonYes.setClickable(false);
 //                buttonNo.setClickable(false);
-                nextTurn(); //startPepperTeacher();//TODO ELIMINA tutta questa riga
+//                nextTurn(); //startPepperTeacher();//TODO ELIMINA tutta questa riga
             }
         });
 
@@ -420,6 +420,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         } else {
             ++userScore;//scores.put("score_user1", (byte) (scores.get("score_user1") + 1)); //Incrementa il punteggio dell'utente
 //            buttonYes.setEnabled(false);
+            nextTurn();
             Log.d(TAG, "Incrementato userScore");
             //TODO inserisci congratulazioni
         }
