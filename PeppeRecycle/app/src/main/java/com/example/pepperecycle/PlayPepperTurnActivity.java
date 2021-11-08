@@ -117,6 +117,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     // Store the Animate action.
     private Animate animate;
     Button buttonTakePicture;
+
+    ImageView imageViewUserScore,imageViewPepperScore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +136,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         textViewUserScore = findViewById(R.id.textViewUserScore);
         textViewPepperScore = findViewById(R.id.textViewPepperScore);
         tvTutorialPepper = findViewById(R.id.tvTutorialPepper);
+        imageViewUserScore = findViewById(R.id.imageViewUserScore);
+        imageViewPepperScore = findViewById(R.id.imageViewPepperScore);
 
         photoTaken=false;
         classified = false;
@@ -171,14 +176,19 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         } else {
             Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
+
         if(trialState == 1) {
             tvTutorialPepper.setVisibility(View.VISIBLE);
+        } else if(trialState == 0) {
+
+            textViewUserScore.setVisibility(View.INVISIBLE);
+            textViewPepperScore.setVisibility(View.INVISIBLE);
+            imageViewUserScore.setVisibility(View.INVISIBLE);
+            imageViewPepperScore.setVisibility(View.INVISIBLE);
+            tvTutorialPepper.setVisibility(View.INVISIBLE);
         } else {
             tvTutorialPepper.setVisibility(View.INVISIBLE);
-            /*textViewUserScore.setEnabled(true);
-            textViewPepperScore.setEnabled(true);
-            imageViewUserScore.setEnabled(true);
-            imageViewPepperScore.setEnabled(true);*/
+
         }
 
         showScore();
@@ -186,9 +196,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         textViewUserScore.setText(scores.get("score_user1").toString());*/
     }
 
-    void showScore () {/*
-        textViewPepperScore.setText(pepperScore);
-        textViewUserScore.setText(userScore);*/
+    void showScore () {
         textViewPepperScore.setText("" + pepperScore);
         textViewUserScore.setText("" + userScore);
     }
