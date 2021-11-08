@@ -66,6 +66,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
     ImageView ivTutorial;
     private Animate animate;
     String currPhrase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,7 +190,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         animateAskTutorial.run();
         tutorialIntro.run();
 
-        askForContinue.run();
+        //askForContinue.run(); L'ho messo direttamente in currPhrase
 
         Listen listenPlay = ListenBuilder
                 .with(qiContext)
@@ -434,7 +435,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.INVISIBLE);
 
-                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto.";
+                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto. Posso andare avanti ora? .";
 
                 tvExplaination.setText("Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto.");
                 ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
@@ -447,7 +448,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.INVISIBLE);
 
-                currPhrase = "Se la risposta è corretta, chi ha indovinato guadagnerà un punto! .";
+                currPhrase = "Se la risposta è corretta, chi ha indovinato guadagnerà un punto! Va bene? .";
 
                 tvExplaination.setText("Se la risposta è corretta, chi ha indovinato guadagnerà un punto!");
                 ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO

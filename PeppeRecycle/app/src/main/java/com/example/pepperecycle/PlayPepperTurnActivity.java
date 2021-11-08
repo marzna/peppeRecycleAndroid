@@ -261,6 +261,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {             // Utente mostra l'oggetto a Pepper
+            Say sayCapture = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Bene, allora aspetto che il giudice mi mostri il rifiuto e prema il pulsante sul mio tablet, così da permettermi di vedere il rifiuto! ." ) // Set the text to say.
+                    .build(); // Build the say action.;
+            sayCapture.run();
 //            setQiContext(qiContext);
             /*Say sayPepperThinks = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                     .withText("Grazie!. Uhm, fammi pensare...") // Set the text to say.
@@ -303,13 +307,14 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {      // Utente non vuole mostrare l'oggetto a Pepper
             // TODO chiede se si vuole interrompere il gioco
             // Say sayPepperStopGame= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-            Say sayToDo = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                    .withText("Questa funzionalità è ancora da implementare.") // Set the text to say.
+            Say sayRepeat = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                    .withText("Mi dispiace, ma, senza questo procedimento, io non posso giocare. ") // Set the text to say.
                     .build(); // Build the say action.
             // sayPepperStopGame.run();
-            sayToDo.run();
+            sayRepeat.run();
+            restartActivity();
 
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere il gioco dall'inizio
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -615,6 +620,16 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     }
     void restartActivity() {
         Intent activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
+        activity2Intent.putExtra("wasteType", wasteType);
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("wasteTypeString", wasteTypeString);
+        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("trialState", trialState);
         startActivity(activity2Intent); //Per ripetere
         finish();
     }
