@@ -78,7 +78,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private String garbageType = null; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
-    private String postUrl = "http://d396-2-44-142-90.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://6111-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
     private boolean tutorialEnabled;
     byte trialState;
 
@@ -167,6 +167,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             currentRound = extras.getByte("currentRound");
             trialState = extras.getByte("trialState");
+            Log.d(TAG, "Ricevuto trialState: "+ trialState);
+        } else {
+            Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
         if(trialState == 1) {
             tvTutorialPepper.setVisibility(View.VISIBLE);
@@ -208,7 +211,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build(); // Build the say action.
 
         Say sayPepperTurnTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Aspetto che il giudice mi mostri il rifiuto e prema il pulsante verde sul mio tablet!" ) // Set the text to say.
+                .withText("Aspetto che il giudice mi mostri il rifiuto e prema il pulsante sul mio tablet, così da permettermi di vedere il rifiuto! ." ) // Set the text to say.
                 .build(); // Build the say action.;
 
         Say showGarbage = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -248,7 +251,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             sayPepperTurnTutorial.run();
         }
         showGarbage.run();
-
+        Log.d(TAG, "TrialState: " + trialState);
         //animatePepperTurn.run(); //rimosso perché sennò ci sono troppi movimenti
 
         Listen listenPlay = ListenBuilder
@@ -670,7 +673,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentRound", currentRound);
         activity2Intent.putExtra("trialState", trialState);
-
+        Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
         startActivity(activity2Intent);
         finish();
         /* TODO Turno dell'utente:

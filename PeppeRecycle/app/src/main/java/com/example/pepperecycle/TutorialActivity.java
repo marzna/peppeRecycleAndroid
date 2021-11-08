@@ -59,6 +59,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
     boolean endOfTutorial;
     TextView tvExplaination;
     byte trialState; //Qui dovrebbe essere 0
+    boolean lastPage = false; //ultima pagg del tutorial
 
     private Button buttonNext, buttonPrev, buttonPlay;
     private int mCurrentPage;
@@ -137,17 +138,19 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-
-//        mCurrentPage
+        //mCurrentPage
         Say tutorialIntro = SayBuilder.with(qiContext) // Create the builder with the context.
+                .withText(currPhrase) // Set the text to say.
+                //.withText(currPhrase + ". Posso andare avanti ora?") // Set the text to say.
                 //.withText("Ecco come si gioca. a turno, il giudice ci mostra un oggetto e noi dobbiamo indovinare in quale bidone riciclarlo. Poi, il giudice deve dire se la risposta è corretta o no.. Chi indovina, guadagnerà un punto!") // Set the text to say.
-                .withText("Ecco come si gioca. a turno, il giudice ci mostra un oggetto e noi dobbiamo indovinare in quale bidone riciclarlo. "/* +
-                        "Poi, il giudice deve dire se la risposta è corretta o no.. " +
-                        "Chi indovina, guadagnerà un punto!"*/) // Set the text to say.
+                /*.withText("Ecco come si gioca. a turno, il giudice ci mostra un oggetto e noi dobbiamo indovinare in quale bidone riciclarlo. "/* +
+                                "Poi, il giudice deve dire se la risposta è corretta o no.. " +
+                                "Chi indovina, guadagnerà un punto!") // Set the text to say.*/
                 .build(); // Build the say action.
 
         Say askForContinue = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Vuoi fare un turno di prova per imparare a giocare?") // Set the text to say.
+                //.withText("Vuoi fare un turno di prova per imparare a giocare?") // Set the text to say.
+                .withText("Tutto chiaro?") // Set the text to say.
                 .build(); // Build the say action.;
 
         Animation explain = AnimationBuilder.with(qiContext)
@@ -156,7 +159,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .withAnimation(explain).build();
 
         PhraseSet phraseSetNextPage = PhraseSetBuilder.with(qiContext)
-                .withTexts("Si", "è chiaro", "sì", "sei stato chiaro", "Ho capito", "Vai avanti", "avanti", "ok", "okay", "ochei")
+                .withTexts("Si", "è chiaro", "sì", "sei stato chiaro", "Ho capito", "Vai avanti", "avanti", "ok", "okay", "ochei", "va bene")
                 .build();
 
         PhraseSet phraseSetPlay = PhraseSetBuilder.with(qiContext)
@@ -185,6 +188,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
         animateAskTutorial.run();
         tutorialIntro.run();
+
         askForContinue.run();
 
         Listen listenPlay = ListenBuilder
@@ -196,15 +200,18 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
 
-        if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNextPage)) {             // Risposta utente affermativa
-            //Va alla pagina successiva
+        if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNextPage)) {             // Risposta utente affermativa => va alla pagina successiva
             Say nextPage = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Perfetto, vado avanti!") // Set the text to say.
+                    .withText("Perfetto!") // Set the text to say.
                     .build(); // Build the say action.
-            nextPage.run();
-            //buttonNext.performClick();
+            if(lastPage) {
+                endTutorial();
+            } else { //Incrementa la pagina fin quando non si arriva all'ultima
+                nextPage();
+            }
+            // buttonNext.performClick();
 
-            nextTurn();
+//            nextTurn(); //
            /* Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
             activity2Intent.putExtra("tutorialEnabled", true);
             activity2Intent.putExtra("round", 0);
@@ -215,7 +222,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
             finish();*/
 
 
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlay)) {       // Va direttamente al gioco, saltando il tutorial
+        } /*else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlay)) {       // Va direttamente al gioco, saltando il tutorial
             Say playGame = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText("Ochei, allora iniziamo subito a giocare!") // Set the text to say.
                     .build(); // Build the say action.
@@ -230,15 +237,31 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
             activity2Intent.putExtra("tutorialEnabled", false); //TODO va cambiato?
             startActivity(activity2Intent); //Per iniziare il gioco.
             finish();
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeatPage)) {   // Richiesta utente di ripetere
+        }*/ else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeatPage)) {   // Richiesta utente di ripetere la pagina corrente
+            Say pepperRepeat = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Va bene, allora ripeterò quest'ultima parte. ") // Set the text to say.
+                    .build(); // Build the say action.
+
+            pepperRepeat.run();
+            startPage(pgIndex);
+
+        }  else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeatFromPg0)) {   // Richiesta utente di ripetere
+            Say pepperRepeat = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Ochei, allora ricomincio tutto da capo!") // Set the text to say.
+                    .build(); // Build the say action.
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
                     .withAnimation(correctAnswer).build();
+            pepperRepeat.run();
             animateCorrect.run();
-            Intent activity2Intent = new Intent(getApplicationContext(), TutorialActivity.class);
+
+            pgIndex=0; //Ritorna alla prima pagina
+            startPage(pgIndex);
+
+/*          Intent activity2Intent = new Intent(getApplicationContext(), TutorialActivity.class);
             startActivity(activity2Intent); //Per ripetere
-            finish();
+            finish();*/
 
         /* } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeatFromPg0)) {   // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -437,7 +460,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.VISIBLE);
 
-                currPhrase = "Il tutorial è finito! Vogliamo fare un turno di prova?"; //TODO non serve?
+                currPhrase = "Il tutòrial è finito! Vogliamo fare un turno di prova?"; //TODO non serve?
                 endOfTutorial = true;
 
                 tvExplaination.setText("Il tutorial è finito!\nVogliamo fare un turno di prova?");
@@ -446,10 +469,12 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                    Se l'utente risponde di sì, vai avanti con il turno di prova,
                     altrimenti inizia a giocare direttamente
                  */
+                lastPage = true;
 
                 break;
 
-            default: //case 4:
+            default: //case 4: tutorial finito, dovrebbe essere pgIndex==-1
+                //nextTurn(); //TODO Controlla se abbia senso
                 break;
         }
     }
@@ -483,7 +508,9 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
     public void startPage(int pgIndex) {
 
         Intent activity2Intent = null;
-        if (endOfTutorial) {
+        /*if (pgIndex == 0) {
+            activity2Intent = new Intent(TutorialActivity.this, TutorialActivity.class);
+        } else */if (endOfTutorial) {
             activity2Intent = new Intent(TutorialActivity.this, TutorialEndActivity.class);
         } else if (pgIndex != -1) {
 //            Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
@@ -493,6 +520,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
             activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
             activity2Intent.putExtra("pgIndex", pgIndex); //passa il numero di pagina
             activity2Intent.putExtra("endOfTutorial", endOfTutorial);
+//            activity2Intent.putExtra("lastPage", lastPage);
             startActivity(activity2Intent);
             overridePendingTransition(enterAnim, exitAnim);
             finish();

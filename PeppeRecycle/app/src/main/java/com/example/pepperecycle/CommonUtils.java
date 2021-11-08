@@ -27,7 +27,9 @@ public class CommonUtils {
         dialogButtonCloseYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.finish();
+                /*activity.finish();*/
+                activity.finishAffinity(); // Close all activites
+                System.exit(0);  // Releasing resources
             }
 
         });

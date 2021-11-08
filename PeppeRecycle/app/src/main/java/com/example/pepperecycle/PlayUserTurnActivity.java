@@ -97,6 +97,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
 
         dialog = new Dialog(this);
         canCloseApp = false;
+        trialState = -1;
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
@@ -107,6 +109,9 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             currentRound = extras.getByte("currentRound");
             roundTutorial = extras.getBoolean("roundTutorial");
             trialState = extras.getByte("trialState");
+            Log.d(TAG, "Ricevuto trialState: "+ trialState);
+        } else {
+            Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
         showScore();
 //        if(tutorialEnabled) {
@@ -180,7 +185,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         Animate animateUserTurn = AnimateBuilder.with(qiContext)
                 .withAnimation(explain).build();
         Say sayUserTurnTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Qui, sul mio tablet, ci sono quattro bidoni: organico, carta e cartone, plastica e metalli, vetro. Il giudice ti mostrerà un rifiuto e tu dovrai dirmi in quale bidone buttarlo per un corretto smaltimento. Se indovinerai, guadagnerai un punto.! Giudice, per favore, mostraci l'oggetto, così da iniziare subito con un turno di prova.! ") // Set the text to say.
+                .withText("Qui, sul mio tablet, ci sono quattro bidoni: organico, carta e cartone, plastica e metalli, vetro. Il giudice ti mostrerà un rifiuto e tu dovrai indicare in quale bidone buttarlo per un corretto smaltimento. Se indovinerai, guadagnerai un punto.! Giudice, per favore, mostraci l'oggetto.! ") // Set the text to say.
                 .build(); // Build the say action.;
 
         Say sayUserTurnExplain= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -344,6 +349,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentRound", currentRound);
+        Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
         startActivity(activity2Intent);
         finish();
         /* TODO Turno dell'utente:

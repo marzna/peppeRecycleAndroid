@@ -11,10 +11,23 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiContext;
+import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
+import com.aldebaran.qi.sdk.builder.AnimateBuilder;
+import com.aldebaran.qi.sdk.builder.AnimationBuilder;
+import com.aldebaran.qi.sdk.builder.ListenBuilder;
+import com.aldebaran.qi.sdk.builder.PhraseSetBuilder;
+import com.aldebaran.qi.sdk.builder.SayBuilder;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
+import com.aldebaran.qi.sdk.object.actuation.Animate;
+import com.aldebaran.qi.sdk.object.actuation.Animation;
+import com.aldebaran.qi.sdk.object.conversation.Listen;
+import com.aldebaran.qi.sdk.object.conversation.ListenResult;
+import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
+import com.aldebaran.qi.sdk.object.conversation.Say;
+import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
 public class TutorialEndActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
     Button buttonYes, buttonNo, buttonPlayEndTutorial;
@@ -23,10 +36,13 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
     int pgIndex; //Non serve??
     byte trialState = -1;
     TextView tvTrialTitle, tvTrialQuestion;
+    String currPhrase;
+    boolean playGameAfterTrial = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        QiSDK.register(this, this);
         setContentView(R.layout.activity_tutorial_end);
 
         //Per far sparire la barra grigia sopra
@@ -57,14 +73,18 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
 
             tvTrialTitle.setText("Turno di prova - FINE");
             tvTrialQuestion.setText("Il turno di prova è finito.\nAdesso giochiamo sul serio!");
-            trialState = -1;
+            currPhrase = "Il raund di prova è finito. Adesso giochiamo sul serio! .";
+            playGameAfterTrial = true;
+//            trialState = -1;
         } else {
             buttonPlayEndTutorial.setEnabled(false);
             buttonPlayEndTutorial.setVisibility(View.INVISIBLE);
 
             tvTrialTitle.setText("Turno di prova - INIZIO");
             tvTrialQuestion.setText("Vuoi giocare un turno di prova?");
+            currPhrase = "Il tutòrial è finito. Vogliamo giocare un raund di prova?";
         }
+        trialState = -1;
 
         //OnClickListeners
         buttonYes.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +111,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
                 Intent activity2Intent = new Intent(getApplicationContext(), TutorialActivity.class);
                 activity2Intent.putExtra("endOfTutorial", false);
                 activity2Intent.putExtra("pgIndex", 3); //TODO ultima pagina?
+                activity2Intent.putExtra("trialState", trialState);
                 startActivity(activity2Intent); //Per andare alla pagina precedente
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
@@ -126,22 +147,30 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
 
     }
 
+
+    /*Porta al gioco
+     * @param tutorialEnabled true  ->  indica che si farà un turno di prova
+     * @param tutorialEnabled false ->  no turno di prova
+     * */
     public void playGame(boolean tutorialEnabled) {
-        Intent activity2Intent = new Intent(TutorialEndActivity.this, PlayUserTurnActivity.class);
-        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        Intent activity2Intent;
         //if(tutorialEnabled) { //Se il tutorial è attivo, toccherà all'utente
         if (tutorialEnabled) {
-            activity2Intent.putExtra("isPepperTurn", false); //toccherà all'utente in quanto è tutorial
+            activity2Intent= new Intent(TutorialEndActivity.this, PlayUserTurnActivity.class);
+            activity2Intent.putExtra("isPepperTurn", false); // toccherà all'utente in quanto è tutorial
             trialState = 0;
+        } else {
+            activity2Intent= new Intent(TutorialEndActivity.this, PlayGameActivity.class);
+            trialState = -1; //TODO Controlla, non so se vada bene così
         }
 
         //TODO Servono?
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("pepperScore", false);
         activity2Intent.putExtra("userScore", 0);
         activity2Intent.putExtra("roundTutorial", true);
         activity2Intent.putExtra("trialState", trialState);
-
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
 
         startActivity(activity2Intent);
@@ -153,9 +182,178 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
         return false;
     }
 
+    String endedTutorial = "";
+    Animate animate;
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-        //TODO Aggiungi dialoghi
+        Say askForTrialRound = SayBuilder.with(qiContext) // Create the builder with the context.
+                //.withText("Il tutorial è finito. Vogliamo giocare un raund di prova?") // Set the text to say.
+                .withText(currPhrase) // Set the text to say.
+                .build(); // Build the say action.
+
+        Animation explain = AnimationBuilder.with(qiContext)
+                .withResources(R.raw.question_right_hand_a001).build();
+        Animate animateAskTrial = AnimateBuilder.with(qiContext)
+                .withAnimation(explain).build();
+
+        PhraseSet phraseSetPlayTrial = PhraseSetBuilder.with(qiContext)
+                .withTexts("Si", "sì", "va bene", "ochei", "certo", "raund di prova",
+                        "round di prova", "giochiamo il raund di prova",
+                        "giochiamo il round di prova", "giochiamo il turno di prova",
+                        "ok", "okay")
+                .build();
+
+        PhraseSet phraseSetSkipTrial = PhraseSetBuilder.with(qiContext)
+                .withTexts("Giochiamo", "Voglio giocare", "Non mi va", "No").build();
+
+        //In risposta a: "Il round di prova è finito. Adesso giochiamo sul serio! .";
+        PhraseSet phraseSetPlayGameAfterTrial = PhraseSetBuilder.with(qiContext)
+                .withTexts("Si", "sì", "va bene", "ochei", "certo",
+                        "Giochiamo", "Voglio giocare" ,
+                        "ok", "okay")
+                .build();
+
+        PhraseSet phraseSetNoPlay = PhraseSetBuilder.with(qiContext)
+                .withTexts("No", "Non mi va", "Non giochiamo", "Non voglio giocare",
+                        "Torna alla Home", "Menu principale", "vai al menu principale", "torna al menu principale")
+                .build();
+
+        PhraseSet phraseSetRepeatPage = PhraseSetBuilder.with(qiContext)
+                .withTexts("Non è chiaro", "Ripeti",
+                        "Non ho capito", "Puoi ripetere")
+                .build();
+
+        PhraseSet phraseSetBackPage = PhraseSetBuilder.with(qiContext)
+                .withTexts("Torna", "Indietro")
+                .build();
+
+        PhraseSet phraseSetBackHome = PhraseSetBuilder.with(qiContext)
+                .withTexts("Torna alla Home", "Menu principale", "vai al menu principale", "torna al menu principale")
+                .build();
+
+        PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
+                .withTexts("Chiudi il gioco", "Esci", "Basta")
+                .build();
+
+        askForTrialRound.run();
+        animateAskTrial.run();
+        /*  while(pgIndex <3 ) { //Incrementa la pagina fin quando non si arriva all'ultima
+            nextPage();
+        }
+        askForContinue.run();*/
+
+        Listen listenPlay = ListenBuilder
+                .with(qiContext)
+                .withPhraseSets(phraseSetPlayTrial, phraseSetBackPage, phraseSetSkipTrial,
+                        phraseSetRepeatPage, phraseSetBackHome,
+                        phraseSetClose, phraseSetPlayGameAfterTrial)
+                .build();
+        ListenResult listenResult = listenPlay.run();
+        PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
+
+        //Se il trial non è stato ancora svolto
+        if (!playGameAfterTrial && PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlayTrial)) {             // Risposta utente affermativa
+            //Va al turno di prova
+            Say startTrialPhrase = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Perfetto! Allora iniziamo il turno di prova! In questo round, non terremo conto del punteggio") // Set the text to say.
+                    .build(); // Build the say action.
+            startTrialPhrase.run();
+
+        } else if (!playGameAfterTrial && PhraseSetUtil.equals(matchedPhraseSet, phraseSetSkipTrial)) {       // Va direttamente al gioco, saltando il tutorial
+            Say playGame = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Uau, vuoi già giocare? Ochei, allora iniziamo subito!") // Set the text to say.
+                    .build(); // Build the say action.
+            Say playGameAfterTrial = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Uau, vuoi già giocare? Ochei, allora iniziamo subito!") // Set the text to say.
+                    .build(); // Build the say action.
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.exclamation_both_hands_a001).build();
+            Animate animateCorrect = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+            if(trialState == 0 || trialState == 1 ) { // se ci troviamo nel trial
+
+            } else {
+                playGame.run();
+            }
+            animateCorrect.run();
+            Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
+            activity2Intent.putExtra("tutorialEnabled", false);
+            activity2Intent.putExtra("trialState", -1);
+            startActivity(activity2Intent); //Per iniziare il gioco.
+            finish();
+        } else if (playGameAfterTrial && PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlayGameAfterTrial)) {       // Va direttamente al gioco, saltando il tutorial
+            //Prosegue col gioco vero e proprio dopo aver fatto il turno di prova
+            Say playGame = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Perfetto, buona fortuna! Ricordati che, d'ora in poi, calcoleremo il punteggio!") // Set the text to say.
+                    .build(); // Build the say action.
+
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.affirmation_a002).build();
+            Animate animateCorrect = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+
+            playGame.run();
+            animateCorrect.run();
+
+            Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
+            activity2Intent.putExtra("tutorialEnabled", false); // Non è attivo, avendolo già fatto in passato
+            startActivity(activity2Intent); //Per iniziare il gioco.
+            finish();
+        } else if (playGameAfterTrial && PhraseSetUtil.equals(matchedPhraseSet, phraseSetNoPlay)) {       // Va direttamente al gioco, saltando il tutorial
+            //Riporta l'utente alla home, dato che non vuole giocare dopo aver fatto il turno di prova
+            Say playGame = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Okay, sarà per un'altra volta! Ti porto alla houm") // Set the text to say.
+                    .build(); // Build the say action.
+
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.affirmation_a002).build();
+            Animate animateCorrect = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+
+            playGame.run();
+            animateCorrect.run();
+
+            Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(activity2Intent);
+            finish();
+
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeatPage)) {   // Richiesta utente di ripetere
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.coughing_left_b001).build();
+            Animate animateCorrect = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+
+            animateCorrect.run();
+            Intent activity2Intent = new Intent(getApplicationContext(), TutorialEndActivity.class);
+            startActivity(activity2Intent); //Per ripetere
+            finish();
+
+        } else if (playGameAfterTrial && PhraseSetUtil.equals(matchedPhraseSet, phraseSetBackHome)) {     // Torna alla home
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.affirmation_a002).build();
+            Animate animateCorrect = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+            animateCorrect.run();
+            Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(activity2Intent);
+            finish();
+
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
+            Animation correctAnswer = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.hello_a004).build();
+            animate = AnimateBuilder.with(qiContext)
+                    .withAnimation(correctAnswer).build();
+
+            Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Va bene, sto chiudendo il gioco. Ciaoo!") // Set the text to say.
+                    .build(); // Build the say action.
+
+            sayGoodbye.run();
+            animate.run();
+
+            finish();
+
+        }
     }
 
     @Override
