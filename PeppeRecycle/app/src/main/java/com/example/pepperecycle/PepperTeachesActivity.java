@@ -53,11 +53,11 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     String exclamation;
     byte trialState;
     String[] pepperExclamations = {
-            ". Evvài, ho indovinato! .",
-            ". Mi sto impegnando! .",
-            ". Questa cosa la sapevo proprio bene! . ",
-            ". Si vede che ho studiato! .",
-            ". Certo che sono proprio bravo! ."
+            "Evvài, ho indovinato!",
+            "Mi sto impegnando!",
+            "Questa cosa la sapevo proprio bene! ",
+            "Si vede che ho studiato!",
+            "Certo che sono proprio bravo!"
     };
 
     String[] factsOrganic = {
@@ -149,8 +149,8 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayRandomFact= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText(factAboutRecycle + exclamation +
-                        "Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
+                .withText(factAboutRecycle + ". " + exclamation +
+                        ". Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
                 .build(); // Build the say action.
         Animation sayRandomFactAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione
