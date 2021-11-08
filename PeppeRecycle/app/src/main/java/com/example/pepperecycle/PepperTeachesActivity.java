@@ -53,11 +53,11 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     String exclamation;
     byte trialState;
     String[] pepperExclamations = {
-            "Evvài, ho indovinato! .",
-            "Mi sto impegnando! .",
-            "Questa cosa la sapevo proprio bene! . ",
-            "Si vede che ho studiato! .",
-            "Certo che sono proprio bravo! ."
+            ". Evvài, ho indovinato! .",
+            ". Mi sto impegnando! .",
+            ". Questa cosa la sapevo proprio bene! . ",
+            ". Si vede che ho studiato! .",
+            ". Certo che sono proprio bravo! ."
     };
 
     String[] factsOrganic = {

@@ -60,7 +60,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
     TextView tvExplaination;
     byte trialState; //Qui dovrebbe essere 0
     boolean lastPage = false; //ultima pagg del tutorial
-
+    Button buttonSkipTutorial;
     private Button buttonNext, buttonPrev, buttonPlay;
     private int mCurrentPage;
     ImageView ivTutorial;
@@ -81,6 +81,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         buttonNext = (Button) findViewById(R.id.buttonNext);
         buttonPrev = (Button) findViewById(R.id.buttonPrev);
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
+        buttonSkipTutorial = (Button) findViewById(R.id.buttonSkipTutorial);
 
         tvExplaination = (TextView) findViewById(R.id.tvExplaination);
         ivTutorial = (ImageView) findViewById(R.id.ivTutorial);
@@ -127,7 +128,15 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 prevPage();
             }
         });
+        buttonSkipTutorial.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View view) {
+                pgIndex=3;
+                startPage(pgIndex);
+                endOfTutorial = true; //TODO Inutile? Forse è già stato inizializzato a true?
+            }
+        });
 
     }
 
