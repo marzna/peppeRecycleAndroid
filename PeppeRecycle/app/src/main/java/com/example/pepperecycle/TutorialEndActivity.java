@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiContext;
+import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
 import com.aldebaran.qi.sdk.builder.AnimateBuilder;
 import com.aldebaran.qi.sdk.builder.AnimationBuilder;
@@ -41,6 +42,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        QiSDK.register(this, this);
         setContentView(R.layout.activity_tutorial_end);
 
         //Per far sparire la barra grigia sopra
@@ -73,15 +75,16 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
             tvTrialQuestion.setText("Il turno di prova è finito.\nAdesso giochiamo sul serio!");
             currPhrase = "Il raund di prova è finito. Adesso giochiamo sul serio! .";
             playGameAfterTrial = true;
-            trialState = -1;
+//            trialState = -1;
         } else {
             buttonPlayEndTutorial.setEnabled(false);
             buttonPlayEndTutorial.setVisibility(View.INVISIBLE);
 
             tvTrialTitle.setText("Turno di prova - INIZIO");
             tvTrialQuestion.setText("Vuoi giocare un turno di prova?");
-            currPhrase = "Il tutorial è finito. Vogliamo giocare un raund di prova?";
+            currPhrase = "Il tutòrial è finito. Vogliamo giocare un raund di prova?";
         }
+        trialState = -1;
 
         //OnClickListeners
         buttonYes.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +111,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
                 Intent activity2Intent = new Intent(getApplicationContext(), TutorialActivity.class);
                 activity2Intent.putExtra("endOfTutorial", false);
                 activity2Intent.putExtra("pgIndex", 3); //TODO ultima pagina?
+                activity2Intent.putExtra("trialState", trialState);
                 startActivity(activity2Intent); //Per andare alla pagina precedente
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
@@ -157,7 +161,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
             trialState = 0;
         } else {
             activity2Intent= new Intent(TutorialEndActivity.this, PlayGameActivity.class);
-            //TODO Controlla, non so se vada bene così
+            trialState = -1; //TODO Controlla, non so se vada bene così
         }
 
         //TODO Servono?
@@ -231,9 +235,9 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-        animateAskTrial.run();
         askForTrialRound.run();
-      /*  while(pgIndex <3 ) { //Incrementa la pagina fin quando non si arriva all'ultima
+        animateAskTrial.run();
+        /*  while(pgIndex <3 ) { //Incrementa la pagina fin quando non si arriva all'ultima
             nextPage();
         }
         askForContinue.run();*/

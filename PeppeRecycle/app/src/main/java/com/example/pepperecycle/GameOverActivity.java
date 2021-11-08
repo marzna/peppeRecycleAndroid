@@ -198,7 +198,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
         imageViewResult.setImageResource(R.drawable.trophy);*/
     }
     void userLoser() {
-        resultPhrase = "Hai perso. Stavolta sono stato più bravo di te!";
+        resultPhrase = "Hai perso. Stavolta sono stato più bravo di te! .";
         tvResult.setText("Hai perso!");
         /*tvGameOver.setText("Uhm,\ncredo che sia meglio rivedere qualcosa!");
         imageViewResult.setImageResource(R.drawable.sad_face);*/

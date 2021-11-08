@@ -93,6 +93,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         tvTutorialJudge = findViewById(R.id.tvTutorialJudge);
 
         buttonYes = findViewById(R.id.buttonAnswerYes);
+//        buttonYes.setClickable(true);
         buttonNo = findViewById(R.id.buttonAnswerNo);
 
         desc = "In questa fase del gioco,\n" +
@@ -101,7 +102,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         dialog = new Dialog(this);
 
-
+        trialState = -1;
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -118,11 +119,13 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             trialState = extras.getByte("trialState");
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
-
+        Log.d(TAG, "TrialState: "+ trialState);
         if(trialState == 0 || trialState == 1) {
             tvTutorialJudge.setVisibility(View.VISIBLE);
+            Log.d(TAG, "Siamo nel trial. trialState: "+ trialState);
         } else {
             tvTutorialJudge.setVisibility(View.INVISIBLE);
+            Log.d(TAG, "NON siamo nel trial. trialState: "+ trialState);
             /*textViewUserScore.setEnabled(true);
             textViewPepperScore.setEnabled(true);
             imageViewUserScore.setEnabled(true);
@@ -134,18 +137,18 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
             @Override
             public void onClick(View view) {
-                Log.e("TAG", "buttonYes cliccato");
+                Log.e(TAG, "buttonYes cliccato");
                 //Il punteggio viene incrementato solo se la risposta è corretta
                 isAnswerCorrect = true;
                 pressed = true;
-
+                buttonYes.setClickable(false);
                 // Incrementa il punteggio solo se non si tratta di un turno di prova
                 if(trialState == -1) {//                if(!tutorialEnabled) {
                     updateScore(isPepperTurn);
                     /*trialState = 1;*/ //Pronto per passare al turno di Pepper
-                    Log.e("TAG", "Punteggio incrementato.");
+                    Log.e(TAG, "Punteggio incrementato.");
                 } else {
-                    Log.e("TAG", "Turno di prova. Punteggio non incrementato.");
+                    Log.d(TAG, "Turno di prova. Punteggio non incrementato.");
                 }
                 //Rendo i bottoni non cliccabili per evitare di incrementare ulteriormente i punteggi
 //                buttonYes.setClickable(false);
@@ -158,7 +161,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
             @Override
             public void onClick(View view) {
-                Log.e("TAG", "buttonNo cliccato");
+                Log.e(TAG, "buttonNo cliccato");
                 isAnswerCorrect = false;
                 pressed = true;
                 //TODO Se il turno era dell'utente, fai dire a Pepper qualcosa random sul riciclo o no?
@@ -232,9 +235,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
             //todo se l'utente ha sbagliato, insegna qualcosa
-            if(trialState == -1) // if(!tutorialEnabled)
+            if(trialState == -1) {// if(!tutorialEnabled)
                 updateScore(isPepperTurn);
-            nextTurn();
+            } else {
+                nextTurn();
+            }
 
             //todo activity per insegnare qualcosa
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
@@ -320,7 +325,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsGlass);
                 break;
             default:
-                typeBinSelectedIs = "Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno.";
+                typeBinSelectedIs = "Si è verificato un problema. Torna indietro e ripetiamo il turno.";
+                //"Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno.";
                 selectedBinIs.setGravity(Gravity.CENTER);
                 textViewAskForConfirm.setVisibility(View.GONE); //View.INVISIBLE
                 selectedBin.setVisibility(View.GONE); //View.INVISIBLE
@@ -391,7 +397,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
              updateScore(isPepperTurn);
          }
 
-         Log.e("TAG", "Entrato nel buttonYes.");
+         Log.e(TAG, "Entrato nel buttonYes.");
 
          nextTurn();//startPepperTeacher();//TODO ELIMINA tutta questa riga
      }
@@ -403,16 +409,22 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
          nextTurn();
      }*/
     public void updateScore(boolean isPepperTurn) {
-        if(isPepperTurn && trialState != 1 ) {
+//        if(trialState == -1) { controllato già fuori
+        if(isPepperTurn) {
             ++pepperScore;//scores.put("score_pepper", (byte) (scores.get("score_pepper") + 1)); //Incrementa il punteggio di Pepper
-            pepperTeaches = pepperTeacher();
+            // pepperTeaches = pepperTeacher();
             startPepperTeacher();
-            //TODO inserisci nozioni relative all'oggetto classificato
+            Log.d(TAG, "Incrementato pepperScore");
+            //nextTurn();
+
         } else {
             ++userScore;//scores.put("score_user1", (byte) (scores.get("score_user1") + 1)); //Incrementa il punteggio dell'utente
+//            buttonYes.setEnabled(false);
+            Log.d(TAG, "Incrementato userScore");
             //TODO inserisci congratulazioni
         }
     }
+    //}
     byte nextTrialState(byte state) {
         switch(state) {
             case 0:     // è appena stato effettuato il turno utente.
@@ -427,6 +439,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         return state;
     }
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
+        // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
         Intent activity2Intent;
         trialState = nextTrialState(trialState);
         if (trialState == 2) {
@@ -441,8 +454,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
                 if(isPepperTurn) {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class);
+                    Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
                 } else {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
+                    Log.d(TAG, "trialState passato a UserTurn: " + trialState);
                 }
             /*if (isPepperTurn) { TODO se non va bene rimetti come stava
                 if (tutorialEnabled) {
@@ -492,7 +507,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         finish();
     }
     void startPepperTeacher() {
-        Log.e("TAG", "Entrato nella funzione startPepperTeacher.");
+        Log.e(TAG, "Entrato nella funzione startPepperTeacher.");
         Intent activity2Intent = new Intent(JudgeConfirmActivity.this, PepperTeachesActivity.class);//TODO GameOverActivity
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("wasteType", wasteType);
@@ -503,6 +518,9 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         //activity2Intent.putExtra("scores", (Serializable) scores);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("trialState", trialState);
+        activity2Intent.putExtra("tutorialEnabled", false);
+        //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
 
         startActivity(activity2Intent);
         finish();

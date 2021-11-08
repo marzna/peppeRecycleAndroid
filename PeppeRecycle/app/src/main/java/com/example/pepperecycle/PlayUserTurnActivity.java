@@ -97,6 +97,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
 
         dialog = new Dialog(this);
         canCloseApp = false;
+        trialState = -1;
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
@@ -107,6 +109,9 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             currentRound = extras.getByte("currentRound");
             roundTutorial = extras.getBoolean("roundTutorial");
             trialState = extras.getByte("trialState");
+            Log.d(TAG, "Ricevuto trialState: "+ trialState);
+        } else {
+            Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
         showScore();
 //        if(tutorialEnabled) {
@@ -344,6 +349,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentRound", currentRound);
+        Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
         startActivity(activity2Intent);
         finish();
         /* TODO Turno dell'utente:

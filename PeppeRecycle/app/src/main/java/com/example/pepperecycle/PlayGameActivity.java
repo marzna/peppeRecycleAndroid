@@ -2,6 +2,7 @@ package com.example.pepperecycle;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -30,7 +31,8 @@ import java.util.Map;
 import java.util.Random;
 
 //Activity contenente il vero e proprio gioco
-public class PlayGameActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
+public class PlayGameActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
+    private static final String TAG = "PlayGameActivity";//, CameraBridgeViewBase.CvCameraViewListener2{
 
     boolean isPepperTurn;
     // int N_PLAYERS = 2; int turn = new Random().nextInt(N_PLAYERS) ; //Ritorna un random int nel range [0, N_PLAYERS-1]
@@ -42,6 +44,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     static byte userScore = 0;
     boolean tutorialEnabled;
     byte tutorialState = -1;
+    byte trialState;
 
     // Store the Animate action.
     private Animate animate;
@@ -64,11 +67,15 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         isPepperTurn = new Random().nextBoolean() ; //Ritorna un random boolean (Serve per stabilire randomicamente chi inizia a giocare)
         currentRound = 0;
         Bundle extras = getIntent().getExtras();
+        trialState = -1;
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             currentRound = extras.getByte("currentRound");
+            trialState = extras.getByte("trialState");
 
+            Log.d(TAG, "Ricevuto trialState: "+ trialState);
         }
+
         if(tutorialEnabled) {
             isPepperTurn = false;
         }
@@ -130,6 +137,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("trialState", trialState);
         startActivity(activity2Intent);
         //isPepperTurn = !isPepperTurn;
         finish();

@@ -51,6 +51,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     Button buttonPlay;
     Animate animate;
     String exclamation;
+    byte trialState;
     String[] pepperExclamations = {
             "Evvài, ho indovinato! .",
             "Mi sto impegnando! .",
@@ -103,12 +104,13 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
+        Log.d(TAG, "Start.");
+
+        setContentView(R.layout.activity_pepper_teaches);
 
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
-
-        setContentView(R.layout.activity_pepper_teaches);
 
         textViewFactAbout = findViewById(R.id.textViewFactAbout);
         textViewRandomFact = findViewById(R.id.textViewRandomFact);
@@ -122,10 +124,10 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             wasteType = extras.getByte("wasteType"); // The key argument here must match that used in the other activity
             round = extras.getByte("round");
             isPepperTurn = extras.getBoolean("isPepperTurn");
-            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
-            wasteTypeString = extras.getString(wasteTypeString);
+            trialState = extras.getByte("trialState");
+            wasteTypeString = extras.getString("wasteTypeString");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
@@ -319,6 +321,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         activity2Intent.putExtra("userScore", userScore);
         //activity2Intent.putExtra("scores", (Serializable) scores);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("trialState", trialState);
         startActivity(activity2Intent);
         finish();
     }
