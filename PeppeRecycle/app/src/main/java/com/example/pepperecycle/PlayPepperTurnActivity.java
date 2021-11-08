@@ -78,7 +78,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private String garbageType = null; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
-    private String postUrl = "http://6111-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://19e5-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
     private boolean tutorialEnabled;
     byte trialState;
 
@@ -347,7 +347,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            finishAffinity();
 
         }
     }

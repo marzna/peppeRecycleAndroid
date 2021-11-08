@@ -26,7 +26,7 @@
         android:textColor="#FFEB3B"
         android:textSize="30dp"
         android:textStyle="bold|italic"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
     <ImageView
         android:id="@+id/imageViewPepperPhoto"
@@ -147,12 +147,16 @@
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="1dp"
         android:layout_toLeftOf="@id/buttonHome"
         android:layout_toRightOf="@id/tvTutorialPepper"
+        android:fontFamily="@font/andika_regular"
         android:gravity="center"
-        android:text="Per piacere, inquadra l'oggetto e premi sul pulsante verde, così posso vederlo bene!"
+        android:lineSpacingExtra="10sp"
+        android:text="Per piacere, inquadra l'oggetto e premi sul pulsante blu, così posso vederlo bene!"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="23sp" />
 
 </RelativeLayout>
