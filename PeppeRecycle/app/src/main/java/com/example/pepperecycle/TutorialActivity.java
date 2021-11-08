@@ -60,12 +60,13 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
     TextView tvExplaination;
     byte trialState; //Qui dovrebbe essere 0
     boolean lastPage = false; //ultima pagg del tutorial
-
+    Button buttonSkipTutorial;
     private Button buttonNext, buttonPrev, buttonPlay;
     private int mCurrentPage;
     ImageView ivTutorial;
     private Animate animate;
     String currPhrase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +81,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         buttonNext = (Button) findViewById(R.id.buttonNext);
         buttonPrev = (Button) findViewById(R.id.buttonPrev);
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
+        buttonSkipTutorial = (Button) findViewById(R.id.buttonSkipTutorial);
 
         tvExplaination = (TextView) findViewById(R.id.tvExplaination);
         ivTutorial = (ImageView) findViewById(R.id.ivTutorial);
@@ -126,7 +128,15 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 prevPage();
             }
         });
+        buttonSkipTutorial.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View view) {
+                pgIndex=3;
+                startPage(pgIndex);
+                endOfTutorial = true; //TODO Inutile? Forse è già stato inizializzato a true?
+            }
+        });
 
     }
 
@@ -189,7 +199,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         animateAskTutorial.run();
         tutorialIntro.run();
 
-        askForContinue.run();
+        //askForContinue.run(); L'ho messo direttamente in currPhrase
 
         Listen listenPlay = ListenBuilder
                 .with(qiContext)
@@ -434,7 +444,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.INVISIBLE);
 
-                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto.";
+                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto. Posso andare avanti ora? .";
 
                 tvExplaination.setText("Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto.");
                 ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
@@ -447,7 +457,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.INVISIBLE);
 
-                currPhrase = "Se la risposta è corretta, chi ha indovinato guadagnerà un punto! .";
+                currPhrase = "Se la risposta è corretta, chi ha indovinato guadagnerà un punto! Va bene? .";
 
                 tvExplaination.setText("Se la risposta è corretta, chi ha indovinato guadagnerà un punto!");
                 ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO

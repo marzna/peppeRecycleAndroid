@@ -222,6 +222,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     void newGame() { //TODO Da testare
         Intent activity2Intent = new Intent(GameOverActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", false);
+        activity2Intent.putExtra("trialState", -1);
         startActivity(activity2Intent);
         finish();
     }

@@ -1,5 +1,6 @@
 package com.example.pepperecycle;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -11,8 +12,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.DrawableRes;
 
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.QiSDK;
@@ -238,18 +237,22 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBrownBin)) {             // Utente seleziona il bidone dell'organico
             wasteType = TYPE_ORGANIC;
+            binType = "Organico";
             fading(binBrown, getDrawable(R.drawable.bin_brown_shadow));
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBlueBin)) {      // Utente seleziona il bidone carta e cartone
             wasteType = TYPE_PAPER_CARDBOARD;
+            binType = "Carta e cartone";
             fading(binBlue, getDrawable(R.drawable.bin_blue_shadow));
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectYellowBin)) {      // Utente seleziona il bidone plastica e metalli
             wasteType = TYPE_PLASTIC_METAL;
+            binType = "Plastica e metalli";
             fading(binYellow, getDrawable(R.drawable.bin_yellow_shadow));
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectGreenBin)) {      // Utente seleziona il bidone vetro
             wasteType = TYPE_GLASS;
+            binType = "Vetro";
             fading(binGreen, getDrawable(R.drawable.bin_green_shadow));
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
@@ -322,7 +325,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         *//*
     }*/
     void ackSelectedBin(QiContext qiContext) { //Todo forse va messo direttamente in JudgeConfirm...
-        checkBin();
+//        checkBin();
         Say sayAskForConfirm= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 .withText("Hai scelto" + binType + ". Giudice, la risposta è corretta?") // Set the text to say.
                 .build(); // Build the say action.

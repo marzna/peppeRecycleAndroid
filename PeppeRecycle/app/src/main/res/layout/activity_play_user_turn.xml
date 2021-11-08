@@ -63,9 +63,10 @@
         android:id="@+id/binsTVLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/guessBin"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="false"
-        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"
         android:background="@android:color/transparent"
         android:gravity="center_horizontal">
 
@@ -77,7 +78,7 @@
             android:text="Organico"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textViewBinBlue"
@@ -86,7 +87,7 @@
             android:text="Carta e Cartone"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textViewBinYellow"
@@ -95,7 +96,7 @@
             android:text="Plastica e Metalli"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textViewBinGreen"
@@ -104,14 +105,15 @@
             android:text="Vetro"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/binsIVLayout"
         android:layout_width="920dp"
         android:layout_height="1352dp"
-        android:layout_below="@id/binsTVLayout"
+        android:layout_above="@id/binsTVLayout"
+        android:layout_below="@id/guessBin"
         android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
         android:gravity="center_horizontal"
@@ -200,11 +202,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/imageViewUserScore"
         android:layout_centerHorizontal="true"
-        android:layout_margin="25dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:lineSpacingExtra="8sp"

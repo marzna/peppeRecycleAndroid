@@ -9,13 +9,14 @@
 
     <TextView
         android:id="@+id/tvTutorialTitle"
-        android:layout_marginTop="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:text="TUTORIAL"
+        android:textColor="#FFEBEE"
         android:textSize="36sp" />
 
     <TextView
@@ -32,6 +33,7 @@
         android:gravity="center"
         android:text="A turno, il giudice ci mostrerà un oggetto\ne dovremo indovinare in quale bidone riciclarlo"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         android:textSize="36sp" />
 
     <androidx.viewpager.widget.ViewPager
@@ -102,6 +104,19 @@
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
         app:srcCompat="@drawable/bin_yellow_shadow" />
+
+    <Button
+        android:id="@+id/buttonSkipTutorial"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/trial_skip"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:textColor="#B2FF59"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

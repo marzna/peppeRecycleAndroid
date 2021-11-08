@@ -15,18 +15,19 @@
 
     <TextView
         android:id="@+id/tvTutorialPepper"
-        android:layout_width="400dp"
+        android:layout_width="380dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="false"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/andika_regular"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:text="Turno di prova"
         android:textAllCaps="true"
         android:textColor="#FFEB3B"
         android:textSize="30dp"
         android:textStyle="bold|italic"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
     <ImageView
         android:id="@+id/imageViewPepperPhoto"
@@ -92,7 +93,47 @@
         android:textStyle="bold"
         android:visibility="invisible" />
 
+
     <TextView
+        android:id="@+id/textViewPepperScore"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/imageViewPepperScore"
+        android:gravity="center"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="34sp" />
+
+    <ImageView
+        android:id="@+id/imageViewUserScore"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/textViewPepperScore"
+        app:srcCompat="@drawable/user" />
+
+    <TextView
+        android:id="@+id/textViewUserScore"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/imageViewUserScore"
+        android:gravity="center"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="34sp" />
+
+    <ImageView
+        android:id="@+id/imageViewPepperScore"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@drawable/pepper_face" />
+
+    <!--<TextView
         android:id="@+id/textViewScore"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
@@ -140,19 +181,26 @@
         android:layout_height="40dp"
         android:layout_toRightOf="@id/textViewScore"
         android:visibility="invisible"
-        app:srcCompat="@drawable/pepper_face" />
+        app:srcCompat="@drawable/pepper_face" />-->
 
     <TextView
         android:id="@+id/textViewShowMeObj"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginBottom="10dp"
         android:layout_toLeftOf="@id/buttonHome"
         android:layout_toRightOf="@id/tvTutorialPepper"
-        android:gravity="center"
-        android:text="Per piacere, inquadra l'oggetto e premi sul pulsante verde, così posso vederlo bene!"
-        android:textAlignment="center"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center_vertical"
+        android:lineSpacingExtra="10sp"
+        android:text="Per piacere, premi sul bottone blu, così posso vedere bene il rifiuto!"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="23sp" />
 
 </RelativeLayout>
