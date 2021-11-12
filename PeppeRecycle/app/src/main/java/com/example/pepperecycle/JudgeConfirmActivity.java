@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,11 +73,21 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     Dialog dialog;
     String desc;
     Button buttonYes, buttonNo;
+    ImageButton buttonBack;
     TextView textViewAskForConfirm, tvTutorialJudge;
     byte currentRound;
     byte tutorialState = -1;
     byte trialState;
 
+    String exclamation;
+
+    String[] pepperExclamations = {
+            "Evvài, ho indovinato!",
+            "Mi sto impegnando!",
+            "Questa cosa la sapevo proprio bene! ",
+            "Si vede che ho studiato!",
+            "Certo che sono proprio bravo!"
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +107,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         buttonYes = findViewById(R.id.buttonAnswerYes);
 //        buttonYes.setClickable(true);
         buttonNo = findViewById(R.id.buttonAnswerNo);
+        buttonBack = findViewById(R.id.buttonBack);
 
         desc = "In questa fase del gioco,\n" +
                 "il giudice deve stabilire se la risposta è corretta.\n" +
@@ -103,6 +116,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         dialog = new Dialog(this);
 
         trialState = -1;
+        selectExclamation();
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -149,6 +163,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                     Log.e(TAG, "Punteggio incrementato.");
                 } else {
                     Log.d(TAG, "Turno di prova. Punteggio non incrementato.");
+                    nextTurn();
                 }
                 //Rendo i bottoni non cliccabili per evitare di incrementare ulteriormente i punteggi
 //                buttonYes.setClickable(false);
@@ -164,9 +179,9 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 Log.e(TAG, "buttonNo cliccato");
                 isAnswerCorrect = false;
                 pressed = true;
+
                 //TODO Se il turno era dell'utente, fai dire a Pepper qualcosa random sul riciclo o no?
                 //pepperTeaches = pepperTeacher();
-
                 //Rendo i bottoni non cliccabili
 //                buttonYes.setClickable(false);
 //                buttonNo.setClickable(false);
@@ -174,7 +189,32 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             }
         });
 
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "buttonBack cliccato");
+
+                Intent activity2Intent;//Per andare alla pagina principale
+                if (isPepperTurn) { //TODO Rimuovi il bottone back se il turno era di Pepper o lascialo se si vuole ri-scattare la foto?
+                    activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
+                } else {
+                    activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
+                }
+                activity2Intent.putExtra("round", round);
+                //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+                activity2Intent.putExtra("pepperScore", pepperScore);
+                activity2Intent.putExtra("userScore", userScore);
+                activity2Intent.putExtra("currentRound", currentRound);
+                activity2Intent.putExtra("trialState", trialState);
+                startActivity(activity2Intent); //Per andare alla pagina principale
+                finish();
+            }
+        });
+
+
         startJudgeConfirm();
+
     }
 
     @Override
@@ -236,6 +276,12 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
             //todo se l'utente ha sbagliato, insegna qualcosa
             if(trialState == -1) {// if(!tutorialEnabled)
+                if(isPepperTurn) {
+                    Say sayRandomFact = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                            .withText(exclamation) // Set the text to say.
+                            .build(); // Build the say action.
+                    sayRandomFact.run();
+                }
                 updateScore(isPepperTurn);
             } else {
                 nextTurn();
@@ -303,29 +349,40 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             case 0: // case "organic":
                 typeBinSelectedIs = "Il bidone selezionato è quello dell'organico.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndell'organico");
-                selectedBin.setImageResource(R.drawable.bin_brown_shadow);
+                selectedBin.setImageResource(R.drawable.closed_bin_brown_shadow);
+                fading(selectedBin, getDrawable(R.drawable.bin_brown_shadow));
 //                factAboutRecycle = setFactRecycle(factsOrganic);
                 break;
             case 1: // case "paper": case "cardboard":
                 typeBinSelectedIs = "Il bidone selezionato è quello di carta e cartone.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndi carta e cartone");
-                selectedBin.setImageResource(R.drawable.bin_blue_shadow);
+                selectedBin.setImageResource(R.drawable.closed_bin_blue_shadow);
+                fading(selectedBin, getDrawable(R.drawable.bin_blue_shadow));
 //                factAboutRecycle = setFactRecycle(factsCardCardboard);
                 break;
             case 2: // case "plastic": case "metal":
                 typeBinSelectedIs = "Il bidone selezionato è quello di plastica e metalli.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndi plastica e metalli");
-                selectedBin.setImageResource(R.drawable.bin_yellow_shadow);
+                selectedBin.setImageResource(R.drawable.closed_bin_yellow_shadow);
+                fading(selectedBin, getDrawable(R.drawable.bin_yellow_shadow));
 //                factAboutRecycle = setFactRecycle(factsPlasticMetal);
                 break;
             case 3: // case "glass":
                 typeBinSelectedIs = "Il bidone selezionato è quello del vetro.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndel vetro");
-                selectedBin.setImageResource(R.drawable.bin_green_shadow);
+                selectedBin.setImageResource(R.drawable.closed_bin_green_shadow);
+                fading(selectedBin, getDrawable(R.drawable.bin_green_shadow));
 //                factAboutRecycle = setFactRecycle(factsGlass);
                 break;
             default:
                 typeBinSelectedIs = "Si è verificato un problema. Torna indietro e ripetiamo il turno.";
+
+                //Centrare il button
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams
+                        .WRAP_CONTENT);
+                layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+                this.selectedBinIs.setLayoutParams(layoutParams);
+
                 //"Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno.";
                 selectedBinIs.setGravity(Gravity.CENTER);
                 textViewAskForConfirm.setVisibility(View.GONE); //View.INVISIBLE
@@ -334,6 +391,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 buttonNo.setVisibility(View.GONE); //View.INVISIBLE
                 //TODO GOBACK
                 //selectedBinIs.setText("ERRORE.");
+                buttonBack.performClick();               ;
                 break;
         }
         selectedBinIs.setText(typeBinSelectedIs);
@@ -411,12 +469,13 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     public void updateScore(boolean isPepperTurn) {
 //        if(trialState == -1) { controllato già fuori
         if(isPepperTurn) {
+
             ++pepperScore;//scores.put("score_pepper", (byte) (scores.get("score_pepper") + 1)); //Incrementa il punteggio di Pepper
             // pepperTeaches = pepperTeacher();
+            isPepperTurn = false; // solitamente il turno viene cambiato in nextTurn ma in questo caso non viene richiamata
             startPepperTeacher();
             Log.d(TAG, "Incrementato pepperScore");
             //nextTurn();
-
         } else {
             ++userScore;//scores.put("score_user1", (byte) (scores.get("score_user1") + 1)); //Incrementa il punteggio dell'utente
 //            buttonYes.setEnabled(false);
@@ -448,6 +507,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         } else {
             isPepperTurn = !isPepperTurn; // Turno successivo
             ++currentRound;
+            Log.d("ROUND", "currentRound++");
             // if (round < 6) {    // TODO sostituisci 6 con una costante
             // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
             // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
@@ -507,7 +567,16 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         startActivity(activity2Intent);
         finish();
     }
+    void selectExclamation() {
+        Log.e(TAG, "Entrato nel selectExclamation.");
+        exclamation = pepperExclamations[ new Random().nextInt(pepperExclamations.length)];
+
+        Log.e(TAG, "exclamation: " + exclamation);
+
+    }
+
     void startPepperTeacher() {
+
         Log.e(TAG, "Entrato nella funzione startPepperTeacher.");
         Intent activity2Intent = new Intent(JudgeConfirmActivity.this, PepperTeachesActivity.class);//TODO GameOverActivity
         activity2Intent.putExtra("round", round);
@@ -520,13 +589,13 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("currentRound", currentRound);
         activity2Intent.putExtra("trialState", trialState);
-        activity2Intent.putExtra("tutorialEnabled", false);
+//        activity2Intent.putExtra("tutorialEnabled", false);
         //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
 
         startActivity(activity2Intent);
         finish();
     }
-    public void buttonBack(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+    /*public void buttonBack(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent;//Per andare alla pagina principale
         if(isPepperTurn) { //TODO Rimuovi il bottone back se il turno era di Pepper o lascialo se si vuole ri-scattare la foto?
             activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
@@ -541,7 +610,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("trialState", trialState);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
-    }
+    }*/
     public void buttonHelp(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
 //        showDialog(desc);
 
@@ -594,4 +663,41 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         Log.e(TAG, "Dopo dialog.show");
 
     }
+
+
+    //Dissolvenza bidone (animazione quando il bidone viene selezionato)
+    public void fading(ImageView imageView, Drawable res) {
+        //Credits: https://stackoverflow.com/questions/24939387/android-change-background-image-with-fade-in-out-animation
+
+        android.view.animation.Animation fadeOut = AnimationUtils.loadAnimation(JudgeConfirmActivity.this, R.anim.fade_out);
+        imageView.startAnimation(fadeOut);
+
+        fadeOut.setAnimationListener(new android.view.animation.Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(android.view.animation.Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(android.view.animation.Animation animation) {
+                android.view.animation.Animation fadeIn = AnimationUtils.loadAnimation(JudgeConfirmActivity.this, R.anim.fade_in);
+                imageView.startAnimation(fadeIn);
+                imageView.setBackground(res);
+                imageView.setMaxWidth(230);
+                imageView.setMaxHeight(338);
+
+                /*
+            android:layout_width="230dp"
+            android:layout_height="338dp"*/
+            }
+
+            @Override
+            public void onAnimationRepeat(android.view.animation.Animation animation) {
+
+            }
+
+        });
+    }
+
+
 }

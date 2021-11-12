@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -66,6 +67,9 @@ import okhttp3.MultipartBody;
 public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener, CameraBridgeViewBase.CvCameraViewListener2 {
     private static String TAG = "PlayPepperTurnActivity";
 
+    // Indirizzo del server
+    private String postUrl = "http://b5ac-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
     private Mat mRGBA, mRGBAT;
@@ -78,9 +82,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private String garbageType = null; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
-    private String postUrl = "http://19e5-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
     private boolean tutorialEnabled;
     byte trialState;
+
+    boolean roundTutorial;
+    boolean restartGame;
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPeppeRecycle.jpg";
@@ -118,6 +124,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private Animate animate;
     Button buttonTakePicture;
 
+    MediaPlayer mediaPlayer;
+
     ImageView imageViewUserScore,imageViewPepperScore;
 
     @Override
@@ -139,9 +147,13 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         imageViewUserScore = findViewById(R.id.imageViewUserScore);
         imageViewPepperScore = findViewById(R.id.imageViewPepperScore);
 
-        photoTaken=false;
+        photoTaken = false;
         classified = false;
-        canTakePhoto=false;
+        canTakePhoto = false;
+        roundTutorial = false;
+        restartGame = false;
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.ticking_clock);
 
         if (checkPermissions()) {
             Log.d(TAG, "Permissions granted");
@@ -170,25 +182,35 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
+            roundTutorial = extras.getBoolean("roundTutorial");
             currentRound = extras.getByte("currentRound");
             trialState = extras.getByte("trialState");
+            restartGame = extras.getBoolean("restartGame");
             Log.d(TAG, "Ricevuto trialState: "+ trialState);
         } else {
             Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
 
+
         if(trialState == 1) {
             tvTutorialPepper.setVisibility(View.VISIBLE);
-        } else if(trialState == 0) {
-
             textViewUserScore.setVisibility(View.INVISIBLE);
             textViewPepperScore.setVisibility(View.INVISIBLE);
             imageViewUserScore.setVisibility(View.INVISIBLE);
             imageViewPepperScore.setVisibility(View.INVISIBLE);
+        /*}  else if (trialState == 0) {
+             textViewUserScore.setVisibility(View.INVISIBLE);
+                textViewPepperScore.setVisibility(View.INVISIBLE);
+                imageViewUserScore.setVisibility(View.INVISIBLE);
+                imageViewPepperScore.setVisibility(View.INVISIBLE);
             tvTutorialPepper.setVisibility(View.INVISIBLE);
+            */
         } else {
             tvTutorialPepper.setVisibility(View.INVISIBLE);
-
+            textViewUserScore.setVisibility(View.VISIBLE);
+            textViewPepperScore.setVisibility(View.VISIBLE);
+            imageViewUserScore.setVisibility(View.VISIBLE);
+            imageViewPepperScore.setVisibility(View.VISIBLE);
         }
 
         showScore();
@@ -214,6 +236,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         setQiContext(qiContext);
+
         Say sayPepperTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 .withText("Ora è il mio turno!") // Set the text to say.
                 .build(); // Build the say action.
@@ -572,6 +595,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     }
 
     public void classify() {
+        mediaPlayer.start();
         responseText.setText("Classificazione in corso...");
         Log.e("CLASSIF","Entrato in classify");
         responseText.setText(postUrl);
@@ -632,6 +656,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("roundTutorial", isPepperTurn);
         activity2Intent.putExtra("wasteTypeString", wasteTypeString);
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
@@ -678,6 +703,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("roundTutorial", isPepperTurn);
         activity2Intent.putExtra("currentRound", currentRound);
         activity2Intent.putExtra("trialState", trialState);
 
@@ -696,6 +722,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentRound", currentRound);
         activity2Intent.putExtra("trialState", trialState);
+        activity2Intent.putExtra("roundTutorial", isPepperTurn);
+
         Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
         startActivity(activity2Intent);
         finish();

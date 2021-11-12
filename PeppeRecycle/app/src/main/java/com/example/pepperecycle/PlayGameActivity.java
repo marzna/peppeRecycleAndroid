@@ -45,6 +45,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     boolean tutorialEnabled;
     byte tutorialState = -1;
     byte trialState;
+    boolean restartGame; //Indica che si sta giocando una nuova partita dopo aver terminato l'altra
 
     // Store the Animate action.
     private Animate animate;
@@ -66,13 +67,15 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         }};*/
         isPepperTurn = new Random().nextBoolean() ; //Ritorna un random boolean (Serve per stabilire randomicamente chi inizia a giocare)
         currentRound = 0;
+        restartGame = false;
+
         Bundle extras = getIntent().getExtras();
         trialState = -1;
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             currentRound = extras.getByte("currentRound");
             trialState = extras.getByte("trialState");
-
+            restartGame = extras.getBoolean("restartGame");
             Log.d(TAG, "Ricevuto trialState: "+ trialState);
         }
 
@@ -138,6 +141,8 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("currentRound", currentRound);
         activity2Intent.putExtra("trialState", trialState);
+        activity2Intent.putExtra("restartGame", restartGame);
+
         startActivity(activity2Intent);
         //isPepperTurn = !isPepperTurn;
         finish();

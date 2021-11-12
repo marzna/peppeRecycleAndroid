@@ -120,7 +120,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .build(); // Build the say action.*/
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Si","Voglio giocare", "Play", "Si Pepper", "Giochiamo", "Gioca", "Iniziamo", "Inizia")
+                .withTexts("Si", "sì", "sì Pepper", "pepper sì", "pepper si", "Voglio giocare", "Play", "Si Pepper", "Giochiamo", "Gioca", "Iniziamo", "Inizia")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)

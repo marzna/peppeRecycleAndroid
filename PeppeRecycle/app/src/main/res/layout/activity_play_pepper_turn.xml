@@ -22,7 +22,7 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/andika_regular"
         android:gravity="center_vertical"
-        android:text="Turno di prova"
+        android:text="Round di prova"
         android:textAllCaps="true"
         android:textColor="#FFEB3B"
         android:textSize="30dp"

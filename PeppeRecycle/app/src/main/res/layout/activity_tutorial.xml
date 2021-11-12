@@ -87,12 +87,13 @@
         android:layout_height="100dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/button_play"
+        android:background="@drawable/button_next"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:textAllCaps="false"
         android:textSize="20sp"
         android:visibility="invisible" />
+    <!--android:background="@drawable/button_play"-->
 
     <ImageView
         android:id="@+id/ivTutorial"
