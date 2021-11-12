@@ -67,7 +67,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     ImageButton buttonHelp;
     boolean canCloseApp;
     byte currentRound;
-
+    boolean restartGame;
     boolean roundTutorial;
 
     @Override
@@ -89,6 +89,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         imageViewPepperScore = findViewById(R.id.imageViewPepperScore);
         tvTutorial = findViewById(R.id.tvTutorial);
 
+        buttonHelp = findViewById(R.id.buttonHelp);
+
         binBrown = findViewById(R.id.binBrown);
         binBlue = findViewById(R.id.binBlue);
         binYellow = findViewById(R.id.binYellow);
@@ -97,6 +99,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         dialog = new Dialog(this);
         canCloseApp = false;
         trialState = -1;
+        restartGame=false;
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -108,13 +111,14 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             currentRound = extras.getByte("currentRound");
             roundTutorial = extras.getBoolean("roundTutorial");
             trialState = extras.getByte("trialState");
+            restartGame = extras.getBoolean("restartGame");
             Log.d(TAG, "Ricevuto trialState: "+ trialState);
         } else {
             Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
         showScore();
 //        if(tutorialEnabled) {
-        if(trialState == 0) {
+        if(trialState == 0) { //turno di prova
             /*    tvTutorial.setEnabled(true);*/
             textViewUserScore.setVisibility(View.INVISIBLE);
             textViewPepperScore.setVisibility(View.INVISIBLE);
@@ -142,12 +146,56 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 "Buona fortuna!";
 
 
-        buttonHelp = findViewById(R.id.buttonHelp);
         buttonHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CommonUtils.showDialog(PlayUserTurnActivity.this, desc);
                 //showDialog(desc);
+            }
+
+        });
+
+        binBrown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "bidone cliccato");
+                wasteType = TYPE_ORGANIC;
+                // binPressed=true;
+//                fading(binBrown, getDrawable(R.drawable.bin_brown_shadow));
+                askForConfirm();
+            }
+
+        });
+        binBlue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "bidone cliccato");
+                wasteType = TYPE_PAPER_CARDBOARD;
+                // binPressed=true;
+//                fading(binBlue, getDrawable(R.drawable.bin_blue_shadow));
+                askForConfirm();
+            }
+
+        });
+        binYellow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "bidone cliccato");
+                wasteType = TYPE_PLASTIC_METAL;
+                // binPressed=true;
+//                fading(binYellow, getDrawable(R.drawable.bin_yellow_shadow));
+                askForConfirm();
+            }
+
+        });
+        binGreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "bidone cliccato");
+                wasteType = TYPE_GLASS;
+                // binPressed=true;
+//                fading(binGreen, getDrawable(R.drawable.bin_green_shadow));
+                askForConfirm();
             }
 
         });
@@ -238,22 +286,22 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBrownBin)) {             // Utente seleziona il bidone dell'organico
             wasteType = TYPE_ORGANIC;
             binType = "Organico";
-            fading(binBrown, getDrawable(R.drawable.bin_brown_shadow));
+            //fading(binBrown, getDrawable(R.drawable.bin_brown_shadow)); //TODO Bisogna commentarlo anche negli altri bidoni sennò non funziona
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectBlueBin)) {      // Utente seleziona il bidone carta e cartone
             wasteType = TYPE_PAPER_CARDBOARD;
             binType = "Carta e cartone";
-            fading(binBlue, getDrawable(R.drawable.bin_blue_shadow));
+//            fading(binBlue, getDrawable(R.drawable.bin_blue_shadow));
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectYellowBin)) {      // Utente seleziona il bidone plastica e metalli
             wasteType = TYPE_PLASTIC_METAL;
             binType = "Plastica e metalli";
-            fading(binYellow, getDrawable(R.drawable.bin_yellow_shadow));
+//            fading(binYellow, getDrawable(R.drawable.bin_yellow_shadow));
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectGreenBin)) {      // Utente seleziona il bidone vetro
             wasteType = TYPE_GLASS;
             binType = "Vetro";
-            fading(binGreen, getDrawable(R.drawable.bin_green_shadow));
+//            fading(binGreen, getDrawable(R.drawable.bin_green_shadow));
             ackSelectedBin(qiContext);
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -444,24 +492,28 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         }
     }
     public void selectBinBrown(View v) {    // 0 = Organico
+        Log.d(TAG, "performclick eseguito");
         wasteType = TYPE_ORGANIC;
         // binPressed=true;
         fading(binBrown, getDrawable(R.drawable.bin_brown_shadow));
         askForConfirm();
     }
     public void selectBinBlue(View v) {     // 1 = Carta / Cartone
+        Log.d(TAG, "performclick eseguito");
         wasteType = TYPE_PAPER_CARDBOARD;
         // binPressed=true;
         fading(binBlue, getDrawable(R.drawable.bin_blue_shadow));
         askForConfirm();
     }
     public void selectBinYellow(View v) {   // 2 = Plastica / Metalli
+        Log.d(TAG, "performclick eseguito");
         wasteType = TYPE_PLASTIC_METAL;
         // binPressed=true;
         fading(binYellow, getDrawable(R.drawable.bin_yellow_shadow));
         askForConfirm();
     }
     public void selectBinGreen(View v) {    // 3 = Vetro
+        Log.d(TAG, "performclick eseguito");
         wasteType = TYPE_GLASS;
         // binPressed=true;
         fading(binGreen, getDrawable(R.drawable.bin_green_shadow));

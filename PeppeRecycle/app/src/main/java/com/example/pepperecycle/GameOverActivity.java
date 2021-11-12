@@ -99,7 +99,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     @Override
     public void onRobotFocusGained(QiContext qiContext) { //TODO TESTARE TUTTA QUESTA FUNZIONE
         Say sayResult= SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText(resultPhrase + "Ti andrebbe di fare un'altra partita?") // Set the text to say.
+                .withText(resultPhrase + "\\rspd=85\\Ti andrebbe di fare un'altra partita?") // Set the text to say.
                 .build(); // Build the say action.
         Animation resultAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione triste
@@ -192,20 +192,20 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
     }*/
     void userWinner() {
-        resultPhrase = "Congratulazioni,hai vinto! Conosci molte informazioni sul riciclo!"; //TODO metti una frase migliore per quando l'utente vince
+        resultPhrase = "Congratulazioni, hai vinto! Conosci molte informazioni sul riciclo!\\rspd=95\\"; //TODO metti una frase migliore per quando l'utente vince
         tvResult.setText("Hai vinto!");
         /*tvGameOver.setText("Congratulazioni,\nhai vinto!\nPepper: " + pepperScore + "\nUser: " + userScore);
         imageViewResult.setImageResource(R.drawable.trophy);*/
     }
     void userLoser() {
-        resultPhrase = "Hai perso. Stavolta sono stato più bravo di te! .";
+        resultPhrase = "Hai perso. Stavolta sono stato più bravo di te! \\rspd=95\\";
         tvResult.setText("Hai perso!");
         /*tvGameOver.setText("Uhm,\ncredo che sia meglio rivedere qualcosa!");
         imageViewResult.setImageResource(R.drawable.sad_face);*/
 
     }
     void userDraw() { //In caso di pareggio
-        resultPhrase = "Siamo stati bravissimi entrambi!";
+        resultPhrase = "Siamo stati bravissimi entrambi!\\rspd=95\\";
         tvResult.setText("Pareggio!");
     }
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
@@ -222,7 +222,11 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     void newGame() { //TODO Da testare
         Intent activity2Intent = new Intent(GameOverActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", false);
-        activity2Intent.putExtra("trialState", -1);
+        activity2Intent.putExtra("trialState", 2);
+        activity2Intent.putExtra("round", 0);
+        activity2Intent.putExtra("roundTutorial", false);
+        activity2Intent.putExtra("endOfTutorial", true);
+        activity2Intent.putExtra("restartGame", true);
         startActivity(activity2Intent);
         finish();
     }

@@ -109,7 +109,8 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
             public void onClick(View view) {
 //                nextTurn();
                 endOfTutorial = true; //TODO Inutile? Forse è già stato inizializzato a true?
-                nextPage();
+//                nextPage();
+                startPage(-1);
             }
         });
 
@@ -132,8 +133,11 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
             @Override
             public void onClick(View view) {
-                pgIndex=3;
+                /*pgIndex=3;
                 startPage(pgIndex);
+                endOfTutorial = true; //TODO Inutile? Forse è già stato inizializzato a true?
+            */
+                startPage(-1);
                 endOfTutorial = true; //TODO Inutile? Forse è già stato inizializzato a true?
             }
         });
@@ -184,6 +188,10 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .withTexts("Ricominciamo", "Ricomincia", "Da capo", "Dall'inizio", "all'inizio")
                 .build();
 
+        PhraseSet phraseSetSkipTutorial = PhraseSetBuilder.with(qiContext)
+                .withTexts("Salta", "Salta il tutorial", "ignora il tutorial")
+                .build();
+
         PhraseSet phraseSetBackPage = PhraseSetBuilder.with(qiContext)
                 .withTexts("Torna", "Indietro")
                 .build();
@@ -205,7 +213,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .with(qiContext)
                 .withPhraseSets(phraseSetNextPage, phraseSetBackPage, phraseSetPlay,
                         phraseSetRepeatPage, phraseSetRepeatFromPg0, phraseSetBackHome,
-                        phraseSetClose)
+                        phraseSetClose, phraseSetSkipTutorial)
                 .build();
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
@@ -215,7 +223,9 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                     .withText("Perfetto!") // Set the text to say.
                     .build(); // Build the say action.
             if(lastPage) {
-                endTutorial();
+                endOfTutorial=true;
+                startPage(pgIndex);
+                //endTutorial();
             } else { //Incrementa la pagina fin quando non si arriva all'ultima
                 nextPage();
             }
@@ -254,6 +264,15 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
             pepperRepeat.run();
             startPage(pgIndex);
+
+        }  else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetSkipTutorial)) {   // Richiesta utente di skippare il tutorial
+            Say pepperSkipTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Va bene.") // Set the text to say.
+                    .build(); // Build the say action.
+
+            pepperSkipTutorial.run();
+            endOfTutorial = true;
+            startPage(-1);
 
         }  else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeatFromPg0)) {   // Richiesta utente di ripetere
             Say pepperRepeat = SayBuilder.with(qiContext) // Create the builder with the context.
@@ -399,7 +418,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         finish();
     }
 
-    int nPages = 4;
+    int nPages = 3;
 
     // Incrementa la pagina. Se è l'ultima, ritorna -1
     public int increasesPage(int currPage) {
@@ -428,11 +447,11 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.INVISIBLE);
 
-                currPhrase = "A turno, il giudice ci mostrerà un oggetto e dovremo indovinare in quale bidone riciclarlo.";
+                currPhrase = "A turno, il giudice ci mostrerà un oggetto e dovremo indovinare in quale bidone riciclarlo. Ochei?";
 
                 tvExplaination.setText("A turno, il giudice ci mostrerà un oggetto" +
                         "\ne dovremo indovinare in quale bidone riciclarlo.");
-                ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN DEI BIDONI
+                ivTutorial.setImageResource(R.drawable.screen_turns);
                /*Una volta scelto il tipo di bidone,\nil giudice dovrà dire se avremo indovinato o no.
                \nSe sì, si guadagnerà un punto!"
 */
@@ -444,45 +463,50 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.INVISIBLE);
 
-                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto. Posso andare avanti ora? .";
+                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto. Posso andare avanti, ora?";
 
                 tvExplaination.setText("Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto.");
-                ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
+                ivTutorial.setImageResource(R.drawable.screen_turn_judge);
 
                 break;
 
-            case 2:
-                buttonPrev.setVisibility(View.VISIBLE);
+            case 2: // Ultima pagina
+                /*buttonPrev.setVisibility(View.VISIBLE);
                 buttonNext.setVisibility(View.VISIBLE);
 
-                buttonPlay.setVisibility(View.INVISIBLE);
+                buttonPlay.setVisibility(View.INVISIBLE);*/
+                buttonPrev.setVisibility(View.VISIBLE);
+                buttonNext.setVisibility(View.INVISIBLE);
 
-                currPhrase = "Se la risposta è corretta, chi ha indovinato guadagnerà un punto! Va bene? .";
+                buttonPlay.setVisibility(View.VISIBLE);
+                lastPage = true;
+
+                currPhrase = "Se la risposta è corretta, chi ha indovinato guadagnerà un punto! Va bene?";
 
                 tvExplaination.setText("Se la risposta è corretta, chi ha indovinato guadagnerà un punto!");
-                ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
+                ivTutorial.setImageResource(R.drawable.screen_scores);
 
                 break;
 
-            case 3: // Ultima pagina
+            /*case 3: // Ultima pagina
                 buttonPrev.setVisibility(View.VISIBLE);
                 buttonNext.setVisibility(View.INVISIBLE);
 
                 buttonPlay.setVisibility(View.VISIBLE);
 
-                currPhrase = "Il tutòrial è finito! Vogliamo fare un turno di prova?"; //TODO non serve?
+*//*                currPhrase = "Il tutòrial è finito! Vogliamo fare un turno di prova?"; //TODO non serve?
                 endOfTutorial = true;
 
-                tvExplaination.setText("Il tutorial è finito!\nVogliamo fare un turno di prova?");
+                tvExplaination.setText("Il tutorial è finito!\nVogliamo fare un turno di prova?");*//*
                 ivTutorial.setImageResource(R.drawable.bin_brown_shadow); //TODO METTI SCREEN ADEGUATO
-                /*TODO Metti bottoni sì no.
+                *//*TODO Metti bottoni sì no.
                    Se l'utente risponde di sì, vai avanti con il turno di prova,
                     altrimenti inizia a giocare direttamente
-                 */
+                 *//*
                 lastPage = true;
 
                 break;
-
+*/
             default: //case 4: tutorial finito, dovrebbe essere pgIndex==-1
                 //nextTurn(); //TODO Controlla se abbia senso
                 break;
@@ -520,7 +544,8 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
         Intent activity2Intent = null;
         /*if (pgIndex == 0) {
             activity2Intent = new Intent(TutorialActivity.this, TutorialActivity.class);
-        } else */if (endOfTutorial) {
+        } else */
+        if (endOfTutorial) {
             activity2Intent = new Intent(TutorialActivity.this, TutorialEndActivity.class);
         } else if (pgIndex != -1) {
 //            Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
@@ -567,7 +592,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
     public void endTutorial() { //TODO Serve?
         endOfTutorial = true;
-        //TODO fai distinzione turno di prova e non
+
         Intent activity2Intent = new Intent(TutorialActivity.this, PlayUserTurnActivity.class);
 //        Intent activity2Intent = new Intent(TutorialActivity.this, TutorialActivity2.class);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);

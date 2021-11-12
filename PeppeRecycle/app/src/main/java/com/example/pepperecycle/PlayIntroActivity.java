@@ -110,10 +110,12 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
             Animate animateCorrect = AnimateBuilder.with(qiContext)
                     .withAnimation(correctAnswer).build();
             tutorialEnabled=false;
+            trialState = -1;
             playGame.run();
             animateCorrect.run();
             Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
             activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+            activity2Intent.putExtra("trialState", trialState);
             startActivity(activity2Intent); //Per iniziare il gioco.
             finish();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere

@@ -1,5 +1,7 @@
 package com.example.pepperecycle;
 
+import static com.example.pepperecycle.PlayGameActivity.N_ROUNDS;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -38,7 +40,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 
     String TAG = "PepperTeachesActivity";
     boolean isPepperTurn, isAnswerCorrect, pressed;
-    byte wasteType, round;
+    byte wasteType, currentRound, round;
     TextView textViewRandomFact, textViewFactAbout;
     ImageView selectedBin;
     static byte pepperScore, userScore;
@@ -75,7 +77,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             "Una bottiglia di plastica resta per circa 450 anni nell'ambiente prima di degradarsi completamente.",
             "L'alluminio può essere riciclato infinite volte, senza perdita di qualità.",
             "In soli due mesi, le lattine di alluminio possono essere riciclate e rimesse in commercio.",
-            "Riciclare una lattina di alluminio farebbe risparmiare l'energia necessaria per poter guardare la tv per circa 3h.",
+            "Riciclare una lattina di alluminio farebbe risparmiare l'energia necessaria per poter guardare la tv per circa 3 ore.",
             "Una lattina di alluminio può essere riciclata usando solo il 5% dell'energia che bisognerebbe impiegare per fabbricarla da 0.",
             "Riciclare la plastica fa risparmiare il doppio dell'energia che verrebbe consumata per bruciarla in un inceneritore.",
             "Riciclare la plastica fa risparmiare l'88% dell'energia che verrebbe consumata per crearla dalle materie prime."
@@ -123,6 +125,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         if (extras != null) {
             wasteType = extras.getByte("wasteType"); // The key argument here must match that used in the other activity
             round = extras.getByte("round");
+            currentRound = extras.getByte("currentRound");
             isPepperTurn = extras.getBoolean("isPepperTurn");
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
@@ -149,8 +152,8 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayRandomFact= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText(factAboutRecycle + ". " + exclamation +
-                        ". Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
+                //.withText(exclamation + "." + factAboutRecycle + "\\rspd=90\\ Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
+                .withText(factAboutRecycle + "\\rspd=90\\ Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
                 .build(); // Build the say action.
         Animation sayRandomFactAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione
@@ -291,8 +294,91 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         Log.e(TAG, "exclamation: " + exclamation);
 
     }
-
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
+        // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
+        Intent activity2Intent;
+        trialState = nextTrialState(trialState);
+        if (trialState == 2) {
+            endTutorial();
+        } else {
+            isPepperTurn = !isPepperTurn; // Turno successivo
+            ++currentRound;
+            Log.d("ROUND", "currentRound++");
+            // if (round < 6) {    // TODO sostituisci 6 con una costante
+            // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
+            // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
+            if (currentRound < N_ROUNDS) {
+                // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
+                if(isPepperTurn) {
+                    activity2Intent = new Intent(PepperTeachesActivity.this, PlayPepperTurnActivity.class);
+                    Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
+                } else {
+                    activity2Intent = new Intent(PepperTeachesActivity.this, PlayUserTurnActivity.class);
+                    Log.d(TAG, "trialState passato a UserTurn: " + trialState);
+                }
+            /*if (isPepperTurn) { TODO se non va bene rimetti come stava
+                if (tutorialEnabled) {
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
+                } else {
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class); // PlayPepperTurnActivity.class);
+                }
+
+            } else {
+                activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
+            }*/
+
+            /*
+            pepperScore = activity2Intent.getExtras().getByte("pepperScore");
+            userScore = activity2Intent.getExtras().getByte("userScore");
+            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
+            */
+            } else {
+                // Game over
+                activity2Intent = new Intent(PepperTeachesActivity.this, GameOverActivity.class);//TODO GameOverActivity
+            }
+
+            activity2Intent.putExtra("round", round);
+            activity2Intent.putExtra("pepperScore", pepperScore);
+            activity2Intent.putExtra("userScore", userScore);
+            //activity2Intent.putExtra("scores", (Serializable) scores);
+            activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
+            activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("trialState", trialState);
+            startActivity(activity2Intent);
+            finish();
+        }
+    }
+    byte nextTrialState(byte state) {
+        switch(state) {
+            case 0:     // è appena stato effettuato il turno utente.
+                state = 1;
+                break;
+            case 1:     // è appena stato effettuato il turno di Pepper, perciò si va a 2, in cui si chiede di nuovo di iniziare il tutorial.
+                state = 2;
+                break;
+            default: //case -1
+                break;
+        }
+        return state;
+    }
+
+    public void endTutorial() {
+        Intent activity2Intent = new Intent(PepperTeachesActivity.this, TutorialEndActivity.class);
+        activity2Intent.putExtra("endOfTutorial", true); // Tutorial finito
+        activity2Intent.putExtra("pgIndex", 0); //TODO SOSTITUISCI NUMERO MAGICO
+        activity2Intent.putExtra("trialState", trialState);
+        /*
+
+         endOfTutorial = extras.getBoolean("endOfTutorial");
+            pgIndex = extras.getInt("pgIndex");
+            trialState = extras.getByte("trialState");
+         */
+
+        startActivity(activity2Intent);
+        finish();
+    }
+
+    /*public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         Intent activity2Intent;
         isPepperTurn = !isPepperTurn;
         tutorialEnabled=false;
@@ -307,11 +393,11 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             } else {
                 activity2Intent = new Intent(PepperTeachesActivity.this, PlayUserTurnActivity.class);
             }
-            /*
+            *//*
             pepperScore = activity2Intent.getExtras().getByte("pepperScore");
             userScore = activity2Intent.getExtras().getByte("userScore");
             //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
-            */
+            *//*
         } else {            // Game over
             activity2Intent = new Intent(PepperTeachesActivity.this, GameOverActivity.class);//TODO GameOverActivity
         }
@@ -324,7 +410,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         activity2Intent.putExtra("trialState", trialState);
         startActivity(activity2Intent);
         finish();
-    }
+    }*/
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
