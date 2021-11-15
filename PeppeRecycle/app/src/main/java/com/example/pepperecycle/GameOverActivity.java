@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -98,9 +99,16 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) { //TODO TESTARE TUTTA QUESTA FUNZIONE
-        Say sayResult= SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText(resultPhrase + "\\rspd=85\\Ti andrebbe di fare un'altra partita?") // Set the text to say.
+//        resultPhrase += "\\rspd=90\\Ti andrebbe di fare un'altra partita?";
+        Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
+                .withText(resultPhrase) // Set the text to say.
+                //.withText("\\rspd=95\\" + resultPhrase + "\\rspd=90\\Ti andrebbe di fare un'altra partita?") // Set the text to say.
                 .build(); // Build the say action.
+        Say sayAskNewGame =  SayBuilder.with(qiContext) // Create the builder with the context.
+//                .withText(resultPhrase) // Set the text to say.
+                .withText("\\rspd=90\\Ti andrebbe di fare un'altra partita?") // Set the text to say.
+                .build();
+
         Animation resultAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione triste
                 .build();
@@ -109,6 +117,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
                 .build();
 
         sayResult.run();
+        sayAskNewGame.run();
 //      animateResult.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
@@ -192,20 +201,20 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
     }*/
     void userWinner() {
-        resultPhrase = "Congratulazioni, hai vinto! Conosci molte informazioni sul riciclo!\\rspd=95\\"; //TODO metti una frase migliore per quando l'utente vince
+        resultPhrase = "Congratulazioni, hai vinto! Conosci molte informazioni sul riciclo."; //TODO metti una frase migliore per quando l'utente vince
         tvResult.setText("Hai vinto!");
         /*tvGameOver.setText("Congratulazioni,\nhai vinto!\nPepper: " + pepperScore + "\nUser: " + userScore);
         imageViewResult.setImageResource(R.drawable.trophy);*/
     }
     void userLoser() {
-        resultPhrase = "Hai perso. Stavolta sono stato più bravo di te! \\rspd=95\\";
+        resultPhrase = "Hai perso. Stavolta sono stato più bravo di te.";
         tvResult.setText("Hai perso!");
         /*tvGameOver.setText("Uhm,\ncredo che sia meglio rivedere qualcosa!");
         imageViewResult.setImageResource(R.drawable.sad_face);*/
 
     }
     void userDraw() { //In caso di pareggio
-        resultPhrase = "Siamo stati bravissimi entrambi!\\rspd=95\\";
+        resultPhrase = "Siamo stati bravissimi entrambi.";
         tvResult.setText("Pareggio!");
     }
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
@@ -220,9 +229,11 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     }
 
     void newGame() { //TODO Da testare
+        Byte trialState = -1;
         Intent activity2Intent = new Intent(GameOverActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", false);
-        activity2Intent.putExtra("trialState", 2);
+        activity2Intent.putExtra("trialState", trialState); // TODO Ho messo trialstate = -1
+        Log.d("GameOverActivity", "trialState passato a PLAYGAME: " + trialState);
         activity2Intent.putExtra("round", 0);
         activity2Intent.putExtra("roundTutorial", false);
         activity2Intent.putExtra("endOfTutorial", true);

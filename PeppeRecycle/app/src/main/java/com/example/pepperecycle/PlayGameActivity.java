@@ -40,13 +40,15 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     byte currentRound;
     //    Map<String, Byte> scores = new HashMap<String, Byte>();
     Map<String, Byte> scores = new HashMap<>();
-    static byte pepperScore = 0;
-    static byte userScore = 0;
+    static byte pepperScore;
+    static byte userScore;
     boolean tutorialEnabled;
-    byte tutorialState = -1;
+    byte tutorialState;
     byte trialState;
     boolean restartGame; //Indica che si sta giocando una nuova partita dopo aver terminato l'altra
-
+    byte round;
+    boolean roundTutorial, endOfTutorial;
+    boolean playGameAfterTrial;
     // Store the Animate action.
     private Animate animate;
 
@@ -68,16 +70,30 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         isPepperTurn = new Random().nextBoolean() ; //Ritorna un random boolean (Serve per stabilire randomicamente chi inizia a giocare)
         currentRound = 0;
         restartGame = false;
+        pepperScore = 0;
+        userScore = 0;
+        tutorialState = -1;
+        roundTutorial = false;
+        endOfTutorial = false;
+        round = 0;
+        trialState = -1;
 
         Bundle extras = getIntent().getExtras();
-        trialState = -1;
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             currentRound = extras.getByte("currentRound");
             trialState = extras.getByte("trialState");
             restartGame = extras.getBoolean("restartGame");
+            round = extras.getByte("round");
+            roundTutorial = extras.getBoolean("roundTutorial");
+            endOfTutorial = extras.getBoolean("endOfTutorial");
             Log.d(TAG, "Ricevuto trialState: "+ trialState);
         }
+
+        if (restartGame)
+            playGameAfterTrial = true; //???
+        else
+            playGameAfterTrial = false;
 
         if(tutorialEnabled) {
             isPepperTurn = false;

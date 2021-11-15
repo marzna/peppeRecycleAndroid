@@ -69,6 +69,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     byte currentRound;
     boolean restartGame;
     boolean roundTutorial;
+    boolean endOfTutorial, tutorialState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +114,10 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             trialState = extras.getByte("trialState");
             restartGame = extras.getBoolean("restartGame");
             Log.d(TAG, "Ricevuto trialState: "+ trialState);
+
+            tutorialEnabled = extras.getBoolean("tutorialEnabled");
+            endOfTutorial = extras.getBoolean("endOfTutorial");
+            tutorialState = extras.getBoolean("tutorialState");
         } else {
             Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }

@@ -78,6 +78,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     byte currentRound;
     byte tutorialState = -1;
     byte trialState;
+    boolean endOfTutorial;
+    boolean restartGame;
 
     String exclamation;
 
@@ -126,7 +128,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
-            wasteTypeString = extras.getString(wasteTypeString);
+            wasteTypeString = extras.getString("wasteTypeString");
+            roundTutorial = extras.getBoolean("roundTutorial");
+            endOfTutorial = extras.getBoolean("endOfTutorial");
+            restartGame = extras.getBoolean("restartGame");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             currentRound = extras.getByte("currentRound");
             tutorialState = extras.getByte("tutorialState");
@@ -207,7 +212,16 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 activity2Intent.putExtra("userScore", userScore);
                 activity2Intent.putExtra("currentRound", currentRound);
                 activity2Intent.putExtra("trialState", trialState);
+
+
+                activity2Intent.putExtra("roundTutorial", roundTutorial);
+                activity2Intent.putExtra("endOfTutorial", endOfTutorial);
+                activity2Intent.putExtra("restartGame", restartGame);
+                activity2Intent.putExtra("roundTutorial", roundTutorial);
+                activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+                activity2Intent.putExtra("tutorialState", tutorialState);
                 startActivity(activity2Intent); //Per andare alla pagina principale
+
                 finish();
             }
         });
@@ -349,28 +363,32 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             case 0: // case "organic":
                 typeBinSelectedIs = "Il bidone selezionato è quello dell'organico.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndell'organico");
-                selectedBin.setImageResource(R.drawable.closed_bin_brown_shadow);
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_brown_shadow));
+//                selectedBin.setImageResource(R.drawable.closed_bin_brown_shadow);
                 fading(selectedBin, getDrawable(R.drawable.bin_brown_shadow));
 //                factAboutRecycle = setFactRecycle(factsOrganic);
                 break;
             case 1: // case "paper": case "cardboard":
                 typeBinSelectedIs = "Il bidone selezionato è quello di carta e cartone.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndi carta e cartone");
-                selectedBin.setImageResource(R.drawable.closed_bin_blue_shadow);
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_blue_shadow));
+//              selectedBin.setImageResource(R.drawable.closed_bin_blue_shadow);
                 fading(selectedBin, getDrawable(R.drawable.bin_blue_shadow));
 //                factAboutRecycle = setFactRecycle(factsCardCardboard);
                 break;
             case 2: // case "plastic": case "metal":
                 typeBinSelectedIs = "Il bidone selezionato è quello di plastica e metalli.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndi plastica e metalli");
-                selectedBin.setImageResource(R.drawable.closed_bin_yellow_shadow);
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_yellow_shadow));
+//                selectedBin.setImageResource(R.drawable.closed_bin_yellow_shadow);
                 fading(selectedBin, getDrawable(R.drawable.bin_yellow_shadow));
 //                factAboutRecycle = setFactRecycle(factsPlasticMetal);
                 break;
             case 3: // case "glass":
                 typeBinSelectedIs = "Il bidone selezionato è quello del vetro.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndel vetro");
-                selectedBin.setImageResource(R.drawable.closed_bin_green_shadow);
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_green_shadow));
+//                selectedBin.setImageResource(R.drawable.closed_bin_green_shadow);
                 fading(selectedBin, getDrawable(R.drawable.bin_green_shadow));
 //                factAboutRecycle = setFactRecycle(factsGlass);
                 break;

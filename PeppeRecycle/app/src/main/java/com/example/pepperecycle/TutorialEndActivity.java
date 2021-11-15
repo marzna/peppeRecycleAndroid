@@ -40,7 +40,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
     byte trialState = -1;
     TextView tvTrialTitle, tvTrialQuestion;
     String currPhrase;
-    boolean playGameAfterTrial = false; // true se ci si trova dopo il round di prova
+    boolean playGameAfterTrial = false; // true se ci si trova dopo il round di prova //TODO ????
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,7 +282,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
         //Se il trial non è stato ancora svolto
         //if (!playGameAfterTrial && PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlayTrial)) {             // Risposta utente affermativa
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetPlay)) {             // Risposta utente affermativa
-            if (playGameAfterTrial) {// Inizia il round di prova
+            if (!playGameAfterTrial) {// Inizia il round di prova
                 Say startTrialPhrase = SayBuilder.with(qiContext) // Create the builder with the context.
                         .withText("Perfetto! Allora iniziamo il round di prova! In questo round, non terremo conto del punteggio") // Set the text to say.
                         .build(); // Build the say action.

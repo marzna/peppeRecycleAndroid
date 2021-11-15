@@ -70,7 +70,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             "Il compost può essere prodotto sia su scala industriale che domestica."
     };
     String[] factsPlasticMetal = {
-            "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori o imballaggi dei prodotti che compriamo, come la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e tanto altro.",
+            "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori o imballaggi dei prodotti che compriamo, come la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e tanto àltro.",
             "Una mascherina impiegherebbe tra i 400 e i 450 anni per degradarsi completamente nell'ambiente. Durante questo processo, rilascerebbe micro-particelle di plastica, che, in mare, potrebbero essere ingerite dalle specie marine.",
             "Una lattina di alluminio resta dai 20 ai 100 anni nell'ambiente prima di degradarsi completamente, ecco perché sarebbe meglio riciclarla nell'apposita categoria!",
             "Moltissime creature marine muoiono ogni anno a causa delle buste di platica e della spazzatura che vengono gettate in mare.",
@@ -153,7 +153,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayRandomFact= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 //.withText(exclamation + "." + factAboutRecycle + "\\rspd=90\\ Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
-                .withText(factAboutRecycle + "\\rspd=90\\ Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
+                .withText(factAboutRecycle + "\\rspd=95\\ Adesso possiamo proseguire con il gioco, o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
                 .build(); // Build the say action.
         Animation sayRandomFactAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione
