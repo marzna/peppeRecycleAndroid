@@ -68,7 +68,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://b5ac-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://12b0-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -123,6 +123,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     // Store the Animate action.
     private Animate animate;
     Button buttonTakePicture;
+    boolean endOfTutorial, tutorialState;
 
     MediaPlayer mediaPlayer;
 
@@ -186,7 +187,13 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             currentRound = extras.getByte("currentRound");
             trialState = extras.getByte("trialState");
             restartGame = extras.getBoolean("restartGame");
+            endOfTutorial = extras.getBoolean("endOfTutorial");
+            tutorialState = extras.getBoolean("tutorialState");
             Log.d(TAG, "Ricevuto trialState: "+ trialState);
+
+
+
+
         } else {
             Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
@@ -277,7 +284,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-        sayPepperTurn.run();//TODO non ho capito perché lo dice due volte nell'emulatore... Verifica che non sia la stessa cosa con il robot
+        sayPepperTurn.run();
         if (trialState == 1) { // if (tutorialEnabled) {
             sayPepperTurnTutorial.run();
         }
@@ -516,6 +523,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             javaCameraView.disableView();
         }
 
+       /* if(mediaPlayer != null) {
+            mediaPlayer.release();
+        }*/
+
     }
 
     @Override
@@ -525,6 +536,15 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         if (javaCameraView != null) {
             javaCameraView.disableView();
         }
+
+       /* if(mediaPlayer != null) {
+            if(mediaPlayer.isPlaying()) {
+
+                mediaPlayer.release();
+                mediaPlayer.stop();
+            }
+        }*/
+
         /*
         if (isThreadStarted) {
             thread.interrupt();

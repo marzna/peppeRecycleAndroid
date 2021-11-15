@@ -463,7 +463,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 buttonPlay.setVisibility(View.INVISIBLE);
 
-                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto. Posso andare avanti, ora?";
+                currPhrase = "Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto. \\rspd=85\\ Posso andare avanti ora?";
 
                 tvExplaination.setText("Una volta scelto il tipo di bidone, il giudice dirà se è quello giusto.");
                 ivTutorial.setImageResource(R.drawable.screen_turn_judge);

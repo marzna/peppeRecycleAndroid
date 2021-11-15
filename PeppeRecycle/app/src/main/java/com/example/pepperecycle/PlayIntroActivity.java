@@ -103,7 +103,8 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {       // Va direttamente al gioco, saltando il tutorial
             Say playGame= SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Ochei, allora iniziamo subito a giocare!") // Set the text to say.
+//                    .withText("Ochei, allora iniziamo subito a giocare!") // Set the text to say.
+                    .withText("Ok, allora iniziamo subito una nuova partita.") // Set the text to say.
                     .build(); // Build the say action.
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.exclamation_both_hands_a001).build();
