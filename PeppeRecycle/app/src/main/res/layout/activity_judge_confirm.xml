@@ -114,8 +114,9 @@
         android:id="@+id/textViewAskForConfirm"
         android:layout_width="500dp"
         android:layout_height="wrap_content"
-        android:layout_above="@id/buttonAnswerYes"
+        android:layout_above="@id/lvButtonsYesNo"
         android:layout_alignStart="@id/textViewSelectedBinIs"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="20dp"
         android:text="Giudice, confermi?"
         android:textAlignment="center"
@@ -123,25 +124,29 @@
         android:textColor="#FFFFFF"
         android:textSize="34sp" />
 
-    <Button
-        android:id="@+id/buttonAnswerYes"
-        android:layout_width="150dp"
+    <LinearLayout
+        android:id="@+id/lvButtonsYesNo"
+        android:layout_width="500dp"
         android:layout_height="150dp"
-        android:layout_alignBottom="@id/selectedBin"
-        android:layout_marginLeft="50dp"
-        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/selectedBin"
-        android:background="@drawable/button_answer_img_yes" />
+android:layout_marginBottom="25dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/buttonAnswerNo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignBottom="@id/selectedBin"
-        android:layout_marginLeft="50dp"
-        android:layout_marginBottom="50dp"
-        android:layout_toRightOf="@id/buttonAnswerYes"
-        android:background="@drawable/button_answer_img_no" />
+        <Button
+            android:id="@+id/buttonAnswerYes"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginRight="75dp"
+            android:background="@drawable/button_answer_img_yes" />
+
+        <Button
+            android:id="@+id/buttonAnswerNo"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/button_answer_img_no" />
+    </LinearLayout>
 
 
 </RelativeLayout>
