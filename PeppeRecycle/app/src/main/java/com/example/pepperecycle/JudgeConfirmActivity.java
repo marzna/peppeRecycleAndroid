@@ -361,7 +361,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     void startJudgeConfirm() {
         switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
             case 0: // case "organic":
-                typeBinSelectedIs = "Il bidone selezionato è quello dell'organico.";
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone dell'organico.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello dell'organico.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndell'organico");
                 selectedBin.setBackground(getDrawable(R.drawable.closed_bin_brown_shadow));
 //                selectedBin.setImageResource(R.drawable.closed_bin_brown_shadow);
@@ -369,7 +372,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsOrganic);
                 break;
             case 1: // case "paper": case "cardboard":
-                typeBinSelectedIs = "Il bidone selezionato è quello di carta e cartone.";
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone di carta e cartone.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello di carta e cartone.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndi carta e cartone");
                 selectedBin.setBackground(getDrawable(R.drawable.closed_bin_blue_shadow));
 //              selectedBin.setImageResource(R.drawable.closed_bin_blue_shadow);
@@ -377,7 +383,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsCardCardboard);
                 break;
             case 2: // case "plastic": case "metal":
-                typeBinSelectedIs = "Il bidone selezionato è quello di plastica e metalli.";
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone di plastica e metalli.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello di plastica e metalli.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndi plastica e metalli");
                 selectedBin.setBackground(getDrawable(R.drawable.closed_bin_yellow_shadow));
 //                selectedBin.setImageResource(R.drawable.closed_bin_yellow_shadow);
@@ -385,7 +394,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsPlasticMetal);
                 break;
             case 3: // case "glass":
-                typeBinSelectedIs = "Il bidone selezionato è quello del vetro.";
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone del vetro.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello del vetro.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndel vetro");
                 selectedBin.setBackground(getDrawable(R.drawable.closed_bin_green_shadow));
 //                selectedBin.setImageResource(R.drawable.closed_bin_green_shadow);
@@ -393,7 +405,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsGlass);
                 break;
             default:
-                typeBinSelectedIs = "Si è verificato un problema. Torna indietro e ripetiamo il turno.";
+                typeBinSelectedIs = "Si è verificato un problema. Torniamo indietro e ripetiamo il turno.";
 
                 //Centrare il button
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams
