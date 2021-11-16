@@ -58,8 +58,8 @@
 
     <Button
         android:id="@+id/buttonPrev"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_prev"
         android:fontFamily="@font/andika_regular"
@@ -70,8 +70,8 @@
 
     <Button
         android:id="@+id/buttonNext"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_next"
@@ -83,8 +83,8 @@
 
     <Button
         android:id="@+id/buttonPlay"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_next"
@@ -108,8 +108,8 @@
 
     <Button
         android:id="@+id/buttonSkipTutorial"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_alignParentEnd="true"
         android:background="@drawable/trial_skip"
         android:fontFamily="@font/andika_regular"

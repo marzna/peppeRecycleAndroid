@@ -45,7 +45,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="100dp"
         android:layout_marginBottom="95dp"
-        android:foreground="?android:attr/selectableItemBackground" />
+        android:background="@drawable/bin_unknown_shadow" />
 
     <TextView
         android:id="@+id/textViewFactAbout"
@@ -67,7 +67,7 @@
         android:layout_alignBottom="@id/textViewFactAbout"
         android:layout_marginStart="226dp"
         android:layout_marginBottom="-334dp"
-        android:text=""
+        android:text="POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE POLPETTE "
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
