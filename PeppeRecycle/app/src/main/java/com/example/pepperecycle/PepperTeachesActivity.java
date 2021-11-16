@@ -171,7 +171,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
                         "passa al prossimo turno", "giochiamo", "prosegui", "proseguiamo",
                         "prosegui con il gioco", "voglio proseguire con il gioco",
                         "voglio proseguire", "voglio andare avanti", "possiamo proseguire",
-                        "possiamo", "continua", "continuiamo")
+                        "possiamo", "continua", "continuiamo", "avanti")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
@@ -206,13 +206,13 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
                     .withText("Perfetto, allora proseguiamo con il gioco!") // Set the text to say.
                     .build(); // Build the say action.
 
-
-            //Pepper dice chi è il prossimo giocatore
-            Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                    .withText("Adesso è il tuo turno.") // Set the text to say.
-                    .build(); // Build the say action.
-            sayTurn.run();
-
+            if (currentRound<N_ROUNDS-1) {
+                //Pepper dice chi è il prossimo giocatore
+                Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                        .withText("Adesso è il tuo turno.") // Set the text to say.
+                        .build(); // Build the say action.
+                sayTurn.run();
+            }
             nextTurn();
 
 

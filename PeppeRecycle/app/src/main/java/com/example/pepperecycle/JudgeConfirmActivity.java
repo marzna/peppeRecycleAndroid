@@ -299,38 +299,42 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                             .withText(exclamation) // Set the text to say.
                             .build(); // Build the say action.
                     sayRandomFact.run();
-                    phrase = "Hai indovinato. Complimenti. Ora tocca a me.";
-                    Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                            .withText(phrase) // Set the text to say.
-                            .build(); // Build the say action.
-                    sayTurn.run();
                 } else {
+                    if (currentRound<N_ROUNDS-1) {
+                        phrase = "Hai indovinato. \\rspd=80\\ Complimenti. Ora tocca a me.";
+                        Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                                .withText(phrase) // Set the text to say.
+                                .build(); // Build the say action.
+                        sayTurn.run();
+                    }
                 }
                 updateScore(isPepperTurn);
 
             } else {
                 //Pepper dice chi è il prossimo giocatore
-                if(!isPepperTurn) {
+                if (currentRound<N_ROUNDS-1 && !isPepperTurn) {
                     phrase = "Hai indovinato. complimenti. Ora tocca a me.";
+
+                    Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                            .withText(phrase) // Set the text to say.
+                            .build(); // Build the say action.
+                    sayTurn.run();
+                }
+                nextTurn();
+            }
+
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
+            if (currentRound<N_ROUNDS-1) {
+                if (!isPepperTurn) {
+                    phrase = "Oh no. Stavolta hai sbagliato. Tieni alta la concentrazione. Adesso tocca a me!";
+                } else {
+                    phrase = "Oh no. Devo impegnarmi di più. Adesso è il tuo turno.";
                 }
                 Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                         .withText(phrase) // Set the text to say.
                         .build(); // Build the say action.
                 sayTurn.run();
-                nextTurn();
             }
-
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
-
-            if(!isPepperTurn) {
-                phrase = "Oh no. Stavolta hai sbagliato. Tieni alta la concentrazione. Adesso tocca a me!";
-            } else {
-                phrase = "Oh no. Questa non la sapevo. Adesso è il tuo turno.";
-            }
-            Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                    .withText(phrase) // Set the text to say.
-                    .build(); // Build the say action.
-            sayTurn.run();
             nextTurn();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -365,7 +369,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
     }
@@ -742,7 +747,6 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     //Dissolvenza bidone (animazione quando il bidone viene selezionato)
     public void fading(ImageView imageView, Drawable res) {
         //Credits: https://stackoverflow.com/questions/24939387/android-change-background-image-with-fade-in-out-animation
-
         android.view.animation.Animation fadeOut = AnimationUtils.loadAnimation(JudgeConfirmActivity.this, R.anim.fade_out);
         imageView.startAnimation(fadeOut);
 

@@ -182,7 +182,8 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
     }

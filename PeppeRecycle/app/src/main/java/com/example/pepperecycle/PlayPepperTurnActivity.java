@@ -386,7 +386,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             // TODO chiede se si vuole interrompere il gioco
             // Say sayPepperStopGame= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
             Say sayRepeat = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                    .withText("Mi dispiace, ma, senza questo procedimento, io non posso giocare. ") // Set the text to say.
+                    .withText("Mi dispiace, ma senza questo procedimento, io non posso giocare. ") // Set the text to say.
                     .build(); // Build the say action.
             // sayPepperStopGame.run();
             sayRepeat.run();

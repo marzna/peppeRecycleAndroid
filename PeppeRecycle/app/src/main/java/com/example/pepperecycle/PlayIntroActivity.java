@@ -154,7 +154,8 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
     }

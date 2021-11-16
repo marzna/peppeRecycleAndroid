@@ -358,7 +358,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
     }
