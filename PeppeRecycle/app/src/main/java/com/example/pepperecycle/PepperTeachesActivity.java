@@ -205,7 +205,16 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             Say sayNextTurn= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                     .withText("Perfetto, allora proseguiamo con il gioco!") // Set the text to say.
                     .build(); // Build the say action.
+
+
+            //Pepper dice chi è il prossimo giocatore
+            Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                    .withText("Adesso è il tuo turno.") // Set the text to say.
+                    .build(); // Build the say action.
+            sayTurn.run();
+
             nextTurn();
+
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {   // Ripete l'activity con un altro fattp random riguardante il materiale scelto
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -294,6 +303,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         Log.e(TAG, "exclamation: " + exclamation);
 
     }
+
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
         Intent activity2Intent;
@@ -309,13 +319,21 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
             if (currentRound < N_ROUNDS) {
                 // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
-                if(isPepperTurn) {
+                if(isPepperTurn) {/*
+                    phrase = "Ora tocca a me.";*/
                     activity2Intent = new Intent(PepperTeachesActivity.this, PlayPepperTurnActivity.class);
                     Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
-                } else {
+                } else {/*
+                    phrase = "Adesso è il tuo turno.";*/
                     activity2Intent = new Intent(PepperTeachesActivity.this, PlayUserTurnActivity.class);
                     Log.d(TAG, "trialState passato a UserTurn: " + trialState);
                 }
+//                pepperSayTurn(isPepperTurn);
+               /* Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                        .withText(phrase) // Set the text to say.
+                        .build(); // Build the say action.
+                sayTurn.run();*/
+
             /*if (isPepperTurn) { TODO se non va bene rimetti come stava
                 if (tutorialEnabled) {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);

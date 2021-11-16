@@ -65,7 +65,8 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Si", "Voglio sapere", "ripeti il tutorial", "Voglio saperlo",
                         "spiegamelo", "spiegalo", "spiega di nuovo", "voglio che me lo spieghi",
-                        "voglio che lo spieghi", "tutorial", "ok", "okay", "ochei")
+                        "voglio che lo spieghi", "tutorial", "ok", "okay", "ochei",
+                        "Pepper sì", "sì Pepper", "Pepper si", "si Pepper", "ok Pepper")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
@@ -76,7 +77,8 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
                 .build();
 
         PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
-                .withTexts("Torna", "Indietro", "Home")
+                .withTexts("Torna", "Indietro", "Home", "Pepper vai indietro", "Pepper torna alla home",
+                        "pepper torna al menu principale", "pepper torna al menu", "pepper torna indietro")
                 .build();
 
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)

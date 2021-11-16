@@ -259,17 +259,20 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         animateAskForConfirm.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "è corretta", "è giusta", "corretta", "giusta")
+                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "è corretta", "è giusta", "corretta", "giusta",
+                        "pepper sì", "pepper si")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
                 .withTexts("Non lo so", "bo", "Aiutami Pepper").build(); //TODO idk */
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
-                .withTexts("No", "è sbagliata", "sbagliata","No Pepper", "è errata", "non è corretta").build();
+                .withTexts("No", "è sbagliata", "sbagliata","No Pepper", "è errata", "non è corretta",
+                        "pepper no", "pepper no").build();
 
         PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
-                .withTexts("Ripeti", /*"Ricominciamo", "Ricomincia",*/ "Da capo", "Non ho capito", "Puoi ripetere")
+                .withTexts("Ripeti", /*"Ricominciamo", "Ricomincia",*/ "Da capo", "Non ho capito", "Puoi ripetere",
+                        "pepper ripeti")
                 .build();
 
         PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
@@ -297,13 +300,33 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                     sayRandomFact.run();
                 }
                 updateScore(isPepperTurn);
+
             } else {
+                //Pepper dice chi è il prossimo giocatore
+                String phrase;
+                if(!isPepperTurn) {
+                    phrase = "Hai indovinato. complimenti. Ora tocca a me.";
+                } else {
+                    phrase = "Oh no. Questa non la sapevo. Adesso è il tuo turno.";
+                }
+                Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                        .withText(phrase) // Set the text to say.
+                        .build(); // Build the say action.
+                sayTurn.run();
                 nextTurn();
             }
 
-            //todo activity per insegnare qualcosa
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
-            //todo se Pepper ha risp correttamente, insegna qualcosa
+            String phrase;
+            if(!isPepperTurn) {
+                phrase = "Oh no. stavolta hai sbagliato. tieni alta la concentrazione. Adesso tocca a me!";
+            } else {
+                phrase = "Oh no. Questa non la sapevo. Adesso è il tuo turno.";
+            }
+            Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                    .withText(phrase) // Set the text to say.
+                    .build(); // Build the say action.
+            sayTurn.run();
             nextTurn();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -542,14 +565,19 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
             // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
             if (currentRound < N_ROUNDS) {
+                String phrase;
                 // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
                 if(isPepperTurn) {
+                    phrase = "Ora tocca a me.";
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class);
                     Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
                 } else {
+                    phrase = "Adesso è il tuo turno.";
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
                     Log.d(TAG, "trialState passato a UserTurn: " + trialState);
                 }
+//                pepperSayTurn(isPepperTurn);
+
             /*if (isPepperTurn) { TODO se non va bene rimetti come stava
                 if (tutorialEnabled) {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
@@ -582,6 +610,18 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             finish();
         }
     }
+
+    /*void pepperSayTurn(boolean isPepperTurn) {
+        String phrase;
+        if(isPepperTurn)
+            phrase = "Ora tocca a me.";
+        else
+            phrase = "Adesso è il tuo turno.";
+        Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                .withText(phrase) // Set the text to say.
+                .build(); // Build the say action.
+        sayTurn.run();
+    }*/
     public void endTutorial() {
         Intent activity2Intent = new Intent(JudgeConfirmActivity.this, TutorialEndActivity.class);
         activity2Intent.putExtra("endOfTutorial", true); // Tutorial finito

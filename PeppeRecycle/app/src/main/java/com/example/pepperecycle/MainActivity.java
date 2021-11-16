@@ -107,7 +107,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .withText("Ciao!\\rspd=95\\") // Set the text to say.
                 .build(); // Build the say action.
         Say sayPresentation = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("\\rspd=95\\io sono Pepper. e questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
+                .withText("\\rspd=95\\io sono Pepper. E questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
                 .build(); // Build the say action.
 
         //TODO -> Bisognerà cambiare l'interazione nel caso dello storytelling
@@ -124,18 +124,18 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
-                .withTexts("No", "Non voglio", "No Pepper", "Non mi va").build();
+                .withTexts("No", "Non voglio", "No Pepper", "Non mi va", "pepper no").build();
 
         PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
                 .withTexts("Ripeti", "Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
                 .build();
 
         PhraseSet phraseSetStory = PhraseSetBuilder.with(qiContext)
-                .withTexts("", "Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
+                .withTexts("Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
                 .build();
 
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
-                .withTexts("Chiudi il gioco", "Esci", "Basta")
+                .withTexts("Chiudi il gioco", "Esci", "Basta", "arrivederci", "a presto")
                 .build();
 
         Listen listenPlay = ListenBuilder.with(qiContext) // Create the builder with the QiContext.
@@ -179,8 +179,8 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                     .withText("Va bene, sto chiudendo il gioco. Sarà per un'altra volta, ciaoo!") // Set the text to say.
                     .build(); // Build the say action.
 
-            animate.run();
             sayGoodbye.run();
+            animate.run();
 
             finish();
         }

@@ -269,7 +269,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Sì Pepper", "Si Pepper", "Ecco", "Ecco qui", "Ecco Pepper",
-                        "Ecco qui Pepper", "Tieni", "Tieni Pepper", "Pepper tieni", "Sì", "Si")
+                        "Ecco qui Pepper", "Tieni", "Tieni Pepper", "Pepper tieni",
+                        "Sì", "Si", "okay", "ok", "va bene", "pepper ecco", "pepper si")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
@@ -288,7 +289,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-        sayPepperTurn.run();
+//        sayPepperTurn.run();
         if (trialState == 1) { // if (tutorialEnabled) {
             sayPepperTurnTutorial.run();
         }
