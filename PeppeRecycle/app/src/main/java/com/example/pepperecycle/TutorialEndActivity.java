@@ -418,7 +418,8 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
     }

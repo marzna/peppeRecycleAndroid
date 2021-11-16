@@ -204,8 +204,8 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-        animateAskTutorial.run();
         tutorialIntro.run();
+//        animateAskTutorial.run();
 
         //askForContinue.run(); L'ho messo direttamente in currPhrase
 
@@ -324,7 +324,8 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
         // TODO Tutorial

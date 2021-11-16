@@ -245,20 +245,24 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .build(); // Build the say action.
 
         PhraseSet phraseSelectBrownBin = PhraseSetBuilder.with(qiContext)
-                .withTexts("primo", "primo bidone", "bidone uno", "bidone marrone", "organico", "bidone dell'organico", "umido", "bidone dell'umido")
+                .withTexts("primo", "primo bidone", "bidone uno", "bidone marrone", "marrone", "organico", "bidone dell'organico", "umido", "bidone dell'umido")
                 .build();
         PhraseSet phraseSelectBlueBin = PhraseSetBuilder.with(qiContext)
-                .withTexts("secondo", "secondo bidone", "bidone due", "bidone blu", "carta", "cartone", "carta e cartone", "bidone della carta", "bidone del cartone", "bidone di carta e cartone")
+                .withTexts("secondo", "secondo bidone", "bidone due", "bidone blu", "blu", "carta", "cartone", "carta e cartone", "bidone della carta", "bidone del cartone", "bidone di carta e cartone")
                 .build();
         PhraseSet phraseSelectYellowBin = PhraseSetBuilder.with(qiContext)
-                .withTexts("terzo", "terzo bidone", "bidone tre", "bidone giallo", "metallo", "plastica", "bidone della plastica", "bidone dei metalli", "bidone del metallo")
+                .withTexts("terzo", "terzo bidone", "bidone tre", "bidone giallo", "giallo", "metallo", "plastica", "bidone della plastica", "bidone dei metalli", "bidone del metallo")
                 .build();
         PhraseSet phraseSelectGreenBin = PhraseSetBuilder.with(qiContext)
-                .withTexts("quarto", "quarto bidone", "bidone quattro", "bidone verde", "vetro", "bidone del vetro", "ultimo", "l'ultimo","l'ultimo bidone")
+                .withTexts("quarto", "quarto bidone", "bidone quattro", "bidone verde", "verde", "vetro", "bidone del vetro", "ultimo", "l'ultimo","l'ultimo bidone")
                 .build();
 
-/*        PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
-                .withTexts("Non lo so", "bo", "Aiutami Pepper").build(); //TODO idk */
+        PhraseSet phraseSelectOtherBins = PhraseSetBuilder.with(qiContext)
+                .withTexts("indifferenziato", "indifferenziata", "rifiuto speciale", "rifiuti speciali")
+                .build();
+
+        PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
+                .withTexts("Non lo so", "bo", "Aiutami Pepper", "aiutami tu pepper", "pepper aiutami tu", "aiutami").build();
 
         PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
                 .withTexts("Ripeti", "Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
@@ -272,8 +276,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-        sayUserTurn.run();
-//        if(tutorialEnabled) {
+//        sayUserTurn.run();
         if(trialState == 0) {
             sayUserTurnTutorial.run();
         }
@@ -283,7 +286,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         Listen listenPlay = ListenBuilder
                 .with(qiContext)
                 .withPhraseSets(phraseSelectBrownBin, phraseSelectBlueBin, phraseSelectYellowBin, phraseSelectGreenBin,
-                        phraseSetRepeat, phraseSetClose, phraseSetHome)
+                        phraseSetRepeat, phraseSetClose, phraseSetHome, phraseSelectOtherBins, phraseSetIdk)
                 .build();
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
@@ -308,7 +311,22 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             binType = "Vetro";
 //            fading(binGreen, getDrawable(R.drawable.bin_green_shadow));
             ackSelectedBin(qiContext);
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSelectOtherBins)) {      // Altri bidoni non contemplati
+            Say sayRepeat = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("La scelta non è valida. Puoi selezionare solamente i quattro bidoni qui presenti.") // Set the text to say.
+                    .build(); // Build the say action.
+            sayRepeat.run();
+
+            repeatActivity();
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetIdk)) {      // Utente seleziona il bidone carta e cartone
+            Say sayRepeat = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText("Dai. So che puoi farcela.") // Set the text to say.
+                    .build(); // Build the say action.
+            sayRepeat.run();
+
+            repeatActivity();
+        }else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
+            //TODO repeatActivity();
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -340,7 +358,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
     }
@@ -406,6 +425,26 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentRound", currentRound);
         Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
+        startActivity(activity2Intent);
+        finish();
+        /* TODO Turno dell'utente:
+        Schermata con i bidoni. L'utente deve selezionare il bidone corretto.
+        Successivamente, c'è la schermata di richiesta conferma per il giudice
+        Se la risposta è affermativa, l'utente guadagna un punto.
+        */
+    }
+
+    void repeatActivity() {
+        Intent activity2Intent = new Intent(PlayUserTurnActivity.this, PlayUserTurnActivity.class);
+        activity2Intent.putExtra("wasteType", wasteType);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("trialState", trialState);
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("roundTutorial", roundTutorial);
+        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
+        activity2Intent.putExtra("currentRound", currentRound);
         startActivity(activity2Intent);
         finish();
         /* TODO Turno dell'utente:

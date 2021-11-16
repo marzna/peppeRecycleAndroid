@@ -259,17 +259,20 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         animateAskForConfirm.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "è corretta", "è giusta", "corretta", "giusta")
+                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "è corretta", "è giusta", "corretta", "giusta",
+                        "pepper sì", "pepper si")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
                 .withTexts("Non lo so", "bo", "Aiutami Pepper").build(); //TODO idk */
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
-                .withTexts("No", "è sbagliata", "sbagliata","No Pepper", "è errata", "non è corretta").build();
+                .withTexts("No", "è sbagliata", "sbagliata","No Pepper", "è errata", "non è corretta",
+                        "pepper no", "pepper no").build();
 
         PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
-                .withTexts("Ripeti", /*"Ricominciamo", "Ricomincia",*/ "Da capo", "Non ho capito", "Puoi ripetere")
+                .withTexts("Ripeti", /*"Ricominciamo", "Ricomincia",*/ "Da capo", "Non ho capito", "Puoi ripetere",
+                        "pepper ripeti")
                 .build();
 
         PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
@@ -287,6 +290,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
 
+        String phrase = "";
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
             //todo se l'utente ha sbagliato, insegna qualcosa
             if(trialState == -1) {// if(!tutorialEnabled)
@@ -295,15 +299,42 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                             .withText(exclamation) // Set the text to say.
                             .build(); // Build the say action.
                     sayRandomFact.run();
+                } else {
+                    if (currentRound<N_ROUNDS-1) {
+                        phrase = "Hai indovinato. \\rspd=80\\ Complimenti. Ora tocca a me.";
+                        Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                                .withText(phrase) // Set the text to say.
+                                .build(); // Build the say action.
+                        sayTurn.run();
+                    }
                 }
                 updateScore(isPepperTurn);
+
             } else {
+                //Pepper dice chi è il prossimo giocatore
+                if (currentRound<N_ROUNDS-1 && !isPepperTurn) {
+                    phrase = "Hai indovinato. complimenti. Ora tocca a me.";
+
+                    Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                            .withText(phrase) // Set the text to say.
+                            .build(); // Build the say action.
+                    sayTurn.run();
+                }
                 nextTurn();
             }
 
-            //todo activity per insegnare qualcosa
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
-            //todo se Pepper ha risp correttamente, insegna qualcosa
+            if (currentRound<N_ROUNDS-1) {
+                if (!isPepperTurn) {
+                    phrase = "Oh no. Stavolta hai sbagliato. Tieni alta la concentrazione. Adesso tocca a me!";
+                } else {
+                    phrase = "Oh no. Devo impegnarmi di più. Adesso è il tuo turno.";
+                }
+                Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                        .withText(phrase) // Set the text to say.
+                        .build(); // Build the say action.
+                sayTurn.run();
+            }
             nextTurn();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -338,7 +369,8 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
     }
@@ -361,7 +393,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     void startJudgeConfirm() {
         switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
             case 0: // case "organic":
-                typeBinSelectedIs = "Il bidone selezionato è quello dell'organico.";
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone dell'organico.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello dell'organico.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndell'organico");
                 selectedBin.setBackground(getDrawable(R.drawable.closed_bin_brown_shadow));
 //                selectedBin.setImageResource(R.drawable.closed_bin_brown_shadow);
@@ -369,7 +404,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsOrganic);
                 break;
             case 1: // case "paper": case "cardboard":
-                typeBinSelectedIs = "Il bidone selezionato è quello di carta e cartone.";
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone di carta e cartone.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello di carta e cartone.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndi carta e cartone");
                 selectedBin.setBackground(getDrawable(R.drawable.closed_bin_blue_shadow));
 //              selectedBin.setImageResource(R.drawable.closed_bin_blue_shadow);
@@ -377,7 +415,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsCardCardboard);
                 break;
             case 2: // case "plastic": case "metal":
-                typeBinSelectedIs = "Il bidone selezionato è quello di plastica e metalli.";
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone di plastica e metalli.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello di plastica e metalli.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndi plastica e metalli");
                 selectedBin.setBackground(getDrawable(R.drawable.closed_bin_yellow_shadow));
 //                selectedBin.setImageResource(R.drawable.closed_bin_yellow_shadow);
@@ -385,7 +426,10 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsPlasticMetal);
                 break;
             case 3: // case "glass":
-                typeBinSelectedIs = "Il bidone selezionato è quello del vetro.";
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone del vetro.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello del vetro.";
 //                selectedBinIs.setText("Il bidone selezionato è quello\ndel vetro");
                 selectedBin.setBackground(getDrawable(R.drawable.closed_bin_green_shadow));
 //                selectedBin.setImageResource(R.drawable.closed_bin_green_shadow);
@@ -393,7 +437,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 //                factAboutRecycle = setFactRecycle(factsGlass);
                 break;
             default:
-                typeBinSelectedIs = "Si è verificato un problema. Torna indietro e ripetiamo il turno.";
+                typeBinSelectedIs = "Si è verificato un problema. Torniamo indietro e ripetiamo il turno.";
 
                 //Centrare il button
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams
@@ -530,14 +574,19 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
             // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
             if (currentRound < N_ROUNDS) {
+                String phrase;
                 // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
                 if(isPepperTurn) {
+                    phrase = "Ora tocca a me.";
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class);
                     Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
                 } else {
+                    phrase = "Adesso è il tuo turno.";
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
                     Log.d(TAG, "trialState passato a UserTurn: " + trialState);
                 }
+//                pepperSayTurn(isPepperTurn);
+
             /*if (isPepperTurn) { TODO se non va bene rimetti come stava
                 if (tutorialEnabled) {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
@@ -570,6 +619,18 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             finish();
         }
     }
+
+    /*void pepperSayTurn(boolean isPepperTurn) {
+        String phrase;
+        if(isPepperTurn)
+            phrase = "Ora tocca a me.";
+        else
+            phrase = "Adesso è il tuo turno.";
+        Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                .withText(phrase) // Set the text to say.
+                .build(); // Build the say action.
+        sayTurn.run();
+    }*/
     public void endTutorial() {
         Intent activity2Intent = new Intent(JudgeConfirmActivity.this, TutorialEndActivity.class);
         activity2Intent.putExtra("endOfTutorial", true); // Tutorial finito
@@ -686,7 +747,6 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     //Dissolvenza bidone (animazione quando il bidone viene selezionato)
     public void fading(ImageView imageView, Drawable res) {
         //Credits: https://stackoverflow.com/questions/24939387/android-change-background-image-with-fade-in-out-animation
-
         android.view.animation.Animation fadeOut = AnimationUtils.loadAnimation(JudgeConfirmActivity.this, R.anim.fade_out);
         imageView.startAnimation(fadeOut);
 

@@ -14,6 +14,7 @@ import okhttp3.Response;
 
 public class ClientManager implements Runnable {
 
+    private static final String TAG = "ClientManager" ;
     String photoPath;
     String postUrl;
     boolean garbageClassified;
@@ -49,25 +50,27 @@ public class ClientManager implements Runnable {
                 .build();
 
         try {
+            Log.d(TAG, "request" + request);
             Response response = client.newCall(request).execute();
             this.setGarbageType( response.body().string());
             System.out.println("Tipo di rifiuto: " + garbageType);
             //responseText.setText("Tipo rifiuto:" + garbageType); TODO È nel posto sbagliato
             //garbageClassified = true;
             if(garbageType!=null) {
-                Log.d("Classificazione", "Classificazione riuscita.");
+                Log.d(TAG, "Classificazione riuscita."); //Log.d("Classificazione", "Classificazione riuscita.");
             }
 
         } catch (IOException e) {
 
             e.printStackTrace();
-            Log.d("Classificazione", "Classificazione non riuscita.");
+            Log.d(TAG, "Classificazione non riuscita."); //Log.d("Classificazione", "Classificazione non riuscita.");
 
         }
     }
 
     public void setGarbageType(String garbageType) {
         this.garbageType = garbageType;
+        Log.d(TAG, "setGarbageType: " + this.garbageType);
     }
 
     public String getGarbageType() {

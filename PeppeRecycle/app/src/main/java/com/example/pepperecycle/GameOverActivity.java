@@ -158,8 +158,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             sayNewGame.run();
             newGame();
 
-        } else if ( (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) ||
-                (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome))) {     // Torna alla home
+        } else if ( PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.affirmation_a002).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -169,20 +168,22 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             startActivity(activity2Intent); //Per iniziare il gioco.
             finish();
 
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
+        } else if ( (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) ||
+                    (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) ) {    // Chiude il gioco
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.hello_a004).build();
             Animate animate = AnimateBuilder.with(qiContext)
                     .withAnimation(correctAnswer).build();
 
             Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Va bene, sto chiudendo il gioco. Spero di rivederti presto!") // Set the text to say.
+                    .withText("Va bene, allora sto chiudendo il gioco. Spero di rivederti presto!") // Set the text to say.
                     .build(); // Build the say action.
 
             sayGoodbye.run();
             animate.run();
 
-            finish();
+            this.finishAffinity(); // Close all activites
+            System.exit(0);
 
         }
     }
@@ -201,7 +202,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
     }*/
     void userWinner() {
-        resultPhrase = "Congratulazioni, hai vinto! Conosci molte informazioni sul riciclo."; //TODO metti una frase migliore per quando l'utente vince
+        resultPhrase = "Congratulazioni, hai vinto. Conosci molte informazioni sul riciclo."; //TODO metti una frase migliore per quando l'utente vince
         tvResult.setText("Hai vinto!");
         /*tvGameOver.setText("Congratulazioni,\nhai vinto!\nPepper: " + pepperScore + "\nUser: " + userScore);
         imageViewResult.setImageResource(R.drawable.trophy);*/

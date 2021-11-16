@@ -83,7 +83,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             "Riciclare la plastica fa risparmiare l'88% dell'energia che verrebbe consumata per crearla dalle materie prime."
     };
     String[] factsCardCardboard = {
-            "Moltissimi oggetti che usiamo oggi rientrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
+            "Moltissimi oggetti che usiamo oggi rièntrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
             "Molti degli scontrini attualmente in circolazione vanno gettati nell'indifferenziato, perché sono composti da carte termiche, che, se catalogate come carta e cartone, potrebbero causare problemi durante il riciclo.",
             "Una scatola di cartone resta per circa 9 mesi nell'ambiente prima di decomporsi completamente.",
             "Se riciclassimo tutti i giornali, potremmo salvare oltre 250 milioni di alberi ogni anno.",
@@ -171,7 +171,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
                         "passa al prossimo turno", "giochiamo", "prosegui", "proseguiamo",
                         "prosegui con il gioco", "voglio proseguire con il gioco",
                         "voglio proseguire", "voglio andare avanti", "possiamo proseguire",
-                        "possiamo", "continua", "continuiamo")
+                        "possiamo", "continua", "continuiamo", "avanti")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
@@ -205,7 +205,16 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             Say sayNextTurn= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                     .withText("Perfetto, allora proseguiamo con il gioco!") // Set the text to say.
                     .build(); // Build the say action.
+
+            if (currentRound<N_ROUNDS-1) {
+                //Pepper dice chi è il prossimo giocatore
+                Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                        .withText("Adesso è il tuo turno.") // Set the text to say.
+                        .build(); // Build the say action.
+                sayTurn.run();
+            }
             nextTurn();
+
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {   // Ripete l'activity con un altro fattp random riguardante il materiale scelto
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -294,6 +303,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         Log.e(TAG, "exclamation: " + exclamation);
 
     }
+
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
         Intent activity2Intent;
@@ -309,13 +319,21 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
             if (currentRound < N_ROUNDS) {
                 // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
-                if(isPepperTurn) {
+                if(isPepperTurn) {/*
+                    phrase = "Ora tocca a me.";*/
                     activity2Intent = new Intent(PepperTeachesActivity.this, PlayPepperTurnActivity.class);
                     Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
-                } else {
+                } else {/*
+                    phrase = "Adesso è il tuo turno.";*/
                     activity2Intent = new Intent(PepperTeachesActivity.this, PlayUserTurnActivity.class);
                     Log.d(TAG, "trialState passato a UserTurn: " + trialState);
                 }
+//                pepperSayTurn(isPepperTurn);
+               /* Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                        .withText(phrase) // Set the text to say.
+                        .build(); // Build the say action.
+                sayTurn.run();*/
+
             /*if (isPepperTurn) { TODO se non va bene rimetti come stava
                 if (tutorialEnabled) {
                     activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
