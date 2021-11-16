@@ -290,6 +290,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
 
+        String phrase = "";
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
             //todo se l'utente ha sbagliato, insegna qualcosa
             if(trialState == -1) {// if(!tutorialEnabled)
@@ -298,16 +299,19 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                             .withText(exclamation) // Set the text to say.
                             .build(); // Build the say action.
                     sayRandomFact.run();
+                    phrase = "Hai indovinato. Complimenti. Ora tocca a me.";
+                    Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                            .withText(phrase) // Set the text to say.
+                            .build(); // Build the say action.
+                    sayTurn.run();
+                } else {
                 }
                 updateScore(isPepperTurn);
 
             } else {
                 //Pepper dice chi è il prossimo giocatore
-                String phrase;
                 if(!isPepperTurn) {
                     phrase = "Hai indovinato. complimenti. Ora tocca a me.";
-                } else {
-                    phrase = "Oh no. Questa non la sapevo. Adesso è il tuo turno.";
                 }
                 Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                         .withText(phrase) // Set the text to say.
@@ -317,9 +321,9 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             }
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
-            String phrase;
+
             if(!isPepperTurn) {
-                phrase = "Oh no. stavolta hai sbagliato. tieni alta la concentrazione. Adesso tocca a me!";
+                phrase = "Oh no. Stavolta hai sbagliato. Tieni alta la concentrazione. Adesso tocca a me!";
             } else {
                 phrase = "Oh no. Questa non la sapevo. Adesso è il tuo turno.";
             }
