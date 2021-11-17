@@ -68,7 +68,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://02db-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://865c-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -305,6 +305,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {             // Utente mostra l'oggetto a Pepper
+
+            Log.d(TAG, "OnRobotFocusGained: matched yes");
             mediaPlayer.start();
             takePictureSaid = true;
 
@@ -312,17 +314,22 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 //            buttonTakePicture.performClick();
             Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
             try {
-                Log.d(TAG, "Sto passando al clientManager photopath ==" + photoPath);
+                Log.d(TAG, "onrobotfocusgained clientManager lanciato.");
                 ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
                 Thread thread = new Thread(clientManager);
                 thread.start();
                 thread.join();
                 garbageType = clientManager.getGarbageType();
                 responseText.setText("Tipo rifiuto:" + garbageType);
+                Log.d(TAG, "onrobotfocusgained. Ottenuto garbagetype: " + garbageType);
                 classified = true;
+                Log.d(TAG, "onrobotfocusgained. setwastetype");
                 setWasteType();
+                Log.d(TAG, "onrobotfocusgained. checkifphotoexists");
                 checkIfPhotoExists();
+                Log.d(TAG, "onrobotfocusgained. askforconfirm");
                 askForConfirm();
+                mediaPlayer.stop();
             /*else {
                     restartActivity();
                 }*/
@@ -383,6 +390,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             /*goToClassAct();*/
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {      // Utente non vuole mostrare l'oggetto a Pepper
+
+            Log.d(TAG, "OnRobotFocusGained: matched no");
             // TODO chiede se si vuole interrompere il gioco
             // Say sayPepperStopGame= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
             Say sayRepeat = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -393,6 +402,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             restartActivity();
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere il gioco dall'inizio
+            Log.d(TAG, "OnRobotFocusGained: matched repeat");
+
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -403,6 +414,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             finish();
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
+            Log.d(TAG, "OnRobotFocusGained: matched home");
+
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.affirmation_a002).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -413,6 +426,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             finish();
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
+            Log.d(TAG, "OnRobotFocusGained: matched close");
+
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.hello_a004).build();
             animate = AnimateBuilder.with(qiContext)
@@ -640,6 +655,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     }
 
     public void buttonClassify(View v) {
+        mediaPlayer.start();
         if(!classified) {
             classify();
             askForConfirm();
@@ -664,7 +680,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     }
 
     public void classify() {
-        mediaPlayer.start();
         responseText.setText("Classificazione in corso...");
         Log.e("CLASSIF","Entrato in classify");
         responseText.setText(postUrl);
@@ -831,6 +846,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
         startActivity(activity2Intent);
+        mediaPlayer.stop();
         finish();
         /* TODO Turno dell'utente:
         Schermata con i bidoni. L'utente deve selezionare il bidone corretto.
@@ -839,6 +855,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         */
     }
     private void checkIfPhotoExists() {
+        Log.d(TAG, "checkifphotoexists");
         File myFile = new File(photoPath);
 
         if(myFile.exists()) {
