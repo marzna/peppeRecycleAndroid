@@ -251,7 +251,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .withTexts("secondo", "secondo bidone", "bidone due", "bidone blu", "blu", "carta", "cartone", "carta e cartone", "bidone della carta", "bidone del cartone", "bidone di carta e cartone")
                 .build();
         PhraseSet phraseSelectYellowBin = PhraseSetBuilder.with(qiContext)
-                .withTexts("terzo", "terzo bidone", "bidone tre", "bidone giallo", "giallo", "metallo", "plastica", "bidone della plastica", "bidone dei metalli", "bidone del metallo")
+                .withTexts("terzo", "terzo bidone", "bidone tre", "bidone giallo", "giallo", "plastica e metalli",
+                        "metallo", "plastica", "bidone della plastica", "bidone dei metalli", "bidone del metallo")
                 .build();
         PhraseSet phraseSelectGreenBin = PhraseSetBuilder.with(qiContext)
                 .withTexts("quarto", "quarto bidone", "bidone quattro", "bidone verde", "verde", "vetro", "bidone del vetro", "ultimo", "l'ultimo","l'ultimo bidone")

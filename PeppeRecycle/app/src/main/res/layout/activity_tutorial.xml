@@ -110,6 +110,8 @@
         android:id="@+id/buttonSkipTutorial"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentEnd="true"
         android:background="@drawable/trial_skip"
         android:fontFamily="@font/andika_regular"

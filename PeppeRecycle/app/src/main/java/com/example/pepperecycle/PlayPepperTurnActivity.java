@@ -68,7 +68,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://865c-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://55b3-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -89,7 +89,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     boolean restartGame;
 
     private boolean isThreadStarted = false;
-    private String photoName = "PhotoPeppeRecycle.jpg";
+    private String photoName = "PhotoPeppeRecycle.jpg"; // nome con cui la foto sarà salvata temporaneamente in memoria
     private String photoPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() ;
 
     private TextView responseText;
@@ -124,7 +124,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     // Store the Animate action.
     private Animate animate;
     Button buttonTakePicture;
-    boolean endOfTutorial, tutorialState;
+    boolean endOfTutorial;
+    byte tutorialState;
 
     MediaPlayer mediaPlayer;
 
@@ -191,7 +192,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             trialState = extras.getByte("trialState");
             restartGame = extras.getBoolean("restartGame");
             endOfTutorial = extras.getBoolean("endOfTutorial");
-            tutorialState = extras.getBoolean("tutorialState");
+            tutorialState = extras.getByte("tutorialState");
             Log.d(TAG, "Ricevuto trialState: "+ trialState);
 
 
@@ -738,6 +739,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             Log.e("CLASSIF","Errore. L'immagine non è stata catturata in modo corretto");
 //            restartActivity();
             return;
+        }
+        try {
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
         //loadPhoto(imageViewPepperPhoto); // Carica l'immagine nell'ImageView passata come parametro
