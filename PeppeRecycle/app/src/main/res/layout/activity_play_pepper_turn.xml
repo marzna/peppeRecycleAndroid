@@ -200,4 +200,18 @@
         android:textColor="@color/white"
         android:textSize="23sp" />
 
+    <ProgressBar
+        android:id="@+id/pbSavePhoto"
+        style="@android:style/Widget.Material.ProgressBar.Large"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:visibility="invisible"/>
+
 </RelativeLayout>
