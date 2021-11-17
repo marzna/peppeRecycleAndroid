@@ -8,6 +8,18 @@
     android:background="@drawable/bkgr_activity_main"
     tools:context=".TutorialEndActivity">
 
+    <!--<Button
+        android:id="@+id/buttonBack"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_prev"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:visibility="visible" />-->
+
     <TextView
         android:id="@+id/tvTrialTitle"
         android:layout_width="wrap_content"

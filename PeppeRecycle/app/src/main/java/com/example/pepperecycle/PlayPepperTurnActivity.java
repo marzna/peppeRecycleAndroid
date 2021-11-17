@@ -312,13 +312,13 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             mediaPlayer.start();
             takePictureSaid = true;
 
-//            savePhoto(mRGBATbitmap);
-            SavePhoto savePhoto = new SavePhoto(mRGBATbitmap);
-            savePhoto.execute();
+            savePhoto(mRGBATbitmap);
+            /*SavePhoto savePhoto = new SavePhoto(mRGBATbitmap);
+            savePhoto.execute();*/
 
 
 //            buttonTakePicture.performClick();
-            /*todo decommenta
+
             Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
             try {
                 Log.d(TAG, "onrobotfocusgained clientManager lanciato.");
@@ -337,14 +337,14 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 Log.d(TAG, "onrobotfocusgained. askforconfirm");
                 askForConfirm();
                 mediaPlayer.stop();
-            *//*else {
+            /*else {
                     restartActivity();
-                }*//*
+                }*/
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*/
+            }
                         /*responseText.setText("Tipo rifiuto:" + garbageType);
                 setWasteType();
                 checkIfPhotoExists();
@@ -943,7 +943,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     }
 
 
-    class SavePhoto extends AsyncTask<Object, Void, Bitmap>{
+   /* class SavePhoto extends AsyncTask<Object, Void, Bitmap>{
         private Bitmap bmp;
 
         public SavePhoto(Bitmap bmp) {
@@ -951,30 +951,30 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         }
         @Override
         protected Bitmap doInBackground(Object... params) {
-            /*File file = new File(
-                    Environment.getExternalStorageDirectory().getAbsolutePath() + path);
-
-            if(file.exists()){
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            }
-*/          if(!photoTaken)
-                pbSavePhoto.setVisibility(View.VISIBLE);
-                savePhoto(bmp);
-            return bmp; //Inutile ma boh non so come altro fare
-        }
-        /*@Override
-        protected Bitmap doInBackground(Object... params) {
-            Bitmap bitmap = null;
             *//*File file = new File(
                     Environment.getExternalStorageDirectory().getAbsolutePath() + path);
 
             if(file.exists()){
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             }
-*//*
+*//*          if(!photoTaken)
+                pbSavePhoto.setVisibility(View.VISIBLE);
+                savePhoto(bmp);
+            return bmp; //Inutile ma boh non so come altro fare
+        }
+        *//*@Override
+        protected Bitmap doInBackground(Object... params) {
+            Bitmap bitmap = null;
+            *//**//*File file = new File(
+                    Environment.getExternalStorageDirectory().getAbsolutePath() + path);
+
+            if(file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+*//**//*
             savePhoto(bmp);
             return bitmap;
-        }*/
+        }*//*
         @Override
         protected void onPostExecute(Bitmap result) {
             Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
@@ -1001,10 +1001,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 e.printStackTrace();
             }
             pbSavePhoto.setVisibility(View.INVISIBLE);
-            /* if (!imv.getTag().toString().equals(path)) {
-             *//* The path is not same. This means that this
+            *//* if (!imv.getTag().toString().equals(path)) {
+     *//**//* The path is not same. This means that this
                   image view is handled by some other async task.
-                  We don't do anything and return. *//*
+                  We don't do anything and return. *//**//*
                 return;
             }
 
@@ -1013,9 +1013,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 imv.setImageBitmap(result);
             }else{
                 imv.setVisibility(View.GONE);
-            }*/
+            }*//*
         }
 
-    }
+    }*/
 
 }
