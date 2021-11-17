@@ -241,7 +241,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .build(); // Build the say action.;
 
         Say sayUserTurnExplain= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Qual è il bidone adatto a questo rifiuto?") // Set the text to say.
+                .withText("in quale bidone decidi di buttare il rifiuto che ti ha mostrato il giudice?") // Set the text to say.
+                //.withText("Qual è il bidone adatto a questo rifiuto?") // Set the text to say.
                 .build(); // Build the say action.
 
         PhraseSet phraseSelectBrownBin = PhraseSetBuilder.with(qiContext)
