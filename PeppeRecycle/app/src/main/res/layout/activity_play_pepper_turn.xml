@@ -10,7 +10,7 @@
     <org.opencv.android.JavaCameraView
         android:id="@+id/my_camera_view"
         android:layout_width="888px"
-        android:layout_height="500px"
+        android:layout_height="400px"
         android:layout_centerInParent="true" />
 
     <TextView
@@ -183,7 +183,7 @@
     <TextView
         android:id="@+id/textViewShowMeObj"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="0dp"
@@ -195,10 +195,10 @@
         android:layout_toRightOf="@id/tvTutorialPepper"
         android:fontFamily="@font/andika_regular"
         android:gravity="center_vertical"
-        android:lineSpacingExtra="10sp"
-        android:text="Per piacere,\nmi mostreresti il rifiuto?"
+        android:lineSpacingExtra="8sp"
+        android:text='Mostrami il rifiuto e\n pronuncia la parola "Ecco",\noppure premi il pulsante blu.'
         android:textColor="@color/white"
-        android:textSize="23sp" />
+        android:textSize="22sp" />
 
     <ProgressBar
         android:id="@+id/pbSavePhoto"
