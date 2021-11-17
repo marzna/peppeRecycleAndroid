@@ -218,7 +218,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
                     .withTexts("Si", "sì", "va bene", "certo", "raund di prova",
                             "round di prova", "giochiamo il raund di prova",
                             "giochiamo il round di prova", "giochiamo il round di prova",
-                            "ok", "okay")
+                            "ok", "okay", "gioca")
                     .build();
             phraseSetNoPlay = PhraseSetBuilder.with(qiContext)
                     .withTexts("Giochiamo", "Voglio giocare", "Non mi va", "No")

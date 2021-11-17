@@ -84,9 +84,9 @@
         android:layout_toEndOf="@id/selectedBin"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
-        android:text="Il bidone selezionato è quello"
+        android:text="Il bidone selezionato\nè quello"
         android:textColor="#FFFFFF"
-        android:textSize="34sp" />
+        android:textSize="40sp" />
 
     <TextView
         android:id="@+id/textViewAskForConfirm"
