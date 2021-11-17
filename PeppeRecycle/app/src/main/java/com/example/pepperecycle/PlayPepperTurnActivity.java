@@ -291,7 +291,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build();
 
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
-                .withTexts("Chiudi il gioco", "Esci", "Basta")
+                .withTexts("Chiudi il gioco", "Esci", "Basta", "Stop")
                 .build();
 
 //        sayPepperTurn.run();

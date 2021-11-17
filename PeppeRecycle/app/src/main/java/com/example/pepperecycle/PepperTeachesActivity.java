@@ -268,7 +268,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
                 .build();
 
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
-                .withTexts("Chiudi il gioco", "Esci", "Basta", "voglio andare via")
+                .withTexts("Chiudi il gioco", "Esci", "Basta", "voglio andare via", "Stop")
                 .build();
 
         Listen listenPlay = ListenBuilder
