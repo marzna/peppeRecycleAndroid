@@ -1,10 +1,5 @@
 package com.example.pepperecycle;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -13,16 +8,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.QiSDK;
@@ -58,7 +58,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +67,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://55b3-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://2e3d-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -87,6 +86,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     boolean roundTutorial;
     boolean restartGame;
+    ProgressBar pbSavePhoto;
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPeppeRecycle.jpg"; // nome con cui la foto sarà salvata temporaneamente in memoria
@@ -149,6 +149,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         tvTutorialPepper = findViewById(R.id.tvTutorialPepper);
         imageViewUserScore = findViewById(R.id.imageViewUserScore);
         imageViewPepperScore = findViewById(R.id.imageViewPepperScore);
+        pbSavePhoto = findViewById(R.id.pbSavePhoto);
 
         photoTaken = false;
         classified = false;
@@ -311,8 +312,13 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             mediaPlayer.start();
             takePictureSaid = true;
 
-            savePhoto(mRGBATbitmap);
+//            savePhoto(mRGBATbitmap);
+            SavePhoto savePhoto = new SavePhoto(mRGBATbitmap);
+            savePhoto.execute();
+
+
 //            buttonTakePicture.performClick();
+            /*todo decommenta
             Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
             try {
                 Log.d(TAG, "onrobotfocusgained clientManager lanciato.");
@@ -331,14 +337,14 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 Log.d(TAG, "onrobotfocusgained. askforconfirm");
                 askForConfirm();
                 mediaPlayer.stop();
-            /*else {
+            *//*else {
                     restartActivity();
-                }*/
+                }*//*
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
                         /*responseText.setText("Tipo rifiuto:" + garbageType);
                 setWasteType();
                 checkIfPhotoExists();
@@ -658,8 +664,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     public void buttonClassify(View v) {
         mediaPlayer.start();
         if(!classified) {
+            Log.e("CLASSIF", "Classificazione in corso...");
             classify();
             askForConfirm();
+            Log.e("CLASSIF", "Classificazione avvenuta con successo.");
         } else {
             Log.e("CLASSIF", "ERRORE di classificazione.");
         }
@@ -696,7 +704,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         try {
             // SCATTO FOTO
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream); //TODO Rimuovi (o no?)
-            //checkIfPhotoExists();
             if(!photoTaken) {
                 savePhoto(mRGBATbitmap);
             }
@@ -707,10 +714,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
             //CONNESSIONE SERVER
             try {
-            /*if (//!thread.isAlive() && !isThreadStarted) { //Controllo se il thread è stato già attivato
-                thread.start(); isThreadStarted=true; thread.join();
-            }*/
-
                 Log.d(TAG, "Sto passando al clientManager photopath ==" + photoPath);
                 ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
                 Thread thread = new Thread(clientManager);
@@ -728,10 +731,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                        /*responseText.setText("Tipo rifiuto:" + garbageType);
-                setWasteType();
-                checkIfPhotoExists();
-            */
             }
 
         } catch (Exception e) {
@@ -746,35 +745,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             e.printStackTrace();
         }
         javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
-        //loadPhoto(imageViewPepperPhoto); // Carica l'immagine nell'ImageView passata come parametro
 
-        /* try {
-         *//*if (//!thread.isAlive() && !isThreadStarted) { //Controllo se il thread è stato già attivato
-                thread.start(); isThreadStarted=true; thread.join();
-            }*//*
-
-            Log.d(TAG, "Sto passando al clientManager photopath ==" + photoPath);
-            ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
-            Thread thread = new Thread(clientManager);
-            thread.start();
-            thread.join();
-            garbageType = clientManager.getGarbageType();
-            responseText.setText("Tipo rifiuto:" + garbageType);
-            classified = true;
-            setWasteType();
-            checkIfPhotoExists();
-            *//*else {
-                    restartActivity();
-                }*//*
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-                        *//*responseText.setText("Tipo rifiuto:" + garbageType);
-                setWasteType();
-                checkIfPhotoExists();
-            *//*
-        }*/
     }
     void restartActivity() {
         Intent activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
@@ -813,6 +784,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 wasteTypeString = STRING_GLASS;
                 break;
             default:
+                /*wasteType = TYPE_ORGANIC;
+                wasteTypeString = STRING_ORGANIC;*/
+
                 wasteType = CLASSIFICATION_ERROR;
                 wasteTypeString = STRING_CLASSIFICATION_ERROR;
                 break;
@@ -967,4 +941,81 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         CommonUtils.showDialogExit(this);
         //finish();
     }
+
+
+    class SavePhoto extends AsyncTask<Object, Void, Bitmap>{
+        private Bitmap bmp;
+
+        public SavePhoto(Bitmap bmp) {
+            this.bmp = bmp;
+        }
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+            /*File file = new File(
+                    Environment.getExternalStorageDirectory().getAbsolutePath() + path);
+
+            if(file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+*/          if(!photoTaken)
+                pbSavePhoto.setVisibility(View.VISIBLE);
+                savePhoto(bmp);
+            return bmp; //Inutile ma boh non so come altro fare
+        }
+        /*@Override
+        protected Bitmap doInBackground(Object... params) {
+            Bitmap bitmap = null;
+            *//*File file = new File(
+                    Environment.getExternalStorageDirectory().getAbsolutePath() + path);
+
+            if(file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+*//*
+            savePhoto(bmp);
+            return bitmap;
+        }*/
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
+            try {
+                Log.d(TAG, "onrobotfocusgained clientManager lanciato.");
+                ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
+                Thread thread = new Thread(clientManager);
+                thread.start();
+                thread.join();
+                garbageType = clientManager.getGarbageType();
+                responseText.setText("Tipo rifiuto:" + garbageType);
+                Log.d(TAG, "onrobotfocusgained. Ottenuto garbagetype: " + garbageType);
+                classified = true;
+                Log.d(TAG, "onrobotfocusgained. setwastetype");
+                setWasteType();
+                Log.d(TAG, "onrobotfocusgained. checkifphotoexists");
+                checkIfPhotoExists();
+                Log.d(TAG, "onrobotfocusgained. askforconfirm");
+                askForConfirm();
+                mediaPlayer.stop();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pbSavePhoto.setVisibility(View.INVISIBLE);
+            /* if (!imv.getTag().toString().equals(path)) {
+             *//* The path is not same. This means that this
+                  image view is handled by some other async task.
+                  We don't do anything and return. *//*
+                return;
+            }
+
+            if(result != null && imv != null){
+                imv.setVisibility(View.VISIBLE);
+                imv.setImageBitmap(result);
+            }else{
+                imv.setVisibility(View.GONE);
+            }*/
+        }
+
+    }
+
 }

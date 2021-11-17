@@ -205,7 +205,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
         if (playGameAfterTrial) {
             //In risposta a: "Il round di prova è finito. Adesso giochiamo sul serio! .";
             phraseSetPlay = PhraseSetBuilder.with(qiContext)
-                    .withTexts("Si", "sì", "va bene", "ochei", "certo",
+                    .withTexts("Si", "sì", "va bene", "certo",
                             "Giochiamo", "Voglio giocare",
                             "ok", "okay")
                     .build();
@@ -215,7 +215,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
                     .build();
         } else {
             phraseSetPlay = PhraseSetBuilder.with(qiContext)
-                    .withTexts("Si", "sì", "va bene", "ochei", "certo", "raund di prova",
+                    .withTexts("Si", "sì", "va bene", "certo", "raund di prova",
                             "round di prova", "giochiamo il raund di prova",
                             "giochiamo il round di prova", "giochiamo il round di prova",
                             "ok", "okay")

@@ -65,7 +65,7 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Si", "Voglio sapere", "ripeti il tutorial", "Voglio saperlo",
                         "spiegamelo", "spiegalo", "spiega di nuovo", "voglio che me lo spieghi",
-                        "voglio che lo spieghi", "tutorial", "ok", "okay", "ochei",
+                        "voglio che lo spieghi", "tutorial", "ok", "okay",
                         "Pepper sì", "sì Pepper", "Pepper si", "si Pepper", "ok Pepper")
                 .build();
 

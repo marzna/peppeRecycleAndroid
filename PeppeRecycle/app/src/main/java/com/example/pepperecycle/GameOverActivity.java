@@ -122,7 +122,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 //      animateResult.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "ochei", "Giochiamo", "va bene",
+                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "Giochiamo", "va bene",
                         "certo", "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita")
                 .build();
 

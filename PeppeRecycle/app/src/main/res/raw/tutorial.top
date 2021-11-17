@@ -7,7 +7,7 @@ concept:(tutorialIntro)["Ecco come si gioca:
                          Poi, il giudice deve dire se la risposta è corretta o no.
                          Chi indovina, guadagnerà un punto!
                          Posso andare avanti?" ]
-concept:(nextPage) [si chiaro "prossima pagina" avanti ok okay ochei]
+concept:(nextPage) [si chiaro "prossima pagina" avanti ok okay]
 concept:(backPage) ["torna indietro" indietro precedente]
 concept:(repeat) [no "non è chiaro" "non sei stato chiaro" "ripeti" "puoi ripetere" "non ho capito"]
 concept:(play) [giochiamo "voglio giocare" "salta il tutorial"]
