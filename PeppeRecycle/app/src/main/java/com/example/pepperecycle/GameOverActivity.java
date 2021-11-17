@@ -74,6 +74,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             userScore = extras.getByte("userScore");
             currentRound = extras.getByte("currentRound");
         }
+
         if (pepperScore > userScore ) { // Utente perde
             // if (pepperScore == 3 ) { //if(scores.get("score_pepper") == 3 ) {
             userLoser();
@@ -121,8 +122,8 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 //      animateResult.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "ochei", "Giochiamo",
-                        "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita")
+                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "Giochiamo", "va bene",
+                        "certo", "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
@@ -169,7 +170,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             finish();
 
         } else if ( (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) ||
-                    (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) ) {    // Chiude il gioco
+                (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) ) {    // Chiude il gioco
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.hello_a004).build();
             Animate animate = AnimateBuilder.with(qiContext)
@@ -215,8 +216,16 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
     }
     void userDraw() { //In caso di pareggio
-        resultPhrase = "Siamo stati bravissimi entrambi.";
-        tvResult.setText("Pareggio!");
+        if (userScore == 0 && pepperScore == 0) { // score == 0
+            resultPhrase = "Oh no, non abbiamo indovinato neanche una volta. Dovremmo impegnarci di più.";
+            tvResult.setText("Pareggio!");
+        } else if (userScore == 3 && pepperScore == 3) { // score == 3
+            resultPhrase = "Uau, le abbiamo indovinate tutte. Siamo stati bravissimi entrambi.";
+            tvResult.setText("Pareggio!");
+        } else { // score == 2
+            resultPhrase = "Siamo stati bravissimi entrambi, e abbiamo avuto lo stesso punteggio.";
+            tvResult.setText("Pareggio!");
+        }
     }
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);

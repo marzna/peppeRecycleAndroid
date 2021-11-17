@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bkgr_bins"
+    android:background="@drawable/bkgr_bins_ask_confirm"
     tools:context=".PepperTeachesActivity">
 
     <ImageButton
@@ -39,20 +38,17 @@
 
     <ImageView
         android:id="@+id/selectedBin"
-        android:layout_width="230dp"
-        android:layout_height="338dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="100dp"
-        android:layout_marginBottom="95dp"
-        android:foreground="?android:attr/selectableItemBackground" />
+        android:layout_width="125dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/textViewRandomFact"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/textViewFactAbout"
         android:layout_width="701dp"
-        android:layout_height="169dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="-229dp"
-        android:layout_toEndOf="@id/selectedBin"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:text="Curiosità"
@@ -61,17 +57,19 @@
 
     <TextView
         android:id="@+id/textViewRandomFact"
-        android:layout_width="532dp"
-        android:layout_height="333dp"
-        android:layout_alignStart="@id/textViewFactAbout"
-        android:layout_alignBottom="@id/textViewFactAbout"
-        android:layout_marginStart="226dp"
-        android:layout_marginBottom="-334dp"
-        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_below="@id/textViewFactAbout"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bckgr_speech_with_no_borders_big"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="34sp" />
+        android:textColor="#000000"
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/buttonPlay"
@@ -80,9 +78,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_play"
-        android:onClick="buttonPlay"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
+        android:onClick="buttonPlay"
         android:textAllCaps="false"
         android:textSize="20sp"
         android:visibility="invisible" />

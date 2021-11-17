@@ -47,7 +47,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     QiContext qiContext;
     String binType;
     String wasteTypeString;
-    String factAboutRecycle;
+    String factAboutRecycle, textFactAboutRecycle;
     boolean tutorialEnabled;
     boolean pepperTeaches;
     Button buttonPlay;
@@ -70,7 +70,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             "Il compost può essere prodotto sia su scala industriale che domestica."
     };
     String[] factsPlasticMetal = {
-            "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori o imballaggi dei prodotti che compriamo, come la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e tanto àltro.",
+            "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori, o imballaggi, dei prodotti che compriamo, come, la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e \\rspd=80\\tànto àltro.",
             "Una mascherina impiegherebbe tra i 400 e i 450 anni per degradarsi completamente nell'ambiente. Durante questo processo, rilascerebbe micro-particelle di plastica, che, in mare, potrebbero essere ingerite dalle specie marine.",
             "Una lattina di alluminio resta dai 20 ai 100 anni nell'ambiente prima di degradarsi completamente, ecco perché sarebbe meglio riciclarla nell'apposita categoria!",
             "Moltissime creature marine muoiono ogni anno a causa delle buste di platica e della spazzatura che vengono gettate in mare.",
@@ -84,7 +84,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     };
     String[] factsCardCardboard = {
             "Moltissimi oggetti che usiamo oggi rièntrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
-            "Molti degli scontrini attualmente in circolazione vanno gettati nell'indifferenziato, perché sono composti da carte termiche, che, se catalogate come carta e cartone, potrebbero causare problemi durante il riciclo.",
+            "Molti degli scontrini attualmente in circolazione vanno gettati nell'indifferenziato, perché sono composti da carte termiche che, se catalogate come carta e cartone, potrebbero causare problemi durante il riciclo.",
             "Una scatola di cartone resta per circa 9 mesi nell'ambiente prima di decomporsi completamente.",
             "Se riciclassimo tutti i giornali, potremmo salvare oltre 250 milioni di alberi ogni anno.",
             "Riciclare un cartone richiede solo il 75% dell'energia necessaria per produrne uno nuovo.",
@@ -100,6 +100,82 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 
     };
 
+    String[] textFactsOrganic = {
+            "L'organico è formato da scarti alimentari\n" +
+                    "e altri rifiuti facilmente biodegradabili.",
+            "Una torsolo di mela resta per circa 2 mesi\n" +
+                    "nell'ambiente prima di degradarsi completamente.",
+            "Circa un terzo dei rifiuti prodotti da una persona\n" +
+                    "è composto da rifiuti organici.",
+            "Dalla decomposizione dei rifiuti organici, si ottiene\n" +
+                    "il compost, un ottimo concime per il terreno.",
+            "Il compost può essere prodotto sia su scala industriale che domestica."
+    };
+    String[] textFactsPlasticMetal = {
+            "Fanno parte della categoria di plastica e metalli\n" +
+                    "quasi tutti i contenitori o imballaggi dei prodotti che compriamo\n" +
+                    "come la lattina della coca cola, la scatoletta di tonno,\n" +
+                    "la bottiglia dello shampoo e tanto altro.",
+            "Una mascherina impiegherebbe tra i 400 e i 450 anni\n" +
+                    "per degradarsi completamente nell'ambiente.\n" +
+                    "Durante questo processo, rilascerebbe micro-particelle di plastica,\n" +
+                    "che, in mare, potrebbero essere ingerite dalle specie marine.",
+            "Una lattina di alluminio resta dai 20 ai 100 anni nell'ambiente\n" +
+                    "prima di degradarsi completamente,\n" +
+                    "ecco perché sarebbe meglio riciclarla nell'apposita categoria!",
+            "Moltissime creature marine muoiono ogni anno\n" +
+                    "a causa delle buste di platica e della spazzatura\n" +
+                    "che vengono gettate in mare.",
+            "Una bottiglia di plastica resta per circa 450 anni\n" +
+                    "nell'ambiente prima di degradarsi completamente.",
+            "L'alluminio può essere riciclato infinite volte,\n" +
+                    "senza perdita di qualità.",
+            "In soli due mesi, le lattine di alluminio\n" +
+                    "possono essere riciclate e rimesse in commercio.",
+            "Riciclare una lattina di alluminio\n" +
+                    "farebbe risparmiare l'energia necessaria\n" +
+                    "per poter guardare la tv per circa 3 ore.",
+            "Una lattina di alluminio può essere riciclata\n" +
+                    "usando solo il 5% dell'energia\n" +
+                    "che bisognerebbe impiegare per fabbricarla da 0.",
+            "Riciclare la plastica fa risparmiare il doppio dell'energia\n" +
+                    " che verrebbe consumata per bruciarla in un inceneritore.",
+            "Riciclare la plastica fa risparmiare l'88% dell'energia\n" +
+                    "che verrebbe consumata per crearla dalle materie prime."
+    };
+    String[] textFactsCardCardboard = {
+            "Moltissimi oggetti che usiamo oggi rientrano\n" +
+                    "nella categoria di carta e cartone:\n" +
+                    "i quaderni di scuola, i giornali e le riviste.",
+            "Molti degli scontrini attualmente in circolazione\n" +
+                    "vanno gettati nell'indifferenziato, perché sono composti\n" +
+                    "da carte termiche che, se catalogate come carta e cartone,\n" +
+                    "potrebbero causare problemi durante il riciclo.",
+            "Una scatola di cartone resta per circa 9 mesi nell'ambiente\n" +
+                    "prima di decomporsi completamente.",
+            "Se riciclassimo tutti i giornali,\n" +
+                    "potremmo salvare oltre 250 milioni di alberi ogni anno.",
+            "Riciclare un cartone richiede solo\n" +
+                    "il 75% dell'energia necessaria per produrne uno nuovo.",
+            "La carta riciclata produce circa\n" +
+                    "il 70% in meno di inquinamento atmosferico \n" +
+                    "rispetto alla sua creazione a partire dalle materie prime."
+    };
+    String[] textFactsGlass = {
+            "Il vetro può essere riciclato e rifabbricato\n" +
+                    "un numero infinito di volte e non si usura mai.",
+            "Il vetro mantiene il suo colore anche dopo il riciclo,\n" +
+                    "perciò viene suddiviso in colori.",
+            "Una moderna bottiglia di vetro potrebbe impiegare\n" +
+                    "più di 4000 anni per decomporsi del tutto,\n" +
+                    "forse anche di più se si trova in discarica.",
+            "Anche gli antichi Romani riciclavano il vetro.",
+            "Circa 7 bottiglie su 10 sono prodotte con vetro riciclato.",
+            "Riciclando 1 chilo di rifiuti in vetro,\n" +
+                    "si otterrà 1 chilo di nuovi prodotti\n" +
+                    "in vetro riciclato, senza perdere nulla!",
+
+    };
 
 
     @Override
@@ -166,7 +242,8 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 //        animateRandomFact.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "ochei", "andiamo avanti",
+                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "okay", "andiamo avanti",
+                        "possiamo andare avanti", "vai avanti", "prosegui",
                         "vai avanti", "passiamo", "prossimo turno", "vai al prossimo turno",
                         "passa al prossimo turno", "giochiamo", "prosegui", "proseguiamo",
                         "prosegui con il gioco", "voglio proseguire con il gioco",
@@ -265,9 +342,10 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 
     }
 
-    void selection(String typeForTV, int res, String[] factsAboutSmth ) {
+    void selection(String typeForTV, int res, String[] textFactsAboutSmth, String[] factsAboutSmth) {
         textViewFactAbout.setText(typeForTV);
         selectedBin.setBackground(getDrawable(res));
+        textFactAboutRecycle = textFactsAboutSmth[ new Random().nextInt(textFactsAboutSmth.length)];
         factAboutRecycle = factsAboutSmth[ new Random().nextInt(factsAboutSmth.length)];
     }
 
@@ -275,16 +353,16 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         Log.e(TAG, "Entrato nel selectFact.");
         switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
             case 0: // case "organic":
-                selection("Curiosità - ORGANICO", R.drawable.bin_brown_shadow, factsOrganic);
+                selection("Curiosità - ORGANICO", R.drawable.bin_brown_shadow, factsOrganic, textFactsOrganic);
                 break;
             case 1: // case "paper": case "cardboard":
-                selection("Curiosità - CARTA E CARTONE", R.drawable.bin_blue_shadow, factsCardCardboard);
+                selection("Curiosità - CARTA E CARTONE", R.drawable.bin_blue_shadow, factsCardCardboard, textFactsCardCardboard);
                 break;
             case 2: // case "plastic": case "metal":
-                selection("Curiosità - PLASTICA E METALLI", R.drawable.bin_yellow_shadow, factsPlasticMetal);
+                selection("Curiosità - PLASTICA E METALLI", R.drawable.bin_yellow_shadow, factsPlasticMetal, textFactsPlasticMetal);
                 break;
             case 3: // case "glass":
-                selection("Curiosità - VETRO", R.drawable.bin_green_shadow, factsGlass);
+                selection("Curiosità - VETRO", R.drawable.bin_green_shadow, factsGlass, textFactsGlass);
                 break;
             default:
                 textViewFactAbout.setText("Errore"); //TODO MODIFICA
@@ -307,7 +385,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
         Intent activity2Intent;
-        trialState = nextTrialState(trialState);
+//        trialState = nextTrialState(trialState);
         if (trialState == 2) {
             endTutorial();
         } else {

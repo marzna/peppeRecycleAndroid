@@ -20,7 +20,6 @@
 
     <Button
         android:id="@+id/buttonMenuPlay"
-        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_below="@id/imageViewPeppeRecycle"
@@ -34,21 +33,11 @@
 
     <Button
         android:id="@+id/buttonClose"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_alignParentEnd="true"
         android:background="@drawable/button_close"
-        android:fontFamily="@font/andika_regular"
-        android:onClick="buttonClose"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:verticalScrollbarPosition="defaultPosition"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="360dp"
-        tools:layout_editor_absoluteY="299dp" />
+        android:onClick="buttonClose" />
 
     <Button
         android:id="@+id/buttonMenuStorytelling"

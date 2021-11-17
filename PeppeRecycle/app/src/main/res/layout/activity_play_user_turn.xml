@@ -12,51 +12,39 @@
     tools:context=".PlayUserTurnActivity">
 
     <!--   android:background="@drawable/bkgr_bins_wrong"-->
+    <LinearLayout
+        android:id="@+id/llControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentEnd="true">
 
-    <ImageButton
-        android:id="@+id/buttonClose"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/button_close"
-        android:onClick="buttonClose"
-        android:verticalScrollbarPosition="defaultPosition"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="360dp"
-        tools:layout_editor_absoluteY="299dp" />
+        <ImageButton
+            android:id="@+id/buttonHelp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_help"/>
 
-    <ImageButton
-        android:id="@+id/buttonHome"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignRight="@id/buttonClose"
-        android:layout_alignParentEnd="false"
-        android:layout_marginLeft="-52dp"
-        android:layout_marginEnd="53dp"
-        android:background="@drawable/button_home"
-        android:onClick="buttonHome"
-        android:verticalScrollbarPosition="defaultPosition"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="360dp"
-        tools:layout_editor_absoluteY="299dp" />
+        <ImageButton
+            android:id="@+id/buttonHome"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_home"
+            android:onClick="buttonHome" />
 
-    <ImageButton
-        android:id="@+id/buttonHelp"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignRight="@id/buttonHome"
-        android:layout_alignParentEnd="false"
-        android:layout_marginLeft="-52dp"
-        android:layout_marginEnd="53dp"
-        android:background="@drawable/button_help"
-        android:fontFamily="@font/andika_regular"
-        android:verticalScrollbarPosition="defaultPosition"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="360dp"
-        tools:layout_editor_absoluteY="299dp"/>
+
+        <ImageButton
+            android:id="@+id/buttonClose"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:background="@drawable/button_close"
+            android:onClick="buttonClose" />
+
+    </LinearLayout>
 
     <!--Sezione Bidoni-->
     <LinearLayout
@@ -181,14 +169,16 @@
 
     <TextView
         android:id="@+id/tvYourTurn"
-        android:layout_width="400dp"
+        android:layout_width="300dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="false"
         android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@id/llControls"
         android:layout_toEndOf="@id/textViewUserScore"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:text="È il tuo turno!"
+        android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="34sp"
         android:textStyle="bold|italic" />

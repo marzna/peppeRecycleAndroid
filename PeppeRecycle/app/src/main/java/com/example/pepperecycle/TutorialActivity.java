@@ -173,7 +173,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .withAnimation(explain).build();
 
         PhraseSet phraseSetNextPage = PhraseSetBuilder.with(qiContext)
-                .withTexts("Si", "è chiaro", "sì", "sei stato chiaro", "Ho capito", "Vai avanti", "avanti", "ok", "okay", "ochei", "va bene")
+                .withTexts("Si", "è chiaro", "sì", "sei stato chiaro", "Ho capito", "Vai avanti", "avanti", "ok", "okay", "va bene")
                 .build();
 
         PhraseSet phraseSetPlay = PhraseSetBuilder.with(qiContext)

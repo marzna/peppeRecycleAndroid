@@ -256,7 +256,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         selectedBin.run();
         sayAskForConfirm.run();
-        animateAskForConfirm.run();
+//        animateAskForConfirm.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "è corretta", "è giusta", "corretta", "giusta",
@@ -276,7 +276,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 .build();
 
         PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
-                .withTexts("Torna", "Indietro", "Home")
+                .withTexts("Torna alla home", "Home")
+                .build();
+
+        PhraseSet phraseSetBack = PhraseSetBuilder.with(qiContext)
+                .withTexts("Torna indietro", "Indietro")
                 .build();
 
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
@@ -285,14 +289,13 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
         Listen listenPlay = ListenBuilder
                 .with(qiContext)
-                .withPhraseSets(phraseSetYes, phraseSetNo, phraseSetRepeat, phraseSetClose, phraseSetHome)
+                .withPhraseSets(phraseSetYes, phraseSetNo, phraseSetRepeat, phraseSetClose, phraseSetHome, phraseSetBack)
                 .build();
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
 
         String phrase = "";
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
-            //todo se l'utente ha sbagliato, insegna qualcosa
             if(trialState == -1) {// if(!tutorialEnabled)
                 if(isPepperTurn) {
                     Say sayRandomFact = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -312,9 +315,16 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
             } else {
                 //Pepper dice chi è il prossimo giocatore
-                if (currentRound<N_ROUNDS-1 && !isPepperTurn) {
-                    phrase = "Hai indovinato. complimenti. Ora tocca a me.";
-
+                if (currentRound<N_ROUNDS-1) {
+                    if(!isPepperTurn) {
+                        phrase = "Hai indovinato. \\rspd=80\\ Complimenti. Ora tocca a me.";
+                    } else {
+                        Say sayRandomFact = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+                                .withText(exclamation) // Set the text to say.
+                                .build(); // Build the say action.
+                        sayRandomFact.run();
+                        phrase = "Ora tocca a te.";
+                    }
                     Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                             .withText(phrase) // Set the text to say.
                             .build(); // Build the say action.
@@ -326,9 +336,15 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
             if (currentRound<N_ROUNDS-1) {
                 if (!isPepperTurn) {
-                    phrase = "Oh no. Stavolta hai sbagliato. Tieni alta la concentrazione. Adesso tocca a me!";
+                    if(currentRound<N_ROUNDS-2)
+                        phrase = "Oh no, stavolta hai sbagliato. Tieni alta la concentrazione.";
+                    else
+                        phrase = "Oh no, stavolta hai sbagliato. Tieni alta la concentrazione. Adesso tocca a me!";
                 } else {
-                    phrase = "Oh no. Devo impegnarmi di più. Adesso è il tuo turno.";
+                    if(currentRound<N_ROUNDS-2)
+                        phrase = "Oh no, devo impegnarmi di più. Adesso è il tuo turno.";
+                    else
+                        phrase = "Oh no, devo impegnarmi di più.";
                 }
                 Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                         .withText(phrase) // Set the text to say.
@@ -346,6 +362,31 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
             startActivity(activity2Intent); //Per ripetere
             finish();
 
+        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetBack)) {   // Richiesta utente di tornare alla pagina precedente (selezione rifiuto o simile)
+//            buttonBack.performClick();
+            Intent activity2Intent;//Per andare alla pagina principale
+            if (isPepperTurn) { //TODO Rimuovi il bottone back se il turno era di Pepper o lascialo se si vuole ri-scattare la foto?
+                activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
+            } else {
+                activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
+            }
+            activity2Intent.putExtra("round", round);
+            //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+            activity2Intent.putExtra("pepperScore", pepperScore);
+            activity2Intent.putExtra("userScore", userScore);
+            activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("trialState", trialState);
+
+
+            activity2Intent.putExtra("roundTutorial", roundTutorial);
+            activity2Intent.putExtra("endOfTutorial", endOfTutorial);
+            activity2Intent.putExtra("restartGame", restartGame);
+            activity2Intent.putExtra("roundTutorial", roundTutorial);
+            activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+            activity2Intent.putExtra("tutorialState", tutorialState);
+            startActivity(activity2Intent); //Per andare alla pagina principale
+
+            finish();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.affirmation_a002).build();
