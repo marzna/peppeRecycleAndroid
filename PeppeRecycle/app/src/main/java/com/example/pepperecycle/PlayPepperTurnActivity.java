@@ -101,6 +101,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     static final byte TYPE_PAPER_CARDBOARD = 1;
     static final byte TYPE_PLASTIC_METAL = 2;
     static final byte TYPE_GLASS = 3;
+    static final byte TYPE_PAPER = 4;
+    static final byte TYPE_CARDBOARD = 5;
+    static final byte TYPE_PLASTIC = 6;
+    static final byte TYPE_METAL = 7;
+    static final byte TYPE_WASTE = -1;
     static final byte CLASSIFICATION_ERROR = -1;
 
     static final String STRING_ORGANIC = "Organico";
@@ -693,7 +698,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 //        goToClassAct();
     }
 
-    public void classify() {
+    /*public void classify() { //Dovrebbe funzionare ugualmente... Usa questo se l'altro dà problemi
         responseText.setText("Classificazione in corso...");
         Log.e("CLASSIF","Entrato in classify");
         responseText.setText(postUrl);
@@ -729,9 +734,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 classified = true;
                 setWasteType();
                 checkIfPhotoExists();
-            /*else {
+            *//*else {
                     restartActivity();
-                }*/
+                }*//*
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -751,7 +756,62 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         }
         javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
 
+    }*/
+    public void classify() {
+        responseText.setText("Classificazione in corso...");
+        Log.e("CLASSIF","Entrato in classify");
+        responseText.setText(postUrl);
+        MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888; //options.inPreferredConfig = Bitmap.Config.RGB_565;
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        // Read BitMap by file path.
+        Bitmap bitmap = mRGBATbitmap;
+        try {
+            // SCATTO FOTO
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream); //TODO Rimuovi (o no?)
+            if(!photoTaken) {
+                savePhoto(mRGBATbitmap);
+            }
+            //photoTaken=true;
+            responseText.setText("L'immagine dovrebbe esser stata salvata in:" + photoPath);
+            Log.e("CLASSIF","L'immagine dovrebbe esser stata salvata in:" + photoPath);
+
+            stream.close();
+        } catch (Exception e) {
+            responseText.setText("Errore. L'immagine non è stata catturata in modo corretto.");
+            Log.e("CLASSIF","Errore. L'immagine non è stata catturata in modo corretto");
+//            restartActivity();
+            return;
+        } finally {
+
+            //CONNESSIONE SERVER
+            try {
+                ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
+                Thread thread = new Thread(clientManager);
+                thread.start();
+                thread.join();
+                garbageType = clientManager.getGarbageType();
+                responseText.setText("Tipo rifiuto:" + garbageType);
+                classified = true;
+                setWasteType();
+                checkIfPhotoExists();
+            /*else {
+                    restartActivity();
+                }*/
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+//        javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
+
     }
+
     void restartActivity() {
         Intent activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
@@ -775,13 +835,19 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 wasteTypeString = STRING_ORGANIC;
                 break;
             case "plastic":
-            case "metal":
-                wasteType = TYPE_PLASTIC_METAL;
+                wasteType = TYPE_PLASTIC;
                 wasteTypeString = STRING_PLASTIC_METAL;
                 break;
-            case "cardboard":
+            case "metal":
+                wasteType = TYPE_METAL;
+                wasteTypeString = STRING_PLASTIC_METAL;
+                break;
             case "paper":
-                wasteType = TYPE_PAPER_CARDBOARD;
+                wasteType = TYPE_PAPER;
+                wasteTypeString = STRING_PAPER_CARDBOARD;
+                break;
+            case "cardboard":
+                wasteType = TYPE_CARDBOARD;
                 wasteTypeString = STRING_PAPER_CARDBOARD;
                 break;
             case "glass":
@@ -796,7 +862,35 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 wasteTypeString = STRING_CLASSIFICATION_ERROR;
                 break;
         }
-    }
+    }/* void setWasteType() {
+        switch (garbageType) {
+            case "organic":
+                wasteType = TYPE_ORGANIC;
+                wasteTypeString = STRING_ORGANIC;
+                break;
+            case "plastic":
+            case "metal":
+                wasteType = TYPE_PLASTIC_METAL;
+                wasteTypeString = STRING_PLASTIC_METAL;
+                break;
+            case "cardboard":
+            case "paper":
+                wasteType = TYPE_PAPER_CARDBOARD;
+                wasteTypeString = STRING_PAPER_CARDBOARD;
+                break;
+            case "glass":
+                wasteType = TYPE_GLASS;
+                wasteTypeString = STRING_GLASS;
+                break;
+            default:
+                *//*wasteType = TYPE_ORGANIC;
+                wasteTypeString = STRING_ORGANIC;*//*
+
+                wasteType = CLASSIFICATION_ERROR;
+                wasteTypeString = STRING_CLASSIFICATION_ERROR;
+                break;
+        }
+    }*/
 
     void goToClassAct(){
         Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, PepperClassifyingActivity.class);
@@ -851,7 +945,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             Log.e("CLASSIF","File eliminato dal path " + photoPath);
         }
     }
-    private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
+    /*private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
         File pictureFile = getOutputMediaFile();
 
         Log.d(TAG, "Entrata in savePhoto: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
@@ -874,6 +968,30 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         photoPath = "storage/emulated/0/DCIM/" + photoName; //pictureFile.toString(); ///storage/emulated/0/DCIM/PhotoPepper0.jpg
 
         Log.e("CLASSIF","SavePhoto eseguita");
+    }*/
+    private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
+        File pictureFile = getOutputMediaFile();
+
+        Log.d(TAG, "Entrata in savePhoto:"); //+ " takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
+        if (pictureFile == null) {
+            Log.d(TAG, "Error creating media file, check storage permissions: ");// e.getMessage());
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile, false); //il "false" dovrebbe permettere di sovrascrivere l'immagine, se esiste
+            bmp = Bitmap.createScaledBitmap(bmp, 224, 224, true);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            fos.close();
+            photoTaken = true;
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "Impossibile salvare l'immagine. " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Impossibile accedere al file: " + e.getMessage());
+        } finally {
+            photoPath = "storage/emulated/0/DCIM/" + photoName; //pictureFile.toString(); ///storage/emulated/0/DCIM/PhotoPepper0.jpg
+            Log.e("CLASSIF","SavePhoto eseguita");
+        }
+
     }
 
     //Create a File for saving an image or video

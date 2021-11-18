@@ -85,11 +85,6 @@ public class PepperClassifyingActivity extends RobotActivity implements RobotLif
 
     private TextView responseText;
 
-    static final byte TYPE_ORGANIC = 0;
-    static final byte TYPE_PAPER_CARDBOARD = 1;
-    static final byte TYPE_PLASTIC_METAL = 2;
-    static final byte TYPE_GLASS = 3;
-    static final byte CLASSIFICATION_ERROR = -1;
     String wasteTypeString;
     boolean isPepperTurn = true;
 
