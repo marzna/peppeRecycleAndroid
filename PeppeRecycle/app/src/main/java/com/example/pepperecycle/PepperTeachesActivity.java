@@ -231,6 +231,8 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         selectedBin = findViewById(R.id.selectedBin);
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
 
+        trialState = -1; // inutile tanto Pepper non insegna nulla nel trial
+
         Bundle extras = getIntent().getExtras();
 
         Log.e(TAG, "Prima di avere gli extras.");
