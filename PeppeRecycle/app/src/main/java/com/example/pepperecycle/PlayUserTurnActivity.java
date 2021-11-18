@@ -4,10 +4,6 @@ import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_ORGANIC;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
-<<<<<<< HEAD
-=======
-
->>>>>>> ef6f5aafb1f5917f81e4370bf4bd2b180154d1b8
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -50,17 +46,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     byte wasteType=-1; //0=Organico, 1=Carta/Cartone, 2=Plastica/Metalli, 3=Vetro
     String binType;
     boolean binPressed=false;
-<<<<<<< HEAD
     
-=======
-    /*
-    //TODO sposta le costanti in una posizione adeguata
-    static final byte TYPE_ORGANIC = 0;
-    static final byte TYPE_PAPER_CARDBOARD = 1;
-    static final byte TYPE_PLASTIC_METAL = 2;
-    static final byte TYPE_GLASS = 3;
-    */
->>>>>>> ef6f5aafb1f5917f81e4370bf4bd2b180154d1b8
     Map<String, Byte> scores = new HashMap<String, Byte>();
     static byte pepperScore;
     static byte userScore;

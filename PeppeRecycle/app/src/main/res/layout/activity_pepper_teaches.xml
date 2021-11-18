@@ -66,15 +66,10 @@
         android:background="@drawable/bckgr_speech_with_no_borders_big"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
-        android:paddingLeft="50dp"
-        android:paddingTop="50dp"
-        android:paddingRight="50dp"
-        android:paddingBottom="50dp"
-        android:text="Molti degli scontrini attualmente in circolazione non vanno gettati nel bidone dell'indifferenziato, perché sono composti da carte termiche che, se catalogate come carta e cartone, potrebbero causare problemi durante il riciclo."
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="#000000"
-        android:textSize="28sp" />
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/buttonPlay"

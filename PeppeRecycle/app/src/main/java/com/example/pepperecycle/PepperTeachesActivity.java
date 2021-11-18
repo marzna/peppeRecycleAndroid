@@ -9,10 +9,6 @@ import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
-<<<<<<< HEAD
-=======
-
->>>>>>> ef6f5aafb1f5917f81e4370bf4bd2b180154d1b8
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;

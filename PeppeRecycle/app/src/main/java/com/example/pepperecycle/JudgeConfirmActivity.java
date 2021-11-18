@@ -9,10 +9,6 @@ import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
-<<<<<<< HEAD
-=======
-
->>>>>>> ef6f5aafb1f5917f81e4370bf4bd2b180154d1b8
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
@@ -611,16 +607,16 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     void checkBin() {
         switch (wasteType) {
             case 0: // case "organic":
-                binType = "Organico"; //binType = "Organico";
+                binType = "Organico";
                 break;
             case 1: // case "paper": case "cardboard":
-                binType = "Carta e cartone"; //binType = "Carta e cartone";
+                binType = "Carta e cartone";
                 break;
             case 2: // case "plastic": case "metal":
-                binType = "Plastica e metalli"; //binType = "Plastica e metalli";
+                binType = "Plastica e metalli";
                 break;
             case 3: // case "glass":
-                binType = "Vetro"; //binType = "Vetro";
+                binType = "Vetro";
                 break;
             default:
                 binType = "Errore";
