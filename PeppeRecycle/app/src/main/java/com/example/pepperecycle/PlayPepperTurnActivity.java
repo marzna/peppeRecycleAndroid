@@ -70,7 +70,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
+<<<<<<< HEAD
     private String postUrl = "http://f763-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+=======
+    private String postUrl = "http://a219-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+>>>>>>> ef6f5aafb1f5917f81e4370bf4bd2b180154d1b8
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -106,6 +110,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     static final byte TYPE_PLASTIC = 6;
     static final byte TYPE_METAL = 7;
     static final byte TYPE_WASTE = -1;
+<<<<<<< HEAD
+=======
+
+>>>>>>> ef6f5aafb1f5917f81e4370bf4bd2b180154d1b8
     static final byte CLASSIFICATION_ERROR = -1;
 
     static final String STRING_ORGANIC = "Organico";
@@ -202,13 +210,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             restartGame = extras.getBoolean("restartGame");
             endOfTutorial = extras.getBoolean("endOfTutorial");
             tutorialState = extras.getByte("tutorialState");
-            Log.d(TAG, "Ricevuto trialState: "+ trialState);
-
-
-
-
+//            Log.d(TAG, "Ricevuto trialState: "+ trialState);
         } else {
-            Log.d(TAG, "NON ricevuto trialState: " + trialState);
+//            Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
 
 
@@ -316,7 +320,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {             // Utente mostra l'oggetto a Pepper
 
-            Log.d(TAG, "OnRobotFocusGained: matched yes");
+//            Log.d(TAG, "OnRobotFocusGained: matched yes");
             mediaPlayer.start();
             takePictureSaid = true;
 
@@ -329,22 +333,23 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
 //            buttonTakePicture.performClick();
 
-            Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
+//            Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
             try {
-                Log.d(TAG, "onrobotfocusgained clientManager lanciato.");
+//                Log.d(TAG, "onrobotfocusgained clientManager lanciato.");
                 ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
                 Thread thread = new Thread(clientManager);
                 thread.start();
                 thread.join();
                 garbageType = clientManager.getGarbageType();
                 responseText.setText("Tipo rifiuto:" + garbageType);
-                Log.d(TAG, "onrobotfocusgained. Ottenuto garbagetype: " + garbageType);
+                Log.d(TAG, "onrobotfocusgained. garbagetype: " + garbageType);
                 classified = true;
-                Log.d(TAG, "onrobotfocusgained. setwastetype");
+//                Log.d(TAG, "onrobotfocusgained. setwastetype");
                 setWasteType();
-                Log.d(TAG, "onrobotfocusgained. checkifphotoexists");
+//                Log.d(TAG, "onrobotfocusgained. checkifphotoexists");
                 checkIfPhotoExists();
-                Log.d(TAG, "onrobotfocusgained. askforconfirm");
+//                Log.d(TAG, "onrobotfocusgained. askforconfirm");
+
                 askForConfirm();
                 mediaPlayer.stop();
             /*else {
@@ -571,12 +576,12 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             imageViewPepperPhoto.setImageBitmap(mRGBATbitmap);
 
             if(takePictureSaid && !photoTaken) { //Se l'utente ha espresso il comando vocale e la foto non è stata scattata
-                Log.d(TAG, "(takePictureSaid && !photoTaken)==true");
+//                Log.d(TAG, "(takePictureSaid && !photoTaken)==true");
                 savePhoto(mRGBATbitmap);
 //                takePictureSaid=false; TODO ELIMINA RIGA
                 photoTaken = true;
                 Log.d(TAG, "Foto scattata nell'oncameraframe");
-//                javaCameraView.disableView();
+                javaCameraView.disableView();
             }
             //imageViewPepperPhoto.invalidate();
 //                photoTaken=true;
@@ -600,6 +605,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         // Unregister the RobotLifecycleCallbacks for this Activity.
         QiSDK.unregister(this, this);
 
+        Log.d(TAG, "onDestroy chiamato");
+
         if (javaCameraView != null) {
             javaCameraView.disableView();
         }
@@ -613,7 +620,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     @Override
     public void onPause() {
         super.onPause();
-
+        Log.d(TAG, "onPause chiamato");
         if (javaCameraView != null) {
             javaCameraView.disableView();
         }
@@ -637,6 +644,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     public void onResume() {
         super.onResume();
 
+        Log.d(TAG, "onResume chiamato");
         if (OpenCVLoader.initDebug()) {
             Log.d(TAG, "OpenCV is Configured or Connected Successfully.");
             baseLoaderCallback.onManagerConnected(BaseLoaderCallback.SUCCESS);
@@ -721,10 +729,16 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             responseText.setText("L'immagine dovrebbe esser stata salvata in:" + photoPath);
 //            Log.e("CLASSIF","L'immagine dovrebbe esser stata salvata in:" + photoPath);
 
+            stream.close();
+        } catch (Exception e) {
+            responseText.setText("Errore. L'immagine non è stata catturata in modo corretto.");
+            Log.e("CLASSIF","Errore. L'immagine non è stata catturata in modo corretto");
+//            restartActivity();
+            return;
+        } finally {
 
             //CONNESSIONE SERVER
             try {
-                Log.d(TAG, "Sto passando al clientManager photopath ==" + photoPath);
                 ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
                 Thread thread = new Thread(clientManager);
                 thread.start();
@@ -742,19 +756,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            responseText.setText("Errore. L'immagine non è stata catturata in modo corretto.");
-            Log.e("CLASSIF","Errore. L'immagine non è stata catturata in modo corretto");
-//            restartActivity();
-            return;
         }
-        try {
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
+//        javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
 
     }*/
     public void classify() {
@@ -923,7 +926,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("roundTutorial", isPepperTurn);
 
-        Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
+//        Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
         startActivity(activity2Intent);
         mediaPlayer.stop();
         finish();
@@ -936,7 +939,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     //Elimina la foto, se esistente
     private void checkIfPhotoExists() {
-        Log.d(TAG, "checkifphotoexists");
+//        Log.d(TAG, "checkifphotoexists");
         File myFile = new File(photoPath);
 
         if(myFile.exists()) {
@@ -948,10 +951,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     /*private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
         File pictureFile = getOutputMediaFile();
 
-        Log.d(TAG, "Entrata in savePhoto: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
+        Log.d(TAG, "Entrata in savePhoto:"); //+ " takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
         if (pictureFile == null) {
-            Log.d(TAG,
-                    "Error creating media file, check storage permissions: ");// e.getMessage());
+            Log.d(TAG, "Error creating media file, check storage permissions: ");// e.getMessage());
             return;
         }
         try {
@@ -959,14 +961,17 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             bmp = Bitmap.createScaledBitmap(bmp, 224, 224, true);
             bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.close();
-            photoTaken = true;
         } catch (FileNotFoundException e) {
             Log.d(TAG, "Impossibile salvare l'immagine. " + e.getMessage());
         } catch (IOException e) {
             Log.d(TAG, "Impossibile accedere al file: " + e.getMessage());
+        } finally {
+            photoTaken = true;
+            photoPath = "storage/emulated/0/DCIM/" + photoName; //pictureFile.toString(); ///storage/emulated/0/DCIM/PhotoPepper0.jpg
+            Log.e("CLASSIF","SavePhoto eseguita");
         }
-        photoPath = "storage/emulated/0/DCIM/" + photoName; //pictureFile.toString(); ///storage/emulated/0/DCIM/PhotoPepper0.jpg
 
+<<<<<<< HEAD
         Log.e("CLASSIF","SavePhoto eseguita");
     }*/
     private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
@@ -992,6 +997,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             Log.e("CLASSIF","SavePhoto eseguita");
         }
 
+=======
+>>>>>>> ef6f5aafb1f5917f81e4370bf4bd2b180154d1b8
     }
 
     //Create a File for saving an image or video
