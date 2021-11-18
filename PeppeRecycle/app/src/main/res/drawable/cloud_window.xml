@@ -9,5 +9,5 @@
                 android:topRightRadius="5dp"/>
         </shape>
     </item>
-    <item android:drawable="@drawable/bckgr_speech_no_borders" />
+    <item android:drawable="@drawable/bckgr_speech_with_no_borders_big" />
 </layer-list>

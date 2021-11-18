@@ -201,7 +201,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .build();
 
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
-                .withTexts("Chiudi il gioco", "Esci", "Basta")
+                .withTexts("Chiudi il gioco", "Esci", "Basta", "Stop")
                 .build();
 
         tutorialIntro.run();

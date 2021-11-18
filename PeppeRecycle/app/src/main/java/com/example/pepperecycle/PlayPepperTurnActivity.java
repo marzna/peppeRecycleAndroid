@@ -55,9 +55,12 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +70,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://2e3d-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://f763-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -255,7 +258,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build(); // Build the say action.
 
         Say sayPepperTurnTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Aspetto che il giudice mi mostri il rifiuto e prema il pulsante sul mio tablet, così da permettermi di vedere il rifiuto! ." ) // Set the text to say.
+                .withText("Aspetto che mi mostri il rifiuto e prema il pulsante sul mio tablet o pronunci la parola ECCO, così da permettermi di vedere il rifiuto." ) // Set the text to say.
                 .build(); // Build the say action.;
 
         Say showGarbage = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -288,7 +291,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build();
 
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
-                .withTexts("Chiudi il gioco", "Esci", "Basta")
+                .withTexts("Chiudi il gioco", "Esci", "Basta", "Stop")
                 .build();
 
 //        sayPepperTurn.run();
@@ -313,6 +316,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             takePictureSaid = true;
 
             savePhoto(mRGBATbitmap);
+
+
             /*SavePhoto savePhoto = new SavePhoto(mRGBATbitmap);
             savePhoto.execute();*/
 
@@ -563,7 +568,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             if(takePictureSaid && !photoTaken) { //Se l'utente ha espresso il comando vocale e la foto non è stata scattata
                 Log.d(TAG, "(takePictureSaid && !photoTaken)==true");
                 savePhoto(mRGBATbitmap);
-                takePictureSaid=false;
+//                takePictureSaid=false; TODO ELIMINA RIGA
                 photoTaken = true;
                 Log.d(TAG, "Foto scattata nell'oncameraframe");
 //                javaCameraView.disableView();
@@ -709,7 +714,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             }
             //photoTaken=true;
             responseText.setText("L'immagine dovrebbe esser stata salvata in:" + photoPath);
-            Log.e("CLASSIF","L'immagine dovrebbe esser stata salvata in:" + photoPath);
+//            Log.e("CLASSIF","L'immagine dovrebbe esser stata salvata in:" + photoPath);
 
 
             //CONNESSIONE SERVER
@@ -834,6 +839,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         Se la risposta è affermativa, l'utente guadagna un punto.
         */
     }
+
+    //Elimina la foto, se esistente
     private void checkIfPhotoExists() {
         Log.d(TAG, "checkifphotoexists");
         File myFile = new File(photoPath);
@@ -844,7 +851,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             Log.e("CLASSIF","File eliminato dal path " + photoPath);
         }
     }
-
     private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
         File pictureFile = getOutputMediaFile();
 
@@ -856,6 +862,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         }
         try {
             FileOutputStream fos = new FileOutputStream(pictureFile, false); //il "false" dovrebbe permettere di sovrascrivere l'immagine, se esiste
+            bmp = Bitmap.createScaledBitmap(bmp, 224, 224, true);
             bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.close();
             photoTaken = true;
