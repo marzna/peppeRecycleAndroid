@@ -46,7 +46,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     byte wasteType=-1; //0=Organico, 1=Carta/Cartone, 2=Plastica/Metalli, 3=Vetro
     String binType;
     boolean binPressed=false;
-    
+
     Map<String, Byte> scores = new HashMap<String, Byte>();
     static byte pepperScore;
     static byte userScore;

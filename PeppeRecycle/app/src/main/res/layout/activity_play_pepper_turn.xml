@@ -10,7 +10,7 @@
     <org.opencv.android.JavaCameraView
         android:id="@+id/my_camera_view"
         android:layout_width="888px"
-        android:layout_height="400px"
+        android:layout_height="500px"
         android:layout_centerInParent="true" />
 
     <TextView
