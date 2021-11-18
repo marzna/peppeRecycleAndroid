@@ -1,6 +1,14 @@
 package com.example.pepperecycle;
 
 import static com.example.pepperecycle.PlayGameActivity.N_ROUNDS;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_ORGANIC;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -94,7 +102,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
-
+        Log.d(TAG, "JudgeConfirm iniziato");
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
@@ -433,6 +441,72 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     String typeBinSelectedIs ;
     void startJudgeConfirm() {
         switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
+            case TYPE_ORGANIC: // case "organic":
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone dell'ORGANICO.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello dell'ORGANICO.";
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_brown_shadow));
+                fading(selectedBin, getDrawable(R.drawable.bin_brown_shadow));
+                break;
+            case TYPE_PAPER_CARDBOARD: case TYPE_PAPER: case TYPE_CARDBOARD: // case "paper": case "cardboard":
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone di CARTA E CARTONE.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello di CARTA E CARTONE.";
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_blue_shadow));
+                fading(selectedBin, getDrawable(R.drawable.bin_blue_shadow));
+                break;
+            case TYPE_PLASTIC_METAL: case TYPE_PLASTIC: case TYPE_METAL: // case "plastic": case "metal":
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone di PLASTICA E METALLI.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello di PLASTICA E METALLI.";
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_yellow_shadow));
+                fading(selectedBin, getDrawable(R.drawable.bin_yellow_shadow));
+                break;
+            case TYPE_GLASS: // case "glass":
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone del VETRO.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello del VETRO.";
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_green_shadow));
+                fading(selectedBin, getDrawable(R.drawable.bin_green_shadow));
+                break;
+            default:
+                typeBinSelectedIs = "Si è verificato un problema. Torniamo indietro e ripetiamo il turno.";
+
+                //Centrare il button
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams
+                        .WRAP_CONTENT);
+                layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+                this.selectedBinIs.setLayoutParams(layoutParams);
+
+                //"Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno.";
+                selectedBinIs.setGravity(Gravity.CENTER);
+                textViewAskForConfirm.setVisibility(View.GONE); //View.INVISIBLE
+                selectedBin.setVisibility(View.GONE); //View.INVISIBLE
+                buttonYes.setVisibility(View.GONE); //View.INVISIBLE
+                buttonNo.setVisibility(View.GONE); //View.INVISIBLE
+                //TODO GOBACK
+                //selectedBinIs.setText("ERRORE.");
+                buttonBack.performClick();               ;
+                break;
+        }
+        selectedBinIs.setText(typeBinSelectedIs);
+
+        if(pressed) {
+            // TODO Incrementa score
+            nextTurn();
+            /*if(trialState != 2)
+                nextTurn();
+            else
+                endTutorial();*/
+        }
+
+
+    }/*void startJudgeConfirm() {
+        switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
             case 0: // case "organic":
                 if (isPepperTurn)
                     typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone dell'organico.";
@@ -502,14 +576,14 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         if(pressed) {
             // TODO Incrementa score
             nextTurn();
-            /*if(trialState != 2)
+            *//*if(trialState != 2)
                 nextTurn();
             else
-                endTutorial();*/
+                endTutorial();*//*
         }
 
 
-    }
+    }*/
     void ackSelectedBin(QiContext qiContext) { //Todo forse va messo direttamente in JudgeConfirm...
         checkBin();
         Say sayAskForConfirm= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -534,16 +608,16 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     void checkBin() {
         switch (wasteType) {
             case 0: // case "organic":
-                binType = "Organico";
+                binType = "Organico"; //binType = "Organico";
                 break;
             case 1: // case "paper": case "cardboard":
-                binType = "Carta e cartone";
+                binType = "Carta e cartone"; //binType = "Carta e cartone";
                 break;
             case 2: // case "plastic": case "metal":
-                binType = "Plastica e metalli";
+                binType = "Plastica e metalli"; //binType = "Plastica e metalli";
                 break;
             case 3: // case "glass":
-                binType = "Vetro";
+                binType = "Vetro"; //binType = "Vetro";
                 break;
             default:
                 binType = "Errore";

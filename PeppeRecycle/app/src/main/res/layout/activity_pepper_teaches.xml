@@ -70,7 +70,7 @@
         android:paddingTop="50dp"
         android:paddingRight="50dp"
         android:paddingBottom="50dp"
-        android:text="Fanno parte della categoria di plastica e metalli quasi tutti i contenitori, o imballaggi, dei prodotti che compriamo, come, la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e tànto àltro."
+        android:text="Molti degli scontrini attualmente in circolazione non vanno gettati nel bidone dell'indifferenziato, perché sono composti da carte termiche che, se catalogate come carta e cartone, potrebbero causare problemi durante il riciclo."
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="#000000"
