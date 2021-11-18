@@ -259,7 +259,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         setQiContext(qiContext);
 
         Say sayPepperTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Ora è il mio turno!") // Set the text to say.
+                .withText("Iniziamo dal mio turno!") // Set the text to say.
                 .build(); // Build the say action.
 
         Say sayPepperTurnTutorial = SayBuilder.with(qiContext) // Create the builder with the context.
@@ -299,7 +299,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .withTexts("Chiudi il gioco", "Esci", "Basta", "Stop")
                 .build();
 
-//        sayPepperTurn.run();
+        if(currentRound==0)
+            sayPepperTurn.run();
         if (trialState == 1) { // if (tutorialEnabled) {
             sayPepperTurnTutorial.run();
         }

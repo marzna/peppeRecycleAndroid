@@ -229,7 +229,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayUserTurn= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Tocca a te!") // Set the text to say.
+                .withText("Iniziamo dal tuo turno.") // Set the text to say.
                 .build(); // Build the say action.
         //TODO Help ... in una dialog
         Animation explain = AnimationBuilder.with(qiContext)
@@ -278,7 +278,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-//        sayUserTurn.run();
+        if(currentRound==0)
+            sayUserTurn.run();
         if(trialState == 0) {
             sayUserTurnTutorial.run();
         }

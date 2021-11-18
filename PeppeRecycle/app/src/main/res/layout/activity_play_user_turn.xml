@@ -163,7 +163,8 @@
         android:textAllCaps="true"
         android:textColor="#FFEB3B"
         android:textSize="30dp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic"
+        android:visibility="visible" />
     <!-- -->
 
     <TextView
