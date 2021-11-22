@@ -120,7 +120,6 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
         setContentView(R.layout.activity_next_turn);
-
        /* selectedBinIs = findViewById(R.id.textViewSelectedBinIs);
         selectedBin = findViewById(R.id.selectedBin);
         textViewAskForConfirm = findViewById(R.id.textViewAskForConfirm);
@@ -246,7 +245,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     .build();
 
             Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText(exclamation + "Proseguiamo?") // Set the text to say.
+                    .withText(exclamation) // Set the text to say.
                     .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                     .build(); // Build the say action.
 
@@ -416,7 +415,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     Log.d(TAG, "currentRound: " + currentRound);
                 }
 //                Log.d("ROUND", "currentRound++");
-                if (currentRound < N_ROUNDS - 1) {
+                if (currentRound < N_ROUNDS) {
                     // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili
                     if (isPepperTurn) {     //Tocca a Pepper
                         activity2Intent = new Intent(NextTurnActivity.this, PlayPepperTurnActivity.class);
@@ -458,19 +457,19 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 exclamation = pepperCorrectPhrase[new Random().nextInt(pepperCorrectPhrase.length)];
                 resAnim = R.raw.nicereaction_a002;
                 if(trialState == -1)
-                    tvMessage.setText("Ho guadagnato un punto!");
+                    tvMessage.setText("Ho indovinato,\nperciò guadagno un punto!");
                 else
-                    tvMessage.setText("");
+                    tvMessage.setText("Ho indovinato!");
             } else {
                 exclamation = pepperWrongPhrase[new Random().nextInt(pepperWrongPhrase.length)];
                 resAnim = R.raw.sad_a001;
                 if(trialState == -1)
                     tvMessage.setText("Ho sbagliato.\nNon mi è stato assegnato nessun punto.");
                 else
-                    tvMessage.setText("");
+                    tvMessage.setText("Ho sbagliato...");
             }
-            if(trialState == -1)
-                exclamation += "Ora tocca a te. ";
+            if (currentRound < N_ROUNDS)
+                exclamation += "Ora tocca a te. Ok?";
 
         } else {
 
@@ -479,9 +478,9 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 resAnim = R.raw.nicereaction_a001;
 
                 if(trialState == -1)
-                    tvMessage.setText("Complimenti\nHai guadagnato un punto!");
+                    tvMessage.setText("Complimenti,\nHai guadagnato un punto!");
                 else
-                    tvMessage.setText("");
+                    tvMessage.setText("Complimenti,\nHai indovinato!");
 
             } else {
                 exclamation = userWrongPhrase[new Random().nextInt(userWrongPhrase.length)];
@@ -490,10 +489,11 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 if(trialState == -1)
                     tvMessage.setText("Hai sbagliato.\nNon ti è stato assegnato nessun punto.");
                 else
-                    tvMessage.setText("");
+                    tvMessage.setText("La risposta era sbagliata.");
             }
 
-            exclamation += "Adesso è il mio turno. ";
+            if (currentRound < N_ROUNDS)
+                exclamation += "Adesso è il mio turno. ";
         }
     }
 
