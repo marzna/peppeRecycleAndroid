@@ -416,7 +416,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     }
 
     void askForConfirm() {
-        Intent activity2Intent = new Intent(PlayUserTurnActivity.this, JudgeConfirmActivity.class);
+//        Intent activity2Intent = new Intent(PlayUserTurnActivity.this, JudgeConfirmActivity.class);
+        Intent activity2Intent = new Intent(PlayUserTurnActivity.this, PlayJudgeTurnActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("trialState", trialState);

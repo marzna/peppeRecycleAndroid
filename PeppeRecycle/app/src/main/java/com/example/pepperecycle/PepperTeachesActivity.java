@@ -68,9 +68,6 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             "Si vede che ho studiato!",
             "Certo che sono proprio bravo!"
     };
-
-
-
     String[] factsOrganic = {
             "L'organico è formato da scarti alimentari e altri rifiuti facilmente biodegradabili.",
             "Una torsolo di mela resta per circa 2 mesi nell'ambiente prima di degradarsi completamente.",
@@ -95,13 +92,13 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             "Una lattina di alluminio può essere riciclata usando solo il 5% dell'energia che bisognerebbe impiegare per fabbricarla da zero.",
     };
     String[] factsPaper = {
-            "Moltissimi oggetti che usiamo oggi rièntrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
+            "Moltissimi oggetti che usiamo oggi, rièntrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
             "Molti degli scontrini attualmente in circolazione non vanno gettati nel bidone dell'indifferenziato, perché sono composti da carte termiche che, se catalogate come carta e cartone, potrebbero causare problemi durante il riciclo.",
             "Se riciclassimo tutti i giornali, potremmo salvare oltre 250 milioni di alberi ogni anno.",
             "La carta riciclata produce circa il 70% in meno di inquinamento atmosferico rispetto alla sua creazione a partire dalle materie prime."
     };
     String[] factsCardboard = {
-            "Moltissimi oggetti che usiamo oggi rièntrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
+            "Moltissimi oggetti che usiamo oggi, rièntrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
             "Una scatola di cartone resta per circa 9 mesi nell'ambiente prima di decomporsi completamente.",
             "Riciclare un cartone richiede solo il 75% dell'energia necessaria per produrne uno nuovo.",
     };
@@ -114,6 +111,51 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             "Riciclando 1 chilo di rifiuti in vetro, si otterrà 1 chilo di nuovi prodotti in vetro riciclato, senza perdere nulla!",
 
     };
+
+
+    /* String[] factsOrganic = {
+             "L'organico è formato da scarti alimentari e altri rifiuti facilmente biodegradabili.",
+             "Una torsolo di mela resta per circa 2 mesi nell'ambiente prima di degradarsi completamente.",
+             "Circa un terzo dei rifiuti prodotti da una persona è composto da rifiuti organici.",
+             "Dalla decomposizione dei rifiuti organici, si ottiene il compost, un ottimo concime per il terreno.",
+             "Il compost può essere prodotto sia su scala industriale che domestica."
+     };
+     String[] factsPlastic = {
+             "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori, o imballaggi, dei prodotti che compriamo, come, la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e \\rspd=80\\tànto àltro.",
+             "Una mascherina impiegherebbe tra i 400 e i 450 anni per degradarsi completamente nell'ambiente. Durante questo processo, rilascerebbe micro-particelle di plastica, che, in mare, potrebbero essere ingerite dalle specie marine.",
+             "Moltissime creature marine muoiono ogni anno a causa delle buste di platica e della spazzatura che vengono gettate in mare.",
+             "Una bottiglia di plastica resta per circa 450 anni nell'ambiente prima di degradarsi completamente.",
+             "Riciclare la plastica fa risparmiare il doppio dell'energia che verrebbe consumata per bruciarla in un inceneritore.",
+             "Riciclare la plastica fa risparmiare l'88% dell'energia che verrebbe consumata per crearla dalle materie prime."
+     };
+     String[] factsMetal = {
+             "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori, o imballaggi, dei prodotti che compriamo, come, la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e \\rspd=80\\tànto àltro.",
+             "Una lattina di alluminio resta dai 20 ai 100 anni nell'ambiente prima di degradarsi completamente, ecco perché sarebbe meglio riciclarla nell'apposita categoria!",
+             "L'alluminio può essere riciclato infinite volte, senza perdita di qualità.",
+             "In soli due mesi, le lattine di alluminio possono essere riciclate e rimesse in commercio.",
+             "Riciclare una lattina di alluminio farebbe risparmiare l'energia necessaria per poter guardare la tv per circa 3 ore.",
+             "Una lattina di alluminio può essere riciclata usando solo il 5% dell'energia che bisognerebbe impiegare per fabbricarla da zero.",
+     };
+     String[] factsPaper = {
+             "Moltissimi oggetti che usiamo oggi rièntrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
+             "Molti degli scontrini attualmente in circolazione non vanno gettati nel bidone dell'indifferenziato, perché sono composti da carte termiche che, se catalogate come carta e cartone, potrebbero causare problemi durante il riciclo.",
+             "Se riciclassimo tutti i giornali, potremmo salvare oltre 250 milioni di alberi ogni anno.",
+             "La carta riciclata produce circa il 70% in meno di inquinamento atmosferico rispetto alla sua creazione a partire dalle materie prime."
+     };
+     String[] factsCardboard = {
+             "Moltissimi oggetti che usiamo oggi rièntrano nella categoria di carta e cartone: i quaderni di scuola, i giornali e le riviste.",
+             "Una scatola di cartone resta per circa 9 mesi nell'ambiente prima di decomporsi completamente.",
+             "Riciclare un cartone richiede solo il 75% dell'energia necessaria per produrne uno nuovo.",
+     };
+     String[] factsGlass = {
+             "Il vetro può essere riciclato e rifabbricato un numero infinito di volte e non si usura mai.",
+             "Il vetro mantiene il suo colore anche dopo il riciclo, perciò viene suddiviso in colori.",
+             "Una moderna bottiglia di vetro potrebbe impiegare più di 4000 anni per decomporsi del tutto, forse anche di più se si trova in discarica.",
+             "Anche gli antichi Romani riciclavano il vetro.",
+             "Circa 7 bottiglie su 10 sono prodotte con vetro riciclato.",
+             "Riciclando 1 chilo di rifiuti in vetro, si otterrà 1 chilo di nuovi prodotti in vetro riciclato, senza perdere nulla!",
+
+     };*/
     String[] factsPlasticMetal = {
             "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori, o imballaggi, dei prodotti che compriamo, come, la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e \\rspd=80\\tànto àltro.",
             "Una mascherina impiegherebbe tra i 400 e i 450 anni per degradarsi completamente nell'ambiente. Durante questo processo, rilascerebbe micro-particelle di plastica, che, in mare, potrebbero essere ingerite dalle specie marine.",
@@ -267,7 +309,8 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayRandomFact= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 //.withText(exclamation + "." + factAboutRecycle + "\\rspd=90\\ Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
-                .withText("Ecco una curiosità:" + factAboutRecycle + "\\rspd=95\\ Adesso possiamo proseguire con il gioco, o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
+                //.withText("Ecco una curiosità:" + factAboutRecycle + "\\rspd=95\\ Adesso possiamo proseguire con il gioco, o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
+                .withText("Ecco una curiosità:" + factAboutRecycle + "\\rspd=95\\ Adesso proseguiamo con il gioco. Va bene?") // Set the text to say.
                 .build(); // Build the say action.
         Animation sayRandomFactAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione
@@ -292,10 +335,10 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
                 .withTexts("Non lo so", "bo", "Aiutami Pepper").build(); //TODO idk */
 
-        PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
+       /* PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
                 .withTexts("No", "no Pepper", "Pepper no", "raccontami altro", "curiosità", "voglio sapere un'altra curiosità",
                         "voglio sentire un'altra curiosità", "racconta", "non possiamo", "non voglio giocare")
-                .build();
+                .build();*/
 
         PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
                 .withTexts("Ripeti", /*"Ricominciamo", "Ricomincia",*/ "Da capo", "Non ho capito", "Puoi ripetere")
@@ -304,35 +347,42 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
                 .withTexts("Torna", "Indietro", "Home")
                 .build();
-
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
-                .withTexts("Chiudi il gioco", "Esci", "Basta", "voglio andare via", "Stop")
+                .withTexts("No", "non mi va", "non voglio continuare", "non voglio proseguire",
+                        "basta", "non è corretta", "stop", "basta", "chiudi il gioco", "chiudi",
+                        "no Pepper", "Pepper no", "Esci", "voglio andare via")
                 .build();
 
+     /*   PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
+                .withTexts("Chiudi il gioco", "Esci", "Basta", "voglio andare via", "Stop")
+                .build();
+*/
         Listen listenPlay = ListenBuilder
                 .with(qiContext)
-                .withPhraseSets(phraseSetYes, phraseSetNo, phraseSetClose, phraseSetHome)
+                .withPhraseSets(phraseSetYes, phraseSetClose, phraseSetHome)
+//                .withPhraseSets(phraseSetYes, phraseSetNo, phraseSetClose, phraseSetHome)
                 .build();
         ListenResult listenResult = listenPlay.run();
         PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
             Say sayNextTurn= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                    .withText("Perfetto, allora proseguiamo con il gioco!") // Set the text to say.
+                    .withText("Okay.") // Set the text to say.
+//                    .withText("Perfetto, allora proseguiamo con il gioco!") // Set the text to say.
                     .build(); // Build the say action.
 
-            if (currentRound<N_ROUNDS-1) {
+           /* if (currentRound<N_ROUNDS-1) {
                 sayNextTurn.run();
                 //Pepper dice chi è il prossimo giocatore
                 Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                         .withText("Adesso è il tuo turno.") // Set the text to say.
                         .build(); // Build the say action.
                 sayTurn.run();
-            }
+            }*/
             nextTurn();
 
 
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {   // Ripete l'activity con un altro fattp random riguardante il materiale scelto
+        /*} else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {   // Ripete l'activity con un altro fattp random riguardante il materiale scelto
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -350,7 +400,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             startActivity(activity2Intent);
             finish();
 
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
+        */} else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.affirmation_a002).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -467,129 +517,27 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
-        Intent activity2Intent;
-//        trialState = nextTrialState(trialState);
-        if (trialState == 2) {
-            endTutorial();
-        } else {
-            isPepperTurn = !isPepperTurn; // Turno successivo
-            ++currentRound;
-            Log.d("ROUND", "currentRound++");
-            // if (round < 6) {    // TODO sostituisci 6 con una costante
-            // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
-            // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
-            if (currentRound < N_ROUNDS) {
-                // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
-                if(isPepperTurn) {/*
-                    phrase = "Ora tocca a me.";*/
-                    activity2Intent = new Intent(PepperTeachesActivity.this, PlayPepperTurnActivity.class);
-                    Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
-                } else {/*
-                    phrase = "Adesso è il tuo turno.";*/
-                    activity2Intent = new Intent(PepperTeachesActivity.this, PlayUserTurnActivity.class);
-                    Log.d(TAG, "trialState passato a UserTurn: " + trialState);
-                }
-//                pepperSayTurn(isPepperTurn);
-               /* Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                        .withText(phrase) // Set the text to say.
-                        .build(); // Build the say action.
-                sayTurn.run();*/
-
-            /*if (isPepperTurn) { TODO se non va bene rimetti come stava
-                if (tutorialEnabled) {
-                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
-                } else {
-                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class); // PlayPepperTurnActivity.class);
-                }
-
-            } else {
-                activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
-            }*/
-
-            /*
-            pepperScore = activity2Intent.getExtras().getByte("pepperScore");
-            userScore = activity2Intent.getExtras().getByte("userScore");
-            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
-            */
-            } else {
-                // Game over
-                activity2Intent = new Intent(PepperTeachesActivity.this, GameOverActivity.class);//TODO GameOverActivity
-            }
-
-            activity2Intent.putExtra("round", round);
-            activity2Intent.putExtra("pepperScore", pepperScore);
-            activity2Intent.putExtra("userScore", userScore);
-            //activity2Intent.putExtra("scores", (Serializable) scores);
-            activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-            activity2Intent.putExtra("currentRound", currentRound);
-            activity2Intent.putExtra("trialState", trialState);
-            startActivity(activity2Intent);
-            finish();
-        }
-    }
-    byte nextTrialState(byte state) {
-        switch(state) {
-            case 0:     // è appena stato effettuato il turno utente.
-                state = 1;
-                break;
-            case 1:     // è appena stato effettuato il turno di Pepper, perciò si va a 2, in cui si chiede di nuovo di iniziare il tutorial.
-                state = 2;
-                break;
-            default: //case -1
-                break;
-        }
-        return state;
-    }
-
-    public void endTutorial() {
-        Intent activity2Intent = new Intent(PepperTeachesActivity.this, TutorialEndActivity.class);
-        activity2Intent.putExtra("endOfTutorial", true); // Tutorial finito
-        activity2Intent.putExtra("pgIndex", 0); //TODO SOSTITUISCI NUMERO MAGICO
-        activity2Intent.putExtra("trialState", trialState);
-        /*
-
-         endOfTutorial = extras.getBoolean("endOfTutorial");
-            pgIndex = extras.getInt("pgIndex");
-            trialState = extras.getByte("trialState");
-         */
-
-        startActivity(activity2Intent);
-        finish();
-    }
-
-    /*public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
-        Intent activity2Intent;
-        isPepperTurn = !isPepperTurn;
-        tutorialEnabled=false;
-        if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
-            // TODO sostituisci il 3 con una costante, tipo WINNER_SCORE o simili
-            if (isPepperTurn) {
-                if(tutorialEnabled) {
-                    activity2Intent = new Intent(PepperTeachesActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
-                } else {
-                    activity2Intent = new Intent(PepperTeachesActivity.this, PlayPepperTurnActivity.class); // PlayPepperTurnActivity.class);
-                }
-            } else {
-                activity2Intent = new Intent(PepperTeachesActivity.this, PlayUserTurnActivity.class);
-            }
-            *//*
-            pepperScore = activity2Intent.getExtras().getByte("pepperScore");
-            userScore = activity2Intent.getExtras().getByte("userScore");
-            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)//activity2Intent.putExtra("scores", scores);
-            *//*
-        } else {            // Game over
-            activity2Intent = new Intent(PepperTeachesActivity.this, GameOverActivity.class);//TODO GameOverActivity
-        }
+        Intent activity2Intent = new Intent(PepperTeachesActivity.this, NextTurnActivity.class);
         activity2Intent.putExtra("round", round);
-        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
-        //activity2Intent.putExtra("scores", (Serializable) scores);
-        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
+        activity2Intent.putExtra("currentRound", currentRound);
         activity2Intent.putExtra("trialState", trialState);
+        activity2Intent.putExtra("wasteType", wasteType);
+        activity2Intent.putExtra("isAnswerCorrect", true);
+        activity2Intent.putExtra("isPepperTurn", true);
+        activity2Intent.putExtra("wasteTypeString", wasteTypeString);
+//        activity2Intent.putExtra("roundTutorial", roundTutorial);//Non presente
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+//        activity2Intent.putExtra("endOfTutorial", endOfTutorial);//Non presente
+//        activity2Intent.putExtra("restartGame", restartGame);//Non presente
+//        activity2Intent.putExtra("tutorialState", tutorialState); //Non presente
+
         startActivity(activity2Intent);
         finish();
-    }*/
+    }
+
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
@@ -603,35 +551,4 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     public void buttonPlay(View v) {
         nextTurn();
     }
-/* void selectFact() {
-        Log.e(TAG, "Entrato nel selectFact.");
-        switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
-            case 0: // case "organic":
-                textViewFactAbout.setText("Curiosità - ORGANICO"); //TODO MODIFICA
-                selectedBin.setImageResource(R.drawable.bin_brown_shadow);
-                factAboutRecycle = factsOrganic[ new Random().nextInt(factsOrganic.length)];
-                break;
-            case 1: // case "paper": case "cardboard":
-                textViewFactAbout.setText("Curiosità - CARTA E CARTONE");
-                selectedBin.setImageResource(R.drawable.bin_blue_shadow);
-                factAboutRecycle = factsPaperCardboard[ new Random().nextInt(factsPaperCardboard.length)];
-                break;
-            case 2: // case "plastic": case "metal":
-                textViewFactAbout.setText("Curiosità - PLASTICA E METALLI");
-                selectedBin.setImageResource(R.drawable.bin_yellow_shadow);
-                factAboutRecycle = factsPlasticMetal[ new Random().nextInt(factsPlasticMetal.length)];
-                break;
-            case 3: // case "glass":
-                textViewFactAbout.setText("Curiosità - VETRO");
-                selectedBin.setImageResource(R.drawable.bin_green_shadow);
-                factAboutRecycle = factsGlass[ new Random().nextInt(factsGlass.length)];
-                break;
-            default:
-                textViewFactAbout.setText("ERRORE.");
-                break;
-        }
-        Log.e(TAG, "factAboutRecycle" + factAboutRecycle);
-        textViewRandomFact.setText(factAboutRecycle);
-
-    }*/
 }

@@ -12,38 +12,118 @@
     tools:context=".PlayUserTurnActivity">
 
     <!--   android:background="@drawable/bkgr_bins_wrong"-->
+    <TextView
+        android:id="@+id/tvTutorial"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Round di prova"
+        android:textAllCaps="true"
+        android:textColor="#FFEB3B"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"
+        android:visibility="visible" />
+
     <LinearLayout
-        android:id="@+id/llControls"
+        android:id="@+id/llUpperObjs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_alignParentEnd="true">
+        android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/buttonHelp"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+        <LinearLayout
+            android:id="@+id/llScores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageViewPepperScore"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                app:srcCompat="@drawable/pepper_face" />
+
+            <TextView
+                android:id="@+id/textViewPepperScore"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="-"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="34sp" />
+
+            <ImageView
+                android:id="@+id/imageViewUserScore"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                app:srcCompat="@drawable/user" />
+
+            <TextView
+                android:id="@+id/textViewUserScore"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="-"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="34sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvYourTurn"
+            android:layout_width="290dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/andika_regular"
+            android:gravity="center"
+            android:text="È il tuo turno!"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="34sp"
+            android:textStyle="bold|italic" />
+
+        <LinearLayout
+            android:id="@+id/llControls"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/button_help"/>
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/buttonHome"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button_home"
-            android:onClick="buttonHome" />
+            <ImageButton
+                android:id="@+id/buttonHelp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button_help" />
+
+            <ImageButton
+                android:id="@+id/buttonHome"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/button_home"
+                android:onClick="buttonHome" />
 
 
-        <ImageButton
-            android:id="@+id/buttonClose"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:background="@drawable/button_close"
-            android:onClick="buttonClose" />
+            <ImageButton
+                android:id="@+id/buttonClose"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:background="@drawable/button_close"
+                android:onClick="buttonClose" />
 
+        </LinearLayout>
     </LinearLayout>
 
     <!--Sezione Bidoni-->
@@ -150,44 +230,28 @@
             android:scaleType="center" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvTutorial"
-        android:layout_width="400dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="false"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/andika_regular"
-        android:gravity="center"
-        android:text="Round di prova"
-        android:textAllCaps="true"
-        android:textColor="#FFEB3B"
-        android:textSize="30dp"
-        android:textStyle="bold|italic"
-        android:visibility="visible" />
     <!-- -->
 
+    <!--
     <TextView
         android:id="@+id/tvYourTurn"
-        android:layout_width="300dp"
+        android:layout_width="290dp"
         android:layout_height="100dp"
-        android:layout_centerHorizontal="false"
         android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@id/llControls"
-        android:layout_toEndOf="@id/textViewUserScore"
+        android:layout_toRightOf="@id/divVert0"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:text="È il tuo turno!"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="34sp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic" />-->
 
     <TextView
         android:id="@+id/guessBin"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/divider"
+        android:layout_below="@id/divHoriz0"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
@@ -203,54 +267,40 @@
         android:textStyle="italic"
         android:typeface="normal" />
 
-    <TextView
-        android:id="@+id/textViewPepperScore"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/imageViewPepperScore"
-        android:gravity="center"
-        android:text="-"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="34sp" />
-
-    <ImageView
-        android:id="@+id/imageViewUserScore"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/textViewPepperScore"
-        app:srcCompat="@drawable/user" />
-
-    <TextView
-        android:id="@+id/textViewUserScore"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@id/imageViewUserScore"
-        android:gravity="center"
-        android:text="-"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="34sp" />
-
-    <ImageView
-        android:id="@+id/imageViewPepperScore"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="10dp"
-        app:srcCompat="@drawable/pepper_face" />
-
     <View
-        android:id="@+id/divider"
+        android:id="@+id/divHoriz0"
         android:layout_width="900dp"
         android:layout_height="5dp"
-        android:layout_below="@id/tvYourTurn"
+        android:layout_below="@id/llUpperObjs"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/colorDarkBlueDivider" />
+        android:background="@color/white" />
+
+    <!--
+    <View
+        android:id="@+id/divVert0"
+        android:layout_width="5dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/llScores"
+        android:background="@color/white" />
+    <View
+        android:id="@+id/divVert1"
+        android:layout_width="5dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/tvYourTurn"
+        android:background="@color/white" />
+
+    <View
+        android:id="@+id/divHoriz1"
+        android:layout_width="900dp"
+        android:layout_height="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:background="@color/white" />-->
+
 
 
 </RelativeLayout>

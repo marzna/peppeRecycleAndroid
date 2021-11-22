@@ -183,10 +183,10 @@
     <TextView
         android:id="@+id/textViewShowMeObj"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="0dp"
+        android:layout_marginLeft="1dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="1dp"
@@ -194,24 +194,21 @@
         android:layout_toLeftOf="@id/llControls"
         android:layout_toRightOf="@id/tvTutorialPepper"
         android:fontFamily="@font/andika_regular"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:lineSpacingExtra="8sp"
-        android:text='Mostrami il rifiuto e\n pronuncia la parola "Ecco",\noppure premi il pulsante blu.'
+        android:text='Mostrami il rifiuto e pronuncia la parola "Ecco" o premi il pulsante blu.'
         android:textColor="@color/white"
-        android:textSize="22sp" />
+        android:textSize="21sp" />
 
     <ProgressBar
         android:id="@+id/pbSavePhoto"
         style="@android:style/Widget.Material.ProgressBar.Large"
+
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:visibility="invisible"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:visibility="invisible" />
 
 </RelativeLayout>

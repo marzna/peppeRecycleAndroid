@@ -163,11 +163,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
             @Override
             public void onClick(View view) {
+                buttonYes.setClickable(false);
                 Log.e(TAG, "buttonYes cliccato");
                 //Il punteggio viene incrementato solo se la risposta è corretta
                 isAnswerCorrect = true;
                 pressed = true;
-                buttonYes.setClickable(false);
                 // Incrementa il punteggio solo se non si tratta di un turno di prova
                 if(trialState == -1) {//                if(!tutorialEnabled) {
                     updateScore(isPepperTurn);
@@ -645,7 +645,6 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     public void updateScore(boolean isPepperTurn) {
 //        if(trialState == -1) { controllato già fuori
         if(isPepperTurn) {
-
             ++pepperScore;//scores.put("score_pepper", (byte) (scores.get("score_pepper") + 1)); //Incrementa il punteggio di Pepper
             // pepperTeaches = pepperTeacher();
             isPepperTurn = false; // solitamente il turno viene cambiato in nextTurn ma in questo caso non viene richiamata
@@ -722,6 +721,49 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
             }
 
+            activity2Intent.putExtra("round", round);
+            activity2Intent.putExtra("pepperScore", pepperScore);
+            activity2Intent.putExtra("userScore", userScore);
+            //activity2Intent.putExtra("scores", (Serializable) scores);
+            activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
+            activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("trialState", trialState);
+            startActivity(activity2Intent);
+            finish();
+        }
+    }
+    public void nextTurn(boolean isTrue) { // Avvia la activity relativa al prossimo turno (o di Game Over)
+        // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
+        Intent activity2Intent;
+        trialState = nextTrialState(trialState);
+        if (trialState == 2) {
+            endTutorial();
+        } else {
+            isPepperTurn = !isPepperTurn; // Turno successivo
+            ++currentRound;
+            Log.d("ROUND", "currentRound++");
+            // if (round < 6) {    // TODO sostituisci 6 con una costante
+            // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
+            // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
+            if (currentRound < N_ROUNDS) {
+                String phrase;
+                // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
+                if(isPepperTurn) {
+                    phrase = "Ora tocca a me.";
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class);
+                    Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
+                } else {
+                    phrase = "Adesso è il tuo turno.";
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
+                    Log.d(TAG, "trialState passato a UserTurn: " + trialState);
+                }
+            } else {
+                // Game over
+                activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
+            }
+
+            activity2Intent.putExtra("wasteType", wasteType); //Se la risposta è corretta
+            activity2Intent.putExtra("isTrue", isTrue); //Se la risposta è corretta
             activity2Intent.putExtra("round", round);
             activity2Intent.putExtra("pepperScore", pepperScore);
             activity2Intent.putExtra("userScore", userScore);

@@ -70,7 +70,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://3550-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://3c45-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -673,7 +673,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     }
 
     public void buttonClassify(View v) {
+        Log.e(TAG, "ButtonClassify cliccato");
+        buttonTakePicture.setClickable(false);
         mediaPlayer.start();
+        buttonTakePicture.setVisibility(View.INVISIBLE);
+        pbSavePhoto.setVisibility(View.VISIBLE);
         if(!classified) {
             Log.e("CLASSIF", "Classificazione in corso...");
             classify();
@@ -682,21 +686,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         } else {
             Log.e("CLASSIF", "ERRORE di classificazione.");
         }
-        /*Say sayPepperSelectBin = SayBuilder.with(getQiContext()) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Ci sono!" + wasteTypeString) // Set the text to say.
-                .build(); // Build the say action.
-        Animation pepperSelectsBin = AnimationBuilder.with(getQiContext())
-                .withResources(R.raw.scratch_top_of_head_right_b001)
-                .build();
-        Animate animatePepperSelectBin = AnimateBuilder.with(getQiContext())
-                .withAnimation(pepperSelectsBin).build();
-
-        sayPepperSelectBin.run();
-        animatePepperSelectBin.run();*/
-
-        // Say sayPepperSelectBin = SayBuilder.with(qiContext) // Create the builder with the context.
-
-//        goToClassAct();
     }
 
     /*public void classify() { //Dovrebbe funzionare ugualmente... Usa questo se l'altro dà problemi
@@ -858,7 +847,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             default:
                 /*wasteType = TYPE_ORGANIC;
                 wasteTypeString = STRING_ORGANIC;*/
-
                 wasteType = CLASSIFICATION_ERROR;
                 wasteTypeString = STRING_CLASSIFICATION_ERROR;
                 break;
@@ -911,7 +899,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         finish();
     }
     void askForConfirm() {
-        Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, JudgeConfirmActivity.class);
+//        Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, JudgeConfirmActivity.class);
+        Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, PlayJudgeTurnActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
@@ -924,9 +913,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("roundTutorial", isPepperTurn);
 
-        Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
+//        Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
+        Log.d(TAG, "trialstate passato da qui a judgeturn: " + trialState);
         startActivity(activity2Intent);
         mediaPlayer.stop();
+        mediaPlayer.release();
         finish();
         /* TODO Turno dell'utente:
         Schermata con i bidoni. L'utente deve selezionare il bidone corretto.

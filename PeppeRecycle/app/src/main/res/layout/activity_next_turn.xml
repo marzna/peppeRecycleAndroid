@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlueBackground"
+    tools:context=".NextTurnActivity">
+
+    <TextView
+        android:id="@+id/tvTutorialJudge"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="false"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Round di prova"
+        android:textAllCaps="true"
+        android:textColor="#FFEB3B"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/llControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/buttonHome"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_home"
+            android:onClick="buttonHome" />
+
+        <ImageButton
+            android:id="@+id/buttonClose"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:background="@drawable/button_close"
+            android:onClick="buttonClose" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/ivPlay"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_below="@id/tvMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/button_play" />
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Complimenti!\nHai guadagnato un punto!"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp" />
+
+
+    <TextView
+        android:id="@+id/textViewPepperScore"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/imageViewPepperScore"
+        android:gravity="center"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="34sp" />
+
+    <ImageView
+        android:id="@+id/imageViewUserScore"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/textViewPepperScore"
+        app:srcCompat="@drawable/user" />
+
+    <TextView
+        android:id="@+id/textViewUserScore"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/imageViewUserScore"
+        android:gravity="center"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="34sp" />
+
+    <ImageView
+        android:id="@+id/imageViewPepperScore"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@drawable/pepper_face" />
+</RelativeLayout>
