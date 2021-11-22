@@ -42,6 +42,7 @@ import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayP
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.object.actuation.Animate;
 import com.aldebaran.qi.sdk.object.actuation.Animation;
+import com.aldebaran.qi.sdk.object.conversation.BodyLanguageOption;
 import com.aldebaran.qi.sdk.object.conversation.Listen;
 import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
@@ -83,6 +84,8 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     TextView tvUserScore, tvPepperScore;
     ImageView imageViewUserScore,imageViewPepperScore;
     String exclamation;
+    boolean isFromPepperTeaches;
+    int resAnim; // conterrà l'animazione
 
     String[] pepperCorrectPhrase = {
             "Evvài, ho indovinato. ",
@@ -111,7 +114,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
-        Log.d(TAG, "JudgeConfirm iniziato");
+        Log.d(TAG, "NextTurn iniziato");
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
@@ -137,6 +140,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         imageViewPepperScore = findViewById(R.id.imageViewPepperScore);
 
         trialState = -1;
+        isFromPepperTeaches = false;
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -154,11 +158,12 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             currentRound = extras.getByte("currentRound");
             tutorialState = extras.getByte("tutorialState");
             trialState = extras.getByte("trialState");
+            isFromPepperTeaches = extras.getBoolean("isFromPepperTeaches");
         }
 
         Log.d(TAG, "TrialState: " + trialState);
 
-        selectExclamation(isAnswerCorrect, isPepperTurn);
+        selectExclamation(isAnswerCorrect, isPepperTurn, trialState);
 
        /* if (trialState == 0 || trialState == 1) {
             tvTutorialJudge.setVisibility(View.VISIBLE);
@@ -184,14 +189,16 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
 
         setScore();
 
-        //Incrementa il punteggio e lo mostra
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                if(isAnswerCorrect) // Incremento punteggio
-                    updateScore(isPepperTurn);
-            }
-        }, 1000);
+        if(trialState == -1) {
+            //Incrementa il punteggio e lo mostra
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    if (isAnswerCorrect) // Incremento punteggio
+                        updateScore(isPepperTurn);
+                }
+            }, 1000);
+        }
 
 
         buttonPlay.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +214,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         tvPepperScore.setText("" + pepperScore);
         tvUserScore.setText("" + userScore);
 
-        if(trialState == 1) {
+        if(trialState == 0 || trialState == 1) {
             tvTutorialJudge.setVisibility(View.VISIBLE);
             tvUserScore.setVisibility(View.INVISIBLE);
             tvPepperScore.setVisibility(View.INVISIBLE);
@@ -230,95 +237,109 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-        Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText(exclamation + "Proseguiamo?") // Set the text to say.
-                .build(); // Build the say action.
-        sayResult.run();
-        PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                //.withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "pepper sì", "pepper si")
-                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "pepper sì", "pepper si", "ok",
-                        "okay", "andiamo avanti", "possiamo andare avanti", "vai avanti", "prosegui",
-                        "vai avanti", "prossimo turno", "vai al prossimo turno",
-                        "passa al prossimo turno", "giochiamo", "prosegui", "proseguiamo",
-                        "prosegui con il gioco", "voglio proseguire con il gioco",
-                        "voglio proseguire", "voglio andare avanti", "possiamo proseguire",
-                        "possiamo", "continua", "continuiamo", "avanti", "giochiamo")
-                .build();
-        PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
-                .withTexts("No", "non mi va", "non voglio continuare", "non voglio proseguire",
-                        "basta", "non è corretta", "stop", "basta", "chiudi il gioco", "chiudi",
-                        "no Pepper", "Pepper no", "Esci", "voglio andare via")
-                .build();
-
-        PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
-                .withTexts("Ripeti", "Da capo", "Non ho capito", "Puoi ripetere",
-                        "pepper ripeti")
-                .build();
-
-        PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
-                .withTexts("Torna alla home", "Home")
-                .build();
-
-        Listen listenPlay = ListenBuilder
-                .with(qiContext)
-                .withPhraseSets(phraseSetYes, phraseSetRepeat, phraseSetClose, phraseSetHome)
-                .build();
-        ListenResult listenResult = listenPlay.run();
-        PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
-
-        if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
-            nextTurn();
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
-            Animation correctAnswer = AnimationBuilder.with(qiContext)
-                    .withResources(R.raw.coughing_left_b001).build();
-            Animate animateCorrect = AnimateBuilder.with(qiContext)
-                    .withAnimation(correctAnswer).build();
-            animateCorrect.run();
-
-            Intent activity2Intent = new Intent(getApplicationContext(), NextTurnActivity.class);
-            activity2Intent.putExtra("wasteType", wasteType); // The key argument here must match that used in the other activity
-            activity2Intent.putExtra("isAnswerCorrect", isAnswerCorrect);
-            activity2Intent.putExtra("round", round);
-            activity2Intent.putExtra("isPepperTurn", isPepperTurn);
-            activity2Intent.putExtra("pepperScore", pepperScore);
-            activity2Intent.putExtra("userScore", userScore);
-            activity2Intent.putExtra("wasteTypeString", wasteTypeString);
-            activity2Intent.putExtra("roundTutorial", roundTutorial);
-            activity2Intent.putExtra("endOfTutorial", endOfTutorial);
-            activity2Intent.putExtra("restartGame", restartGame);
-            activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-            activity2Intent.putExtra("currentRound", currentRound);
-            activity2Intent.putExtra("tutorialState", tutorialState);
-            activity2Intent.putExtra("trialState", trialState);
-            startActivity(activity2Intent); //Per ripetere
-            finish();
-
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
-            Animation correctAnswer = AnimationBuilder.with(qiContext)
-                    .withResources(R.raw.affirmation_a002).build();
-            Animate animateCorrect = AnimateBuilder.with(qiContext)
-                    .withAnimation(correctAnswer).build();
-            animateCorrect.run();
-            Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(activity2Intent);
-            finish();
-
-        } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
-            Animation correctAnswer = AnimationBuilder.with(qiContext)
-                    .withResources(R.raw.hello_a004).build();
+        if(!isFromPepperTeaches) {
+            Animation animation = AnimationBuilder.with(qiContext)
+                    .withResources(resAnim)
+                    .build();
             animate = AnimateBuilder.with(qiContext)
-                    .withAnimation(correctAnswer).build();
+                    .withAnimation(animation)
+                    .build();
 
-            Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Va bene, allora sto chiudendo il gioco. Spero di rivederti presto!") // Set the text to say.
+            Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText(exclamation + "Proseguiamo?") // Set the text to say.
+                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                     .build(); // Build the say action.
 
-            sayGoodbye.run();
-            animate.run();
+            animate.async().run();
+            sayResult.run();
 
-            this.finishAffinity(); // Close all activites
-            System.exit(0);
+            PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
+                    //.withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "pepper sì", "pepper si")
+                    .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "pepper sì", "pepper si", "ok",
+                            "okay", "andiamo avanti", "possiamo andare avanti", "vai avanti", "prosegui",
+                            "vai avanti", "prossimo turno", "vai al prossimo turno",
+                            "passa al prossimo turno", "giochiamo", "prosegui", "proseguiamo",
+                            "prosegui con il gioco", "voglio proseguire con il gioco",
+                            "voglio proseguire", "voglio andare avanti", "possiamo proseguire",
+                            "possiamo", "continua", "continuiamo", "avanti", "giochiamo")
+                    .build();
+            PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
+                    .withTexts("No", "non mi va", "non voglio continuare", "non voglio proseguire",
+                            "basta", "non è corretta", "stop", "basta", "chiudi il gioco", "chiudi",
+                            "no Pepper", "Pepper no", "Esci", "voglio andare via")
+                    .build();
 
+            PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
+                    .withTexts("Ripeti", "Da capo", "Non ho capito", "Puoi ripetere",
+                            "pepper ripeti")
+                    .build();
+
+            PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
+                    .withTexts("Torna alla home", "Home")
+                    .build();
+
+            Listen listenPlay = ListenBuilder
+                    .with(qiContext)
+                    .withPhraseSets(phraseSetYes, phraseSetRepeat, phraseSetClose, phraseSetHome)
+                    .build();
+            ListenResult listenResult = listenPlay.run();
+            PhraseSet matchedPhraseSet = listenResult.getMatchedPhraseSet();
+
+            if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
+                nextTurn();
+            } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere
+                Animation correctAnswer = AnimationBuilder.with(qiContext)
+                        .withResources(R.raw.coughing_left_b001).build();
+                Animate animateCorrect = AnimateBuilder.with(qiContext)
+                        .withAnimation(correctAnswer).build();
+                animateCorrect.run();
+
+                Intent activity2Intent = new Intent(getApplicationContext(), NextTurnActivity.class);
+                activity2Intent.putExtra("wasteType", wasteType); // The key argument here must match that used in the other activity
+                activity2Intent.putExtra("isAnswerCorrect", isAnswerCorrect);
+                activity2Intent.putExtra("round", round);
+                activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+                activity2Intent.putExtra("pepperScore", pepperScore);
+                activity2Intent.putExtra("userScore", userScore);
+                activity2Intent.putExtra("wasteTypeString", wasteTypeString);
+                activity2Intent.putExtra("roundTutorial", roundTutorial);
+                activity2Intent.putExtra("endOfTutorial", endOfTutorial);
+                activity2Intent.putExtra("restartGame", restartGame);
+                activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+                activity2Intent.putExtra("currentRound", currentRound);
+                activity2Intent.putExtra("tutorialState", tutorialState);
+                activity2Intent.putExtra("trialState", trialState);
+                startActivity(activity2Intent); //Per ripetere
+                finish();
+
+            } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
+                /*Animation correctAnswer = AnimationBuilder.with(qiContext)
+                        .withResources(R.raw.affirmation_a002).build();
+                Animate animateCorrect = AnimateBuilder.with(qiContext)
+                        .withAnimation(correctAnswer).build();
+                animateCorrect.run();*/
+                Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(activity2Intent);
+                finish();
+
+            } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
+                Animation correctAnswer = AnimationBuilder.with(qiContext)
+                        .withResources(R.raw.hello_a004).build();
+                animate = AnimateBuilder.with(qiContext)
+                        .withAnimation(correctAnswer).build();
+
+                Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
+                        .withText("Va bene, allora sto chiudendo il gioco. Spero di rivederti presto!") // Set the text to say.
+                        .withBodyLanguageOption(BodyLanguageOption.DISABLED)
+                        .build(); // Build the say action.
+
+                sayGoodbye.run();
+                animate.async().run();
+
+                this.finishAffinity(); // Close all activites
+                System.exit(0);
+
+            }
         }
     }
 
@@ -336,6 +357,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         if (isPepperTurn) {
             ++pepperScore;
             tvPepperScore.setText(" " + pepperScore);
+//            startPepperTeacher();
             Log.d(TAG, "Incrementato pepperScore");
         } else {
             ++userScore;
@@ -356,38 +378,66 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         }
         return state;
     }
+    void startPepperTeacher() {
+
+        Log.e(TAG, "Entrato nella funzione startPepperTeacher.");
+        Intent activity2Intent = new Intent(NextTurnActivity.this, PepperTeachesActivity.class);//TODO GameOverActivity
+        activity2Intent.putExtra("round", round);
+        activity2Intent.putExtra("wasteType", wasteType);
+        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("wasteTypeString", wasteTypeString);
+        activity2Intent.putExtra("pepperScore", pepperScore);
+        activity2Intent.putExtra("userScore", userScore);
+        //activity2Intent.putExtra("scores", (Serializable) scores);
+        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("trialState", trialState);
+//        activity2Intent.putExtra("tutorialEnabled", false);
+        //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
+
+        startActivity(activity2Intent);
+        finish();
+    }
 
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
         Intent activity2Intent;
-        trialState = nextTrialState(trialState);
-        if (trialState == 2) { //se si è nel trial ed è finito
+        trialState = nextTrialState(trialState); //TODO se si bugga, metti prima di questa riga if(!isFromPepperTeaches)
+        if (trialState == 2) { // Se si è nel trial ed è finito
+            Log.e(TAG, "trialState = " + trialState);
             endTutorial();
         } else { // se si è nel gioco e si deve incrementare il turno
-            /*if(isAnswerCorrect) // Incremento punteggio
-                updateScore(isPepperTurn);*/
-            isPepperTurn = !isPepperTurn; // Turno successivo
-            ++currentRound;
-            Log.d("ROUND", "currentRound++");
-            if (currentRound < N_ROUNDS-1 ) {
-                // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili
-                if (isPepperTurn) {
-                    activity2Intent = new Intent(NextTurnActivity.this, PlayPepperTurnActivity.class);
-                    Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
-                } else {
-                    activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
-                    Log.d(TAG, "trialState passato a UserTurn: " + trialState);
-                }
+            // Tutorial finito
+            if (trialState == 1) {// Turno di Pepper durante il trial
+                activity2Intent = new Intent(NextTurnActivity.this, PlayPepperTurnActivity.class);
             } else {
-                // Game over
-                activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);//TODO GameOverActivity
-            }
+                if (!isFromPepperTeaches) {
+                    isPepperTurn = !isPepperTurn; // Turno successivo
+                    ++currentRound;
+                    Log.d(TAG, "currentRound: " + currentRound);
+                }
+//                Log.d("ROUND", "currentRound++");
+                if (currentRound < N_ROUNDS - 1) {
+                    // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili
+                    if (isPepperTurn) {     //Tocca a Pepper
+                        activity2Intent = new Intent(NextTurnActivity.this, PlayPepperTurnActivity.class);
+                        Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
+                    } else {                // Tocca all'utente
+                        activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
+                        Log.d(TAG, "trialState passato a UserTurn: " + trialState);
+                    }
+                } else {                    // Game over
+                    activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);
+                }
 
+            }
             activity2Intent.putExtra("round", round);
             activity2Intent.putExtra("pepperScore", pepperScore);
             activity2Intent.putExtra("userScore", userScore);
             activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
             activity2Intent.putExtra("currentRound", currentRound);
             activity2Intent.putExtra("trialState", trialState);
+            activity2Intent.putExtra("isFromPepperTeaches", isFromPepperTeaches);
+
             startActivity(activity2Intent);
             finish();
         }
@@ -402,28 +452,45 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         finish();
     }
 
-    void selectExclamation(boolean isTrue, boolean isPepperTurn) {
-
+    void selectExclamation(boolean isTrue, boolean isPepperTurn, int trialState) {
         if (isPepperTurn) {
-
             if (isTrue) {
                 exclamation = pepperCorrectPhrase[new Random().nextInt(pepperCorrectPhrase.length)];
-                tvMessage.setText("Ho guadagnato un punto!");
+                resAnim = R.raw.nicereaction_a002;
+                if(trialState == -1)
+                    tvMessage.setText("Ho guadagnato un punto!");
+                else
+                    tvMessage.setText("");
             } else {
                 exclamation = pepperWrongPhrase[new Random().nextInt(pepperWrongPhrase.length)];
-                tvMessage.setText("Ho sbagliato.\nNon mi è stato assegnato nessun punto.");
+                resAnim = R.raw.sad_a001;
+                if(trialState == -1)
+                    tvMessage.setText("Ho sbagliato.\nNon mi è stato assegnato nessun punto.");
+                else
+                    tvMessage.setText("");
             }
-
-            exclamation += "Ora tocca a te. ";
+            if(trialState == -1)
+                exclamation += "Ora tocca a te. ";
 
         } else {
 
             if (isTrue) {
                 exclamation = userCorrectPhrase[new Random().nextInt(userCorrectPhrase.length)];
-                tvMessage.setText("Complimenti\nHai guadagnato un punto!");
+                resAnim = R.raw.nicereaction_a001;
+
+                if(trialState == -1)
+                    tvMessage.setText("Complimenti\nHai guadagnato un punto!");
+                else
+                    tvMessage.setText("");
+
             } else {
                 exclamation = userWrongPhrase[new Random().nextInt(userWrongPhrase.length)];
-                tvMessage.setText("Hai sbagliato.\nNon ti è stato assegnato nessun punto.");
+                resAnim = R.raw.sad_a001;
+
+                if(trialState == -1)
+                    tvMessage.setText("Hai sbagliato.\nNon ti è stato assegnato nessun punto.");
+                else
+                    tvMessage.setText("");
             }
 
             exclamation += "Adesso è il mio turno. ";
