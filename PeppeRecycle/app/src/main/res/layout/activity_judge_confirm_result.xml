@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bkgr_bins"
+    tools:context=".JudgeConfirmResultActivity">
+
+    <TextView
+        android:id="@+id/tvTutorialJudge"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="false"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Round di prova"
+        android:textAllCaps="true"
+        android:textColor="#FFEB3B"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/llControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentEnd="true">
+
+        <ImageButton
+            android:id="@+id/buttonHelp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_help"
+            android:onClick="buttonHelp" />
+
+        <ImageButton
+            android:id="@+id/buttonBack"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_back" />
+
+        <ImageButton
+            android:id="@+id/buttonHome"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_home"
+            android:onClick="buttonHome"/>
+
+        <ImageButton
+            android:id="@+id/buttonClose"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:background="@drawable/button_close"
+            android:onClick="buttonClose" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/selectedBin"
+        android:layout_width="230dp"
+        android:layout_height="338dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="100dp"
+        android:layout_marginBottom="95dp"
+        android:background="?android:attr/selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/textViewSelectedBinIs"
+        android:layout_width="471dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/selectedBin"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toRightOf="@id/selectedBin"
+        android:fontFamily="@font/andika_regular"
+        android:gravity="center"
+        android:text="Risposta corretta!"
+        android:textColor="#FFFFFF"
+        android:textSize="50sp" />
+
+
+</RelativeLayout>

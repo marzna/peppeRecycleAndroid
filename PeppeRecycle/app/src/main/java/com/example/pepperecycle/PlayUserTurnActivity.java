@@ -1,5 +1,9 @@
 package com.example.pepperecycle;
 
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_ORGANIC;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -42,11 +46,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     byte wasteType=-1; //0=Organico, 1=Carta/Cartone, 2=Plastica/Metalli, 3=Vetro
     String binType;
     boolean binPressed=false;
-    //TODO sposta le costanti in una posizione adeguata
-    static final byte TYPE_ORGANIC = 0;
-    static final byte TYPE_PAPER_CARDBOARD = 1;
-    static final byte TYPE_PLASTIC_METAL = 2;
-    static final byte TYPE_GLASS = 3;
+
     Map<String, Byte> scores = new HashMap<String, Byte>();
     static byte pepperScore;
     static byte userScore;
@@ -229,7 +229,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         Say sayUserTurn= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Tocca a te!") // Set the text to say.
+                .withText("Iniziamo dal tuo turno.") // Set the text to say.
                 .build(); // Build the say action.
         //TODO Help ... in una dialog
         Animation explain = AnimationBuilder.with(qiContext)
@@ -278,7 +278,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-//        sayUserTurn.run();
+        if(currentRound==0)
+            sayUserTurn.run();
         if(trialState == 0) {
             sayUserTurnTutorial.run();
         }
@@ -415,7 +416,8 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     }
 
     void askForConfirm() {
-        Intent activity2Intent = new Intent(PlayUserTurnActivity.this, JudgeConfirmActivity.class);
+//        Intent activity2Intent = new Intent(PlayUserTurnActivity.this, JudgeConfirmActivity.class);
+        Intent activity2Intent = new Intent(PlayUserTurnActivity.this, PlayJudgeTurnActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("trialState", trialState);

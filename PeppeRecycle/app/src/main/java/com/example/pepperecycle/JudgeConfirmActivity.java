@@ -1,7 +1,14 @@
 package com.example.pepperecycle;
 
 import static com.example.pepperecycle.PlayGameActivity.N_ROUNDS;
-
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_ORGANIC;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC;
+import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
@@ -94,7 +101,7 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
-
+        Log.d(TAG, "JudgeConfirm iniziato");
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
@@ -156,11 +163,11 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
 
             @Override
             public void onClick(View view) {
+                buttonYes.setClickable(false);
                 Log.e(TAG, "buttonYes cliccato");
                 //Il punteggio viene incrementato solo se la risposta è corretta
                 isAnswerCorrect = true;
                 pressed = true;
-                buttonYes.setClickable(false);
                 // Incrementa il punteggio solo se non si tratta di un turno di prova
                 if(trialState == -1) {//                if(!tutorialEnabled) {
                     updateScore(isPepperTurn);
@@ -433,6 +440,72 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     String typeBinSelectedIs ;
     void startJudgeConfirm() {
         switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
+            case TYPE_ORGANIC: // case "organic":
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone dell'ORGANICO.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello dell'ORGANICO.";
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_brown_shadow));
+                fading(selectedBin, getDrawable(R.drawable.bin_brown_shadow));
+                break;
+            case TYPE_PAPER_CARDBOARD: case TYPE_PAPER: case TYPE_CARDBOARD: // case "paper": case "cardboard":
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone di CARTA E CARTONE.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello di CARTA E CARTONE.";
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_blue_shadow));
+                fading(selectedBin, getDrawable(R.drawable.bin_blue_shadow));
+                break;
+            case TYPE_PLASTIC_METAL: case TYPE_PLASTIC: case TYPE_METAL: // case "plastic": case "metal":
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone di PLASTICA E METALLI.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello di PLASTICA E METALLI.";
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_yellow_shadow));
+                fading(selectedBin, getDrawable(R.drawable.bin_yellow_shadow));
+                break;
+            case TYPE_GLASS: // case "glass":
+                if (isPepperTurn)
+                    typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone del VETRO.";
+                else
+                    typeBinSelectedIs = "Il bidone selezionato è quello del VETRO.";
+                selectedBin.setBackground(getDrawable(R.drawable.closed_bin_green_shadow));
+                fading(selectedBin, getDrawable(R.drawable.bin_green_shadow));
+                break;
+            default:
+                typeBinSelectedIs = "Si è verificato un problema. Torniamo indietro e ripetiamo il turno.";
+
+                //Centrare il button
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams
+                        .WRAP_CONTENT);
+                layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+                this.selectedBinIs.setLayoutParams(layoutParams);
+
+                //"Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno.";
+                selectedBinIs.setGravity(Gravity.CENTER);
+                textViewAskForConfirm.setVisibility(View.GONE); //View.INVISIBLE
+                selectedBin.setVisibility(View.GONE); //View.INVISIBLE
+                buttonYes.setVisibility(View.GONE); //View.INVISIBLE
+                buttonNo.setVisibility(View.GONE); //View.INVISIBLE
+                //TODO GOBACK
+                //selectedBinIs.setText("ERRORE.");
+                buttonBack.performClick();               ;
+                break;
+        }
+        selectedBinIs.setText(typeBinSelectedIs);
+
+        if(pressed) {
+            // TODO Incrementa score
+            nextTurn();
+            /*if(trialState != 2)
+                nextTurn();
+            else
+                endTutorial();*/
+        }
+
+
+    }/*void startJudgeConfirm() {
+        switch (wasteType) { // Modifica la label in base al tipo di bidone selezionato
             case 0: // case "organic":
                 if (isPepperTurn)
                     typeBinSelectedIs = "Penso che questo rifiuto vada gettato nel bidone dell'organico.";
@@ -502,14 +575,14 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
         if(pressed) {
             // TODO Incrementa score
             nextTurn();
-            /*if(trialState != 2)
+            *//*if(trialState != 2)
                 nextTurn();
             else
-                endTutorial();*/
+                endTutorial();*//*
         }
 
 
-    }
+    }*/
     void ackSelectedBin(QiContext qiContext) { //Todo forse va messo direttamente in JudgeConfirm...
         checkBin();
         Say sayAskForConfirm= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -572,7 +645,6 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
     public void updateScore(boolean isPepperTurn) {
 //        if(trialState == -1) { controllato già fuori
         if(isPepperTurn) {
-
             ++pepperScore;//scores.put("score_pepper", (byte) (scores.get("score_pepper") + 1)); //Incrementa il punteggio di Pepper
             // pepperTeaches = pepperTeacher();
             isPepperTurn = false; // solitamente il turno viene cambiato in nextTurn ma in questo caso non viene richiamata
@@ -649,6 +721,49 @@ public class JudgeConfirmActivity extends RobotActivity implements RobotLifecycl
                 activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
             }
 
+            activity2Intent.putExtra("round", round);
+            activity2Intent.putExtra("pepperScore", pepperScore);
+            activity2Intent.putExtra("userScore", userScore);
+            //activity2Intent.putExtra("scores", (Serializable) scores);
+            activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
+            activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("trialState", trialState);
+            startActivity(activity2Intent);
+            finish();
+        }
+    }
+    public void nextTurn(boolean isTrue) { // Avvia la activity relativa al prossimo turno (o di Game Over)
+        // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
+        Intent activity2Intent;
+        trialState = nextTrialState(trialState);
+        if (trialState == 2) {
+            endTutorial();
+        } else {
+            isPepperTurn = !isPepperTurn; // Turno successivo
+            ++currentRound;
+            Log.d("ROUND", "currentRound++");
+            // if (round < 6) {    // TODO sostituisci 6 con una costante
+            // if((scores.get("score_pepper") < 3 )    ||  (scores.get("score_user1") < 3) )   {
+            // if ( pepperScore < 3 && userScore < 3 )   { // Si ripete fin quando uno dei giocatori non ha raggiunto il punteggio massimo
+            if (currentRound < N_ROUNDS) {
+                String phrase;
+                // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili4
+                if(isPepperTurn) {
+                    phrase = "Ora tocca a me.";
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayPepperTurnActivity.class);
+                    Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
+                } else {
+                    phrase = "Adesso è il tuo turno.";
+                    activity2Intent = new Intent(JudgeConfirmActivity.this, PlayUserTurnActivity.class);
+                    Log.d(TAG, "trialState passato a UserTurn: " + trialState);
+                }
+            } else {
+                // Game over
+                activity2Intent = new Intent(JudgeConfirmActivity.this, GameOverActivity.class);//TODO GameOverActivity
+            }
+
+            activity2Intent.putExtra("wasteType", wasteType); //Se la risposta è corretta
+            activity2Intent.putExtra("isTrue", isTrue); //Se la risposta è corretta
             activity2Intent.putExtra("round", round);
             activity2Intent.putExtra("pepperScore", pepperScore);
             activity2Intent.putExtra("userScore", userScore);

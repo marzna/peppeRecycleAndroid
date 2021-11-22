@@ -102,7 +102,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     public void onRobotFocusGained(QiContext qiContext) { //TODO TESTARE TUTTA QUESTA FUNZIONE
 //        resultPhrase += "\\rspd=90\\Ti andrebbe di fare un'altra partita?";
         Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText(resultPhrase) // Set the text to say.
+                .withText("La partita è finita. " + resultPhrase) // Set the text to say.
                 //.withText("\\rspd=95\\" + resultPhrase + "\\rspd=90\\Ti andrebbe di fare un'altra partita?") // Set the text to say.
                 .build(); // Build the say action.
         Say sayAskNewGame =  SayBuilder.with(qiContext) // Create the builder with the context.
@@ -122,8 +122,10 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 //      animateResult.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
-                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "Giochiamo", "va bene",
-                        "certo", "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita")
+                .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "Giochiamo", "va bene", "certo",
+                        "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita",
+                        "Rigiochiamo", "Rigioca", "Gioca", "Gioca di nuovo", "giochiamo di nuovo",
+                        "Voglio giocare di nuovo")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)

@@ -104,10 +104,10 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .build();
 
         Say sayHello = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Ciao!\\rspd=95\\  \nRipeto\nCiao") // Set the text to say.
+                .withText("Ciao!\\rspd=95\\") // Set the text to say.
                 .build(); // Build the say action.
         Say sayPresentation = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("\\rspd=95\\io sono Pepper. E questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
+                .withText("\\rspd=95\\io sono Pépper. E questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
                 .build(); // Build the say action.
 
         //TODO -> Bisognerà cambiare l'interazione nel caso dello storytelling
