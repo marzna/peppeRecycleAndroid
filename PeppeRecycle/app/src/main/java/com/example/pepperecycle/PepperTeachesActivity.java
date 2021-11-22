@@ -530,6 +530,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         activity2Intent.putExtra("wasteTypeString", wasteTypeString);
 //        activity2Intent.putExtra("roundTutorial", roundTutorial);//Non presente
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
+        activity2Intent.putExtra("isFromPepperTeaches", true);
 //        activity2Intent.putExtra("endOfTutorial", endOfTutorial);//Non presente
 //        activity2Intent.putExtra("restartGame", restartGame);//Non presente
 //        activity2Intent.putExtra("tutorialState", tutorialState); //Non presente

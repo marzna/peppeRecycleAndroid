@@ -37,6 +37,7 @@ import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayP
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.object.actuation.Animate;
 import com.aldebaran.qi.sdk.object.actuation.Animation;
+import com.aldebaran.qi.sdk.object.conversation.BodyLanguageOption;
 import com.aldebaran.qi.sdk.object.conversation.Listen;
 import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
@@ -70,7 +71,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://3c45-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://efdc-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -268,6 +269,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         Say showGarbage = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 .withText("Per piacere, posso vedere il rifiuto da riciclare?") // Set the text to say.
+                .withBodyLanguageOption(BodyLanguageOption.DISABLED) //Movimento disabilitato per velocizzare lo scatto e farlo più stabile (?)
                 .build(); // Build the say action.
 
         //TODO Help ... in una dialog
@@ -299,7 +301,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .withTexts("Chiudi il gioco", "Esci", "Basta", "Stop")
                 .build();
 
-        if(currentRound==0)
+        if(currentRound==0 && tutorialState==-1)
             sayPepperTurn.run();
         if (trialState == 1) { // if (tutorialEnabled) {
             sayPepperTurnTutorial.run();

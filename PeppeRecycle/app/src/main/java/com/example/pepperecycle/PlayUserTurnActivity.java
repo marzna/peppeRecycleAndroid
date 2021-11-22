@@ -30,6 +30,7 @@ import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayP
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.object.actuation.Animate;
 import com.aldebaran.qi.sdk.object.actuation.Animation;
+import com.aldebaran.qi.sdk.object.conversation.BodyLanguageOption;
 import com.aldebaran.qi.sdk.object.conversation.Listen;
 import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
@@ -243,6 +244,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         Say sayUserTurnExplain= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 .withText("in quale bidone decidi di buttare il rifiuto che ti ha mostrato il giudice?") // Set the text to say.
                 //.withText("Qual è il bidone adatto a questo rifiuto?") // Set the text to say.
+                .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                 .build(); // Build the say action.
 
         PhraseSet phraseSelectBrownBin = PhraseSetBuilder.with(qiContext)
@@ -283,7 +285,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         if(trialState == 0) {
             sayUserTurnTutorial.run();
         }
-        animateUserTurn.run();
+        animateUserTurn.async().run();
         sayUserTurnExplain.run();
 
         Listen listenPlay = ListenBuilder

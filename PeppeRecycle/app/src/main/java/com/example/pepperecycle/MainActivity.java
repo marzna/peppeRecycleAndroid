@@ -29,6 +29,7 @@ import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayP
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.object.actuation.Animate;
 import com.aldebaran.qi.sdk.object.actuation.Animation;
+import com.aldebaran.qi.sdk.object.conversation.BodyLanguageOption;
 import com.aldebaran.qi.sdk.object.conversation.Listen;
 import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
@@ -105,9 +106,11 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
 
         Say sayHello = SayBuilder.with(qiContext) // Create the builder with the context.
                 .withText("Ciao!\\rspd=95\\") // Set the text to say.
+                .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                 .build(); // Build the say action.
         Say sayPresentation = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("\\rspd=95\\io sono Pépper. E questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
+                .withText("\\rspd=95\\io sono Pèpper. E questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
+                .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                 .build(); // Build the say action.
 
         //TODO -> Bisognerà cambiare l'interazione nel caso dello storytelling
@@ -146,8 +149,8 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
         //Run Animazione Presentazione
         Future<Void> animateFuture = animate.async().run();
 */
+        animate.async().run();
         sayHello.run(); // animateHello.run(); -> Sbagliato (?)
-        //animate.run();
         sayPresentation.run();
         sayPlay.run();
 

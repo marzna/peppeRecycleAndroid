@@ -46,6 +46,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     //    ImageView imageViewResult;
     String result;
     byte currentRound;
+    int resAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,24 +210,28 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
         tvResult.setText("Hai vinto!");
         /*tvGameOver.setText("Congratulazioni,\nhai vinto!\nPepper: " + pepperScore + "\nUser: " + userScore);
         imageViewResult.setImageResource(R.drawable.trophy);*/
+        resAnim = R.raw.right_hand_high_b001;
     }
     void userLoser() {
         resultPhrase = "Hai perso. Stavolta sono stato più bravo di te.";
         tvResult.setText("Hai perso!");
         /*tvGameOver.setText("Uhm,\ncredo che sia meglio rivedere qualcosa!");
         imageViewResult.setImageResource(R.drawable.sad_face);*/
-
+        resAnim = R.raw.funny_a001;
     }
     void userDraw() { //In caso di pareggio
         if (userScore == 0 && pepperScore == 0) { // score == 0
             resultPhrase = "Oh no, non abbiamo indovinato neanche una volta. Dovremmo impegnarci di più.";
             tvResult.setText("Pareggio!");
+            resAnim = R.raw.sad_a001;
         } else if (userScore == 3 && pepperScore == 3) { // score == 3
             resultPhrase = "Uau, le abbiamo indovinate tutte. Siamo stati bravissimi entrambi.";
             tvResult.setText("Pareggio!");
+            resAnim = R.raw.right_hand_high_b001;
         } else { // score == 2
             resultPhrase = "Siamo stati bravissimi entrambi, e abbiamo avuto lo stesso punteggio.";
             tvResult.setText("Pareggio!");
+            resAnim = R.raw.funny_a001;
         }
     }
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]

@@ -162,10 +162,13 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
             public void onClick(View view) {
                 Log.e(TAG, "buttonYes cliccato");
                 isAnswerCorrect = true;
+                goToNextTurn();
+                /*
                 if(!isPepperTurn) //TODO???
                     goToNextTurn();
                 else
                     startPepperTeacher();
+                */
             }
         });
 
