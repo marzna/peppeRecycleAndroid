@@ -356,7 +356,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         if (isPepperTurn) {
             ++pepperScore;
             tvPepperScore.setText(" " + pepperScore);
-//            startPepperTeacher();
+            startPepperTeacher();
             Log.d(TAG, "Incrementato pepperScore");
         } else {
             ++userScore;
@@ -468,7 +468,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 else
                     tvMessage.setText("Ho sbagliato...");
             }
-            if (currentRound < N_ROUNDS)
+            if (currentRound < N_ROUNDS && trialState == -1)
                 exclamation += "Ora tocca a te. Ok?";
 
         } else {

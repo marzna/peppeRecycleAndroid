@@ -109,11 +109,10 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                 .build(); // Build the say action.
         Say sayPresentation = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("\\rspd=95\\io sono Pèpper. E questo è \\rspd=95\\Pepperisàichel!. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
+                .withText("io sono Pèpper. E questo è \\rspd=95\\Pepperisàichel. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
                 .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                 .build(); // Build the say action.
 
-        //TODO -> Bisognerà cambiare l'interazione nel caso dello storytelling
         Say sayPlay = SayBuilder.with(qiContext) // Create the builder with the context.
                 .withText("\\rspd=95\\Accetti la sfida?") // Set the text to say.
                 .build(); // Build the say action.
