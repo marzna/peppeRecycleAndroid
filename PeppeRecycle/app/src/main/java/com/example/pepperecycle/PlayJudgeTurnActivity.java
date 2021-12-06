@@ -87,6 +87,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
     byte trialState;
     boolean endOfTutorial;
     boolean restartGame;
+    boolean pepperShouldTeach;
 
     String exclamation;
 
@@ -126,6 +127,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
         dialog = new Dialog(this);
 
         trialState = -1;
+        pepperShouldTeach = false;
 
         Bundle extras = getIntent().getExtras();
 
@@ -144,6 +146,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
             currentRound = extras.getByte("currentRound");
             tutorialState = extras.getByte("tutorialState");
             trialState = extras.getByte("trialState");
+            pepperShouldTeach = extras.getBoolean("pepperShouldTeach");
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
         Log.d(TAG, "TrialState: "+ trialState);
@@ -162,6 +165,8 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
             public void onClick(View view) {
                 Log.e(TAG, "buttonYes cliccato");
                 isAnswerCorrect = true;
+                if(isPepperTurn)
+                    pepperShouldTeach = true;
                 goToNextTurn();
                 /*
                 if(!isPepperTurn) //TODO???
@@ -239,7 +244,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "è corretta", "è giusta", "corretta", "giusta",
-                        "pepper sì", "pepper si")
+                        "pepper sì", "pepper si", "confermi", "confermo")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
@@ -272,6 +277,8 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
 
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {
             isAnswerCorrect = true;
+            if(isPepperTurn)
+                pepperShouldTeach = true;
             goToNextTurn();
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {
@@ -449,6 +456,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
         activity2Intent.putExtra("currentRound", currentRound);
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
+        activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
         startActivity(activity2Intent);
         finish();
     }

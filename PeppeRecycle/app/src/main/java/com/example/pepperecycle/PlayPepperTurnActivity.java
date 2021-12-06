@@ -71,17 +71,18 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://d585-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://ef23-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
     private Mat mRGBA, mRGBAT;
-    private ImageView imageViewPepperPhoto;
-    private static final int CAMERA_REQUEST = 1888;
-    private static final int MY_CAMERA_REQUEST_CODE = 100; //Per la richiesta dei permessi della fotocamera //TODO Togliere?
-    private boolean touched = false;
     private Bitmap mRGBATbitmap;
     private int activeCamera = CameraBridgeViewBase.CAMERA_ID_FRONT; //Attiva la fotocamera frontale (?)
+    private static final int CAMERA_REQUEST = 1888;
+    private static final int MY_CAMERA_REQUEST_CODE = 100; //Per la richiesta dei permessi della fotocamera //TODO Togliere?
+
+    private ImageView imageViewPepperPhoto;
+    private boolean touched = false;
     private String garbageType; //static
     byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
     static byte pepperScore, userScore;
@@ -145,6 +146,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
         setContentView(R.layout.activity_play_pepper_turn);
+
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
@@ -174,7 +176,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             Log.d(TAG, "Permissions granted");
             initializeCamera((JavaCameraView) javaCameraView, activeCamera);
         } else {
-            // prompt system dialog
             Log.d(TAG, "Permission prompt");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE); //RequestCode?
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
@@ -183,13 +184,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 5);//??
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 6);
         }
-        /* TODO
-        cardboard cartone
-        glass vetro
-        metal metallo
-        organic organico
-        paper carta
-        plastic plastica        */
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             round = extras.getByte("round");
@@ -204,12 +200,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             endOfTutorial = extras.getBoolean("endOfTutorial");
             tutorialState = extras.getByte("tutorialState");
             Log.d(TAG, "Ricevuto trialState: "+ trialState);
-
-
-
-
-        } else {
-            Log.d(TAG, "NON ricevuto trialState: " + trialState);
         }
 
 
@@ -282,7 +272,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Sì Pepper", "Si Pepper", "Ecco", "Ecco qui", "Ecco Pepper",
                         "Ecco qui Pepper", "Tieni", "Tieni Pepper", "Pepper tieni",
-                        "Sì", "Si", "okay", "ok", "va bene", "pepper ecco", "pepper si")
+                        "Sì", "Si", "okay", "ok", "va bene", "pepper ecco", "pepper si",
+                        "guarda", "guarda qui", "pepper guarda", "guarda pepper")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
@@ -753,9 +744,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         responseText.setText("Classificazione in corso...");
         Log.e("CLASSIF","Entrato in classify");
         responseText.setText(postUrl);
-        MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        //MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1; //loading a smaller version into memory, set inSampleSize to 1 TODO non va bene così, bisognerebbe fare altro
         options.inPreferredConfig = Bitmap.Config.ARGB_8888; //options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -963,6 +955,55 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         Log.e("CLASSIF","SavePhoto eseguita");
     }*/
+
+    private void savePhoto(Bitmap bmp) { //TODO per salvare in memoria interna -> https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
+        File pictureFile = getOutputMediaFile();
+
+        Log.d(TAG, "savePhoto:"); //+ " takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
+        if (pictureFile == null) {
+            Log.d(TAG, "Error creating media file, check storage permissions: ");// e.getMessage());
+            return;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pictureFile, false); //il "false" dovrebbe permettere di sovrascrivere l'immagine, se esiste
+            bmp = Bitmap.createScaledBitmap(bmp, 224, 224, true);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            fos.close();
+            photoTaken = true;
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "Impossibile salvare l'immagine. " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Impossibile accedere al file: " + e.getMessage());
+        } finally {
+            photoPath = "storage/emulated/0/DCIM/" + photoName; // /storage/emulated/0/DCIM/PhotoPepper0.jpg
+            Log.e("CLASSIF","SavePhoto eseguita");
+        }
+
+    }
+
+    //Create a File for saving an image or video
+    private  File getOutputMediaFile(){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+        // Create a media file name
+        File mediaFile = new File(mediaStorageDir.getPath() + File.separator + photoName);
+        return mediaFile;
+    }
+
+
+
+
+
+
+    /*
     private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
         File pictureFile = getOutputMediaFile();
 
@@ -1006,7 +1047,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         // Create a media file name
         File mediaFile = new File(mediaStorageDir.getPath() + File.separator + photoName);
         return mediaFile;
-    }
+    }*/
 
     private void loadPhoto(ImageView imageViewPepperPhoto) {
         File imgFile = new File(photoPath);

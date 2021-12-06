@@ -55,20 +55,22 @@
         android:layout_below="@id/tvMessage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:background="@drawable/button_play" />
+        android:background="@drawable/button_play"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
+        android:layout_centerInParent="true"
         android:fontFamily="@font/andika_regular"
         android:gravity="center"
         android:text="Complimenti!\nHai guadagnato un punto!"
         android:textColor="#FFFFFF"
-        android:textSize="34sp" />
+        android:textSize="48sp" />
 
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_marginTop="150dp"-->
 
     <TextView
         android:id="@+id/textViewPepperScore"

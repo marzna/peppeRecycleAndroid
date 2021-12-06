@@ -61,6 +61,8 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     Animate animate;
     String exclamation;
     byte trialState;
+    boolean pepperShouldTeach;
+
     String[] pepperExclamations = {
             "Evvài, ho indovinato!",
             "Mi sto impegnando!",
@@ -78,7 +80,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
     String[] factsPlastic = {
             "Fanno parte della categoria di plastica e metalli quasi tutti i contenitori, o imballaggi, dei prodotti che compriamo, come, la lattina della coca cola, la scatoletta di tonno, la bottiglia dello shampoo e \\rspd=80\\tànto àltro.",
             "Una mascherina impiegherebbe tra i 400 e i 450 anni per degradarsi completamente nell'ambiente. Durante questo processo, rilascerebbe micro-particelle di plastica, che, in mare, potrebbero essere ingerite dalle specie marine.",
-            "Moltissime creature marine muoiono ogni anno a causa delle buste di platica e della spazzatura che vengono gettate in mare.",
+            "Moltissime creature marine muoiono ogni anno a causa delle buste di plastica e della spazzatura che vengono gettate in mare.",
             "Una bottiglia di plastica resta per circa 450 anni nell'ambiente prima di degradarsi completamente.",
             "Riciclare la plastica fa risparmiare il doppio dell'energia che verrebbe consumata per bruciarla in un inceneritore.",
             "Riciclare la plastica fa risparmiare l'88% dell'energia che verrebbe consumata per crearla dalle materie prime."
@@ -288,6 +290,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 //            trialState = extras.getByte("trialState"); // inutile tanto Pepper non insegna nulla nel trial
             wasteTypeString = extras.getString("wasteTypeString");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
+            pepperShouldTeach = extras.getBoolean("pepperShouldTeach");
             //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
         Log.e(TAG, "Dopo extras.");
@@ -310,7 +313,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         Say sayRandomFact= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
                 //.withText(exclamation + "." + factAboutRecycle + "\\rspd=90\\ Adesso possiamo proseguire con il gioco o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
                 //.withText("Ecco una curiosità:" + factAboutRecycle + "\\rspd=95\\ Adesso possiamo proseguire con il gioco, o vuoi sentire un'altra curiosità riguardante il riciclo?") // Set the text to say.
-                .withText("Ecco una curiosità:" + factAboutRecycle + "\\rspd=95\\ Adesso proseguiamo con il gioco. Va bene?") // Set the text to say.
+                .withText("Ecco una curiosità:" + factAboutRecycle + "\\rspd=95\\ Adesso proseguiamo con il gioco. Tocca a te. Va bene?") // Set the text to say.
                 .build(); // Build the say action.
         Animation sayRandomFactAnim = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.question_right_hand_a001) //TODO Animazione
@@ -531,6 +534,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 //        activity2Intent.putExtra("roundTutorial", roundTutorial);//Non presente
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("isFromPepperTeaches", true);
+        activity2Intent.putExtra("pepperShouldTeach", false);
 //        activity2Intent.putExtra("endOfTutorial", endOfTutorial);//Non presente
 //        activity2Intent.putExtra("restartGame", restartGame);//Non presente
 //        activity2Intent.putExtra("tutorialState", tutorialState); //Non presente
