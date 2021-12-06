@@ -87,6 +87,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     boolean isFromPepperTeaches;
     int resAnim; // conterrà l'animazione
     boolean pepperShouldTeach;
+    String turnPhrase;
 
     String[] pepperCorrectPhrase = {
             "Evvài, ho indovinato. ",
@@ -248,14 +249,30 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             animate = AnimateBuilder.with(qiContext)
                     .withAnimation(animation)
                     .build();
+           /* Animation animationTurn = AnimationBuilder.with(qiContext)
+                    .withResources(R.raw.spread_both_hands_a003)
+                    .build();
+            Animate animateTurn = AnimateBuilder.with(qiContext)
+                    .withAnimation(animationTurn)
+                    .build();*/
 
             Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText(exclamation) // Set the text to say.
                     .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                     .build(); // Build the say action.
 
+            /*Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText(turnPhrase) // Set the text to say.
+                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
+                    .build(); // Build the say action.*/
+
             animate.async().run();
             sayResult.run();
+
+//            animateTurn.async().run();
+//            sayTurn.run();
+
+
         }
     }
 
@@ -330,7 +347,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     }
 
     public void nextTurn() { // Avvia la activity relativa al prossimo turno (o di Game Over)
-        Intent activity2Intent;
+        Intent activity2Intent = null;
         trialState = nextTrialState(trialState); //TODO se si bugga, metti prima di questa riga if(!isFromPepperTeaches)
         if (trialState == 2) { // Se si è nel trial ed è finito
             Log.e(TAG, "trialState = " + trialState);
@@ -373,7 +390,8 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                             activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);
                         }
                     } else { // Turno utente dopo che Pepper ha insegnato qualcosa
-                        activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
+                        if (currentRound < N_ROUNDS)
+                            activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
                     }
 
                     activity2Intent.putExtra("round", round);
@@ -406,6 +424,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             if (isTrue) {
                 exclamation = pepperCorrectPhrase[new Random().nextInt(pepperCorrectPhrase.length)];
                 resAnim = R.raw.nicereaction_a002;
+                Log.e(TAG, "turno di pepper, esclamazione sbagliata selezionata");
                 if(trialState == -1)
                     tvMessage.setText("Ho indovinato,\nperciò guadagno un punto!");
                 else
@@ -413,13 +432,15 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             } else {
                 exclamation = pepperWrongPhrase[new Random().nextInt(pepperWrongPhrase.length)];
                 resAnim = R.raw.sad_a001;
+                Log.e(TAG, "turno utente, esclamazione sbagliata selezionata");
                 if(trialState == -1)
                     tvMessage.setText("Ho sbagliato.\nNon mi è stato assegnato nessun punto.");
                 else
                     tvMessage.setText("Ho sbagliato...");
             }
-            /*if (currentRound < N_ROUNDS && trialState == -1)
-                exclamation += "Ora tocca a te.";*/
+            if (currentRound < N_ROUNDS-1 && trialState == -1 && !isTrue)
+//                turnPhrase += "Ora tocca a te.";
+                exclamation += "Ora tocca a te.";
 
         } else {
 
@@ -427,23 +448,26 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 exclamation = userCorrectPhrase[new Random().nextInt(userCorrectPhrase.length)];
                 resAnim = R.raw.nicereaction_a001;
 
+                Log.e(TAG, "turno di pepper, esclamazione corretta selezionata");
                 if(trialState == -1)
-                    tvMessage.setText("Complimenti,\nHai guadagnato un punto!");
+                    tvMessage.setText("Complimenti,\nhai guadagnato un punto!");
                 else
-                    tvMessage.setText("Complimenti,\nHai indovinato!");
+                    tvMessage.setText("Complimenti,\nhai indovinato!");
 
             } else {
                 exclamation = userWrongPhrase[new Random().nextInt(userWrongPhrase.length)];
                 resAnim = R.raw.sad_a001;
 
+                Log.e(TAG, "turno utente, esclamazione corretta selezionata");
                 if(trialState == -1)
                     tvMessage.setText("Hai sbagliato.\nNon ti è stato assegnato nessun punto.");
                 else
                     tvMessage.setText("La risposta era sbagliata.");
             }
 
-            if (currentRound < N_ROUNDS)
+            if (currentRound < N_ROUNDS-1)
                 exclamation += "Adesso è il mio turno. ";
+//                turnPhrase = "Adesso è il mio turno. ";
         }
     }
 

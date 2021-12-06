@@ -109,7 +109,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                 .build(); // Build the say action.
         Say sayPresentation = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("io sono Pèpper. E questo è \\rspd=95\\Pepperisàichel. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
+                .withText("io sono \\rspd=120\\Pèpper.\\rspd=95\\ E questo è \\rspd=95\\Pepperisàichel. Ci tengo all'ambiente, per cui ho deciso di sfidarti al gioco della raccolta differenziata.") // Set the text to say.
                 .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                 .build(); // Build the say action.
 
@@ -178,7 +178,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                     .withAnimation(correctAnswer).build();
 
             Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Va bene, sto chiudendo il gioco. Sarà per un'altra volta, ciaoo!") // Set the text to say.
+                    .withText("Va bene, sto chiudendo il gioco. Sarà per un'altra volta, ciao!") // Set the text to say.
                     .build(); // Build the say action.
 
             sayGoodbye.run();

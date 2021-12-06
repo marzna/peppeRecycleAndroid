@@ -148,7 +148,7 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
                     .withAnimation(correctAnswer).build();
 
             Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Va bene, sto chiudendo il gioco. Ciaoo!") // Set the text to say.
+                    .withText("Va bene, sto chiudendo il gioco. ù!") // Set the text to say.
                     .build(); // Build the say action.
 
             sayGoodbye.run();

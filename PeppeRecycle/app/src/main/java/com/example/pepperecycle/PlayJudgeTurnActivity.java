@@ -244,7 +244,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "è corretta", "è giusta", "corretta", "giusta",
-                        "pepper sì", "pepper si")
+                        "pepper sì", "pepper si", "confermi", "confermo")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)

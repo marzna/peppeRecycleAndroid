@@ -210,7 +210,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
                             "ok", "okay")
                     .build();
             phraseSetNoPlay = PhraseSetBuilder.with(qiContext)
-                    .withTexts("No", "Non mi va", "Non giochiamo", "Non voglio giocare",
+                    .withTexts("No", "Non mi va", "Non giochiamo", "Non voglio giocare", "Salta",
                             "Torna alla Home", "Menu principale", "vai al menu principale", "torna al menu principale")
                     .build();
         } else {
@@ -221,7 +221,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
                             "ok", "okay", "gioca")
                     .build();
             phraseSetNoPlay = PhraseSetBuilder.with(qiContext)
-                    .withTexts("Giochiamo", "Voglio giocare", "Non mi va", "No")
+                    .withTexts("Giochiamo", "Voglio giocare", "Non mi va", "No", "Salta")
                     .build();
         }
         /*PhraseSet phraseSetPlayTrial = PhraseSetBuilder.with(qiContext)
@@ -412,7 +412,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
                     .withAnimation(correctAnswer).build();
 
             Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Va bene, sto chiudendo il gioco. Ciaoo!") // Set the text to say.
+                    .withText("Va bene, sto chiudendo il gioco. Ciao!") // Set the text to say.
                     .build(); // Build the say action.
 
             sayGoodbye.run();

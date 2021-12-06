@@ -357,7 +357,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                     .withAnimation(correctAnswer).build();
 
             Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Va bene, sto chiudendo il gioco. Ciaoo!") // Set the text to say.
+                    .withText("Va bene, sto chiudendo il gioco. Ciao!") // Set the text to say.
                     .build(); // Build the say action.
 
             sayGoodbye.run();

@@ -71,7 +71,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://de64-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://ef23-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -272,7 +272,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Sì Pepper", "Si Pepper", "Ecco", "Ecco qui", "Ecco Pepper",
                         "Ecco qui Pepper", "Tieni", "Tieni Pepper", "Pepper tieni",
-                        "Sì", "Si", "okay", "ok", "va bene", "pepper ecco", "pepper si")
+                        "Sì", "Si", "okay", "ok", "va bene", "pepper ecco", "pepper si",
+                        "guarda", "guarda qui", "pepper guarda", "guarda pepper")
                 .build();
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
@@ -743,9 +744,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         responseText.setText("Classificazione in corso...");
         Log.e("CLASSIF","Entrato in classify");
         responseText.setText(postUrl);
-        MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        //MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1; //loading a smaller version into memory, set inSampleSize to 1 TODO non va bene così, bisognerebbe fare altro
         options.inPreferredConfig = Bitmap.Config.ARGB_8888; //options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

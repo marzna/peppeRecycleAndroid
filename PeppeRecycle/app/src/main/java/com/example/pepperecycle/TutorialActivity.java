@@ -189,7 +189,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .build();
 
         PhraseSet phraseSetSkipTutorial = PhraseSetBuilder.with(qiContext)
-                .withTexts("Salta", "Salta il tutorial", "ignora il tutorial")
+                .withTexts("Salta", "Salta il tutorial", "ignora il tutorial", "non mi interessa")
                 .build();
 
         PhraseSet phraseSetBackPage = PhraseSetBuilder.with(qiContext)
@@ -318,7 +318,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                     .withAnimation(correctAnswer).build();
 
             Say sayGoodbye = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Va bene, sto chiudendo il gioco. Ciaoo!") // Set the text to say.
+                    .withText("Va bene, sto chiudendo il gioco. Ciao!") // Set the text to say.
                     .build(); // Build the say action.
 
             sayGoodbye.run();
@@ -442,8 +442,20 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
     public void checkPage(int pgIndex) {
         switch (pgIndex) {
-            case 0: // Prima pagina
+            case 0:  //prima pagina
                 buttonPrev.setVisibility(View.INVISIBLE);
+                buttonNext.setVisibility(View.VISIBLE);
+
+                buttonPlay.setVisibility(View.INVISIBLE);
+
+                currPhrase = "Quando le luci sulle mie spalle si illuminano, vuol dire che ti sto ascoltando. Facciamo una prova: dimmi Sì quando è il momento corretto.";
+
+                tvExplaination.setText("Quando le luci sulle mie spalle si illuminano, vuol dire che ti sto ascoltando.Facciamo una prova:\ndimmi \"Sì\" quando è il momento corretto.");
+                ivTutorial.setImageResource(R.drawable.status_blue_leds_transparent);
+
+                break;
+            case 1: // seconda pagina
+                buttonPrev.setVisibility(View.VISIBLE);
                 buttonNext.setVisibility(View.VISIBLE);
 
                 buttonPlay.setVisibility(View.INVISIBLE);
@@ -458,7 +470,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 */
                 break;
 
-            case 1:
+            case 2:
                 buttonPrev.setVisibility(View.VISIBLE);
                 buttonNext.setVisibility(View.VISIBLE);
 
@@ -471,7 +483,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 break;
 
-            case 2: // Ultima pagina
+            case 3: // Ultima pagina
                 /*buttonPrev.setVisibility(View.VISIBLE);
                 buttonNext.setVisibility(View.VISIBLE);
 
