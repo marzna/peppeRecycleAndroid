@@ -224,6 +224,10 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             resultPhrase = "Oh no, non abbiamo indovinato neanche una volta. Dovremmo impegnarci di più.";
             tvResult.setText("Pareggio!");
             resAnim = R.raw.sad_a001;
+        } else if (userScore == 1 && pepperScore == 1) { // score == 3
+            resultPhrase = "Oh no, abbiamo indovinato solo una volta. Dovremmo impegnarci di più.";
+            tvResult.setText("Pareggio!");
+            resAnim = R.raw.sad_a001;
         } else if (userScore == 3 && pepperScore == 3) { // score == 3
             resultPhrase = "Uau, le abbiamo indovinate tutte. Siamo stati bravissimi entrambi.";
             tvResult.setText("Pareggio!");
@@ -234,6 +238,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             resAnim = R.raw.funny_a001;
         }
     }
+
     public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale

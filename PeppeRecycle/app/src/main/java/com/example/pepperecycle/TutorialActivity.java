@@ -450,7 +450,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
 
                 currPhrase = "Quando le luci sulle mie spalle si illuminano, vuol dire che ti sto ascoltando. Facciamo una prova: dimmi Sì quando è il momento corretto.";
 
-                tvExplaination.setText("Quando le luci sulle mie spalle si illuminano, vuol dire che ti sto ascoltando.Facciamo una prova:\ndimmi \"Sì\" quando è il momento corretto.");
+                tvExplaination.setText("Quando le luci sulle mie spalle si illuminano, vuol dire che ti sto ascoltando. Facciamo una prova:\ndimmi \"Sì\" quando è il momento corretto.");
                 ivTutorial.setImageResource(R.drawable.status_blue_leds_transparent);
 
                 break;

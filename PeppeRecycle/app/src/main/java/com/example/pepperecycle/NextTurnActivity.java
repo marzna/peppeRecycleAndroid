@@ -104,7 +104,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     String[] userWrongPhrase = {
             "Argh, dovresti impegnarti di più. ",
             "Oh no, hai sbagliato. ",
-            "Cerca di tenere alta la concentrazione. "
+            "Argh, risposta sbagliata."
     };
     String[] userCorrectPhrase = {
             "Complimenti. ",
@@ -249,28 +249,28 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             animate = AnimateBuilder.with(qiContext)
                     .withAnimation(animation)
                     .build();
-           /* Animation animationTurn = AnimationBuilder.with(qiContext)
+            Animation animationTurn = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.spread_both_hands_a003)
                     .build();
             Animate animateTurn = AnimateBuilder.with(qiContext)
                     .withAnimation(animationTurn)
-                    .build();*/
+                    .build();
 
             Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText(exclamation) // Set the text to say.
-                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
+//                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                     .build(); // Build the say action.
 
-            /*Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText(turnPhrase) // Set the text to say.
-                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
-                    .build(); // Build the say action.*/
-
-            animate.async().run();
+//            animate.async().run();
             sayResult.run();
 
+            Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText(turnPhrase) // Set the text to say.
+//                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
+                    .build(); // Build the say action.
+
 //            animateTurn.async().run();
-//            sayTurn.run();
+            sayTurn.async().run();
 
 
         }
@@ -439,8 +439,8 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     tvMessage.setText("Ho sbagliato...");
             }
             if (currentRound < N_ROUNDS-1 && trialState == -1 && !isTrue)
-//                turnPhrase += "Ora tocca a te.";
-                exclamation += "Ora tocca a te.";
+                turnPhrase = "Ora tocca a te.";
+//                exclamation += "Ora tocca a te.";
 
         } else {
 
@@ -466,8 +466,8 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             }
 
             if (currentRound < N_ROUNDS-1)
-                exclamation += "Adesso è il mio turno. ";
-//                turnPhrase = "Adesso è il mio turno. ";
+//                exclamation += "Adesso è il mio turno. ";
+                turnPhrase = "Adesso è il mio turno. ";
         }
     }
 
