@@ -110,7 +110,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     String[] userCorrectPhrase = {
             "Complimenti. ",
             "Che bello, hai indovinato. ",
-            "Uau. risposta corretta. Hai guadagnato un punto. "
+            "Uau. Risposta corretta. Hai guadagnato un punto. "
     };
 
     @Override

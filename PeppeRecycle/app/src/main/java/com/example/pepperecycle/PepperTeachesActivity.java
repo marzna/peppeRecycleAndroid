@@ -332,7 +332,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
                         "passa al prossimo turno", "giochiamo", "prosegui", "proseguiamo",
                         "prosegui con il gioco", "voglio proseguire con il gioco",
                         "voglio proseguire", "voglio andare avanti", "possiamo proseguire",
-                        "possiamo", "continua", "continuiamo", "avanti")
+                        "possiamo", "continua", "continuiamo", "avanti", "va bene")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
