@@ -101,15 +101,16 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             "Dovrei impegnarmi di più. ",
             "Devo fare più attenzione. "
     };
+
     String[] userWrongPhrase = {
             "Argh, dovresti impegnarti di più. ",
             "Oh no, hai sbagliato. ",
-            "Cerca di tenere alta la concentrazione. "
+            "Argh, risposta sbagliata."
     };
     String[] userCorrectPhrase = {
             "Complimenti. ",
             "Che bello, hai indovinato. ",
-            "Risposta corretta? Allora hai guadagnato un punto, complimenti. "
+            "Uau. risposta corretta. Hai guadagnato un punto. "
     };
 
     @Override
@@ -155,9 +156,16 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    //nextTurn();
-                    Log.d(TAG, "isFromPepperTeaches:" + isFromPepperTeaches + "parte in cui si ferma");
-                    Intent activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
+                    Intent activity2Intent;
+                    if(currentRound<6) {
+                        //nextTurn();
+                        Log.d(TAG, "isFromPepperTeaches:" + isFromPepperTeaches + "parte in cui si ferma");
+                        activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
+
+                    } else {
+                        activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);
+                    }
+
                     activity2Intent.putExtra("round", round);
                     activity2Intent.putExtra("pepperScore", pepperScore);
                     activity2Intent.putExtra("userScore", userScore);
@@ -166,7 +174,6 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     activity2Intent.putExtra("trialState", trialState);
                     activity2Intent.putExtra("isFromPepperTeaches", isFromPepperTeaches);
                     activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
-
                     startActivity(activity2Intent);
                     finish();
                 }
@@ -249,32 +256,31 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             animate = AnimateBuilder.with(qiContext)
                     .withAnimation(animation)
                     .build();
-           /* Animation animationTurn = AnimationBuilder.with(qiContext)
+            Animation animationTurn = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.spread_both_hands_a003)
                     .build();
             Animate animateTurn = AnimateBuilder.with(qiContext)
                     .withAnimation(animationTurn)
-                    .build();*/
+                    .build();
 
             Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText(exclamation) // Set the text to say.
-                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
+//                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                     .build(); // Build the say action.
 
-            /*Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText(turnPhrase) // Set the text to say.
-                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
-                    .build(); // Build the say action.*/
-
-            animate.async().run();
+//            animate.async().run();
             sayResult.run();
 
+            Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText(turnPhrase) // Set the text to say.
+//                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
+                    .build(); // Build the say action.
+
 //            animateTurn.async().run();
-//            sayTurn.run();
-
-
+            sayTurn.async().run();
         }
     }
+
 
     @Override
     public void onRobotFocusLost() {
@@ -392,6 +398,8 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     } else { // Turno utente dopo che Pepper ha insegnato qualcosa
                         if (currentRound < N_ROUNDS)
                             activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
+                        else
+                            activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);
                     }
 
                     activity2Intent.putExtra("round", round);
@@ -439,8 +447,9 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     tvMessage.setText("Ho sbagliato...");
             }
             if (currentRound < N_ROUNDS-1 && trialState == -1 && !isTrue)
-//                turnPhrase += "Ora tocca a te.";
-                exclamation += "Ora tocca a te.";
+                turnPhrase = "Ora tocca a te.";
+//                exclamation += "Ora tocca a te.";
+
 
         } else {
 
