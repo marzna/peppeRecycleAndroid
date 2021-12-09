@@ -126,7 +126,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
                 .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "Giochiamo", "va bene", "certo",
                         "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita",
                         "Rigiochiamo", "Rigioca", "Gioca", "Gioca di nuovo", "giochiamo di nuovo",
-                        "Voglio giocare di nuovo")
+                        "Voglio giocare di nuovo", "mi andrebbe")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
@@ -222,6 +222,10 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     void userDraw() { //In caso di pareggio
         if (userScore == 0 && pepperScore == 0) { // score == 0
             resultPhrase = "Oh no, non abbiamo indovinato neanche una volta. Dovremmo impegnarci di più.";
+            tvResult.setText("Pareggio!");
+            resAnim = R.raw.sad_a001;
+        } else if (userScore == 1 && pepperScore == 1) { // score == 3
+            resultPhrase = "Oh no, abbiamo indovinato solo una volta. Dovremmo impegnarci di più.";
             tvResult.setText("Pareggio!");
             resAnim = R.raw.sad_a001;
         } else if (userScore == 3 && pepperScore == 3) { // score == 3
