@@ -273,8 +273,11 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
 
             Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText(turnPhrase) // Set the text to say.
-//                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                     .build(); // Build the say action.
+            /*Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context.
+                    .withText(turnPhrase) // Set the text to say.
+//                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
+                    .build(); // Build the say action.*/
 
 //            animateTurn.async().run();
             sayTurn.async().run();
@@ -475,8 +478,8 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             }
 
             if (currentRound < N_ROUNDS-1)
-                exclamation += "Adesso è il mio turno. ";
-//                turnPhrase = "Adesso è il mio turno. ";
+//                exclamation += "Adesso è il mio turno. ";
+                turnPhrase = "Adesso è il mio turno. ";
         }
     }
 
