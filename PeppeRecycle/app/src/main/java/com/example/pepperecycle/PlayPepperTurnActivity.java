@@ -258,7 +258,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build(); // Build the say action.;
 
         Say showGarbage = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Per piacere, posso vedere il rifiuto da riciclare?") // Set the text to say.
+                .withText("Per piacere, posso vedere il rifiuto da riciclare? Ricòrdati di dire ecco per mostrarmi il rifiuto.") // Set the text to say.
                 .withBodyLanguageOption(BodyLanguageOption.DISABLED) //Movimento disabilitato per velocizzare lo scatto e farlo più stabile (?)
                 .build(); // Build the say action.
 
@@ -747,7 +747,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         //MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 1; //loading a smaller version into memory, set inSampleSize to 1 TODO non va bene così, bisognerebbe fare altro
+       // options.inSampleSize = 1; //loading a smaller version into memory, set inSampleSize to 1 TODO non va bene così, bisognerebbe fare altro
         options.inPreferredConfig = Bitmap.Config.ARGB_8888; //options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
