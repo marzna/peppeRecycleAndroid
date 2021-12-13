@@ -72,12 +72,11 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
-        Log.d(TAG, "JudgeConfirm iniziato");
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
-        setContentView(R.layout.activity_judge_confirm);
+        setContentView(R.layout.activity_play_judge_turn);
 
         selectedBinIs = findViewById(R.id.textViewSelectedBinIs);
         selectedBin = findViewById(R.id.selectedBin);
