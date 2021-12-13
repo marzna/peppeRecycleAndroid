@@ -53,6 +53,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/* Activity relativa alla gestione del turno successivo.
+ * Gestisce l'incremento dei punteggi e dei turni;
+ *          inoltre, passa all'activity relativa al turno appena incrementato (utente/Pepper),
+ *          o a quella di Game Over (se il gioco è finito),
+ *          o, ancora, a quella in cui Pepper racconta una curiosità
+ *              (se, nel turno appena trascorso, ha classificato correttamente il tipo di rifiuto)
+ */
 public class NextTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
 
     private static final String TAG = "NextTurnActivity";
