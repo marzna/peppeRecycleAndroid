@@ -71,7 +71,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://ef23-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String postUrl = "http://5394-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
@@ -120,6 +120,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     TextView textViewUserScore, textViewPepperScore, tvTutorialPepper;
     boolean isPepperTurn = true;
     boolean canTakePhoto, photoTaken, takePictureSaid;
+
+    Mat dst;
 
     QiContext qiContxt;
     Map<String, Byte> scores = new HashMap<String, Byte>();
@@ -258,7 +260,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .build(); // Build the say action.;
 
         Say showGarbage = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                .withText("Per piacere, posso vedere il rifiuto da riciclare?") // Set the text to say.
+                .withText("Per piacere, posso vedere il rifiuto da riciclare? Ricòrdati di dire ecco per mostrarmi il rifiuto.") // Set the text to say.
                 .withBodyLanguageOption(BodyLanguageOption.DISABLED) //Movimento disabilitato per velocizzare lo scatto e farlo più stabile (?)
                 .build(); // Build the say action.
 
@@ -341,6 +343,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 Log.d(TAG, "onrobotfocusgained. askforconfirm");
                 askForConfirm();
                 mediaPlayer.stop();
+                mediaPlayer.release();
             /*else {
                     restartActivity();
                 }*/
@@ -537,6 +540,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     @Override
     public void onCameraViewStarted(int width, int height) {
         mRGBA = new Mat(height, width, CvType.CV_8UC4);
+        mRGBAT = new Mat();
+        dst = new Mat();
     }
 
     @Override
@@ -547,13 +552,15 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             mRGBAT.release(); //TODO???
     }
 
+
     @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) { //https://stackoverflow.com/questions/64488713/opencv-application-android-camera-crashes-after-10-seconds/64493151#64493151
         mRGBA = inputFrame.rgba();
 
         mRGBAT = mRGBA.t();
+        Core.transpose(mRGBA, mRGBAT);
         Core.flip(mRGBA, mRGBAT, 1);
-        Imgproc.resize(mRGBAT, mRGBAT, mRGBA.size());
+        Imgproc.resize(mRGBAT, dst, mRGBA.size());
 //        Log.e("TAG", "Immagine premuta, foto scattata.");
 
         /*if (touched) {*/
@@ -585,8 +592,50 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             Log.e("TAG", "Immagine non premuta. No scatto.");
         }*/
 
+        mRGBA.release();
+        mRGBAT.release();
+        return dst;
+    }/*
+    @Override
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
+        mRGBA = inputFrame.rgba();
+
+        mRGBAT = mRGBA.t();
+        Core.flip(mRGBA, mRGBAT, 1);
+        Imgproc.resize(mRGBAT, mRGBAT, mRGBA.size());
+//        Log.e("TAG", "Immagine premuta, foto scattata.");
+
+        *//*if (touched) {*//*
+
+        //Potrebbe servire qui, prima del try...catch? -> mRGBATbitmap = Bitmap.createBitmap(javaCameraView.getWidth()/4,javaCameraView.getHeight()/4, Bitmap.Config.ARGB_8888);
+        try {
+            mRGBATbitmap = Bitmap.createBitmap(mRGBAT.cols(), mRGBAT.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(mRGBAT, mRGBATbitmap);
+            imageViewPepperPhoto.setImageBitmap(mRGBATbitmap);
+
+            if(takePictureSaid && !photoTaken) { //Se l'utente ha espresso il comando vocale e la foto non è stata scattata
+                Log.d(TAG, "(takePictureSaid && !photoTaken)==true");
+                savePhoto(mRGBATbitmap);
+//                takePictureSaid=false; TODO ELIMINA RIGA
+                photoTaken = true;
+                Log.d(TAG, "Foto scattata nell'oncameraframe");
+//                javaCameraView.disableView();
+            }
+            //imageViewPepperPhoto.invalidate();
+//                photoTaken=true;
+            //javaCameraView.disableView();
+//                canTakePhoto=false;
+//
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+            *//* touched = false;
+        }else {
+            Log.e("TAG", "Immagine non premuta. No scatto.");
+        }*//*
+
         return mRGBAT;
-    }
+    }*/
 
     @Override
     public void onDestroy() {
@@ -747,7 +796,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         //MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 1; //loading a smaller version into memory, set inSampleSize to 1 TODO non va bene così, bisognerebbe fare altro
+        // options.inSampleSize = 1; //loading a smaller version into memory, set inSampleSize to 1 TODO non va bene così, bisognerebbe fare altro
         options.inPreferredConfig = Bitmap.Config.ARGB_8888; //options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -813,37 +862,42 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         finish();
     }
     void setWasteType() {
-        switch (garbageType) {
-            case "organic":
-                wasteType = TYPE_ORGANIC;
-                wasteTypeString = STRING_ORGANIC;
-                break;
-            case "plastic":
-                wasteType = TYPE_PLASTIC;
-                wasteTypeString = STRING_PLASTIC_METAL;
-                break;
-            case "metal":
-                wasteType = TYPE_METAL;
-                wasteTypeString = STRING_PLASTIC_METAL;
-                break;
-            case "paper":
-                wasteType = TYPE_PAPER;
-                wasteTypeString = STRING_PAPER_CARDBOARD;
-                break;
-            case "cardboard":
-                wasteType = TYPE_CARDBOARD;
-                wasteTypeString = STRING_PAPER_CARDBOARD;
-                break;
-            case "glass":
-                wasteType = TYPE_GLASS;
-                wasteTypeString = STRING_GLASS;
-                break;
-            default:
+        if(garbageType != null) {
+            switch (garbageType) {
+                case "organic":
+                    wasteType = TYPE_ORGANIC;
+                    wasteTypeString = STRING_ORGANIC;
+                    break;
+                case "plastic":
+                    wasteType = TYPE_PLASTIC;
+                    wasteTypeString = STRING_PLASTIC_METAL;
+                    break;
+                case "metal":
+                    wasteType = TYPE_METAL;
+                    wasteTypeString = STRING_PLASTIC_METAL;
+                    break;
+                case "paper":
+                    wasteType = TYPE_PAPER;
+                    wasteTypeString = STRING_PAPER_CARDBOARD;
+                    break;
+                case "cardboard":
+                    wasteType = TYPE_CARDBOARD;
+                    wasteTypeString = STRING_PAPER_CARDBOARD;
+                    break;
+                case "glass":
+                    wasteType = TYPE_GLASS;
+                    wasteTypeString = STRING_GLASS;
+                    break;
+                default:
                 /*wasteType = TYPE_ORGANIC;
                 wasteTypeString = STRING_ORGANIC;*/
-                wasteType = CLASSIFICATION_ERROR;
-                wasteTypeString = STRING_CLASSIFICATION_ERROR;
-                break;
+                    wasteType = CLASSIFICATION_ERROR;
+                    wasteTypeString = STRING_CLASSIFICATION_ERROR;
+                    break;
+            }
+        } else {
+            wasteType = TYPE_ORGANIC;
+            wasteTypeString = STRING_ORGANIC;
         }
     }/* void setWasteType() {
         switch (garbageType) {

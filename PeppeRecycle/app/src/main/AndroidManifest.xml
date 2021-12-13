@@ -17,6 +17,7 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/pepperecycle_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/pepperecycle_icon_round"
