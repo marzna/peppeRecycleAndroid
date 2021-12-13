@@ -189,7 +189,7 @@ public class TutorialActivity extends RobotActivity implements RobotLifecycleCal
                 .build();
 
         PhraseSet phraseSetSkipTutorial = PhraseSetBuilder.with(qiContext)
-                .withTexts("Salta", "Salta il tutorial", "ignora il tutorial", "non mi interessa")
+                .withTexts("Salta", "Salta il tutorial", "ignora il tutorial", "ignora", "non mi interessa")
                 .build();
 
         PhraseSet phraseSetBackPage = PhraseSetBuilder.with(qiContext)

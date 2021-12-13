@@ -126,7 +126,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
                 .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "Giochiamo", "va bene", "certo",
                         "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita",
                         "Rigiochiamo", "Rigioca", "Gioca", "Gioca di nuovo", "giochiamo di nuovo",
-                        "Voglio giocare di nuovo")
+                        "Voglio giocare di nuovo", "mi andrebbe")
                 .build();
 
         /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
@@ -252,11 +252,12 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
     void newGame() { //TODO Da testare
         Byte trialState = -1;
+        Byte round = 0;
         Intent activity2Intent = new Intent(GameOverActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", false);
         activity2Intent.putExtra("trialState", trialState); // TODO Ho messo trialstate = -1
         Log.d("GameOverActivity", "trialState passato a PLAYGAME: " + trialState);
-        activity2Intent.putExtra("round", 0);
+        activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("roundTutorial", false);
         activity2Intent.putExtra("endOfTutorial", true);
         activity2Intent.putExtra("restartGame", true);
