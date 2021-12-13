@@ -12,18 +12,21 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/*
+ * Classe che gestisce la connessione lato client (invio delle immagini e ricezione della label corretta)
+ */
 public class ClientManager implements Runnable {
 
     private static final String TAG = "ClientManager" ;
     String photoPath;
     String postUrl;
-    boolean garbageClassified;
+    boolean garbageClassified; // Si può togliere
     String garbageType;
 
     public ClientManager(String photoPath, String postUrl, boolean garbageClassified, String garbageType) {
         this.photoPath = photoPath;
         this.postUrl = postUrl;
-        this.garbageClassified = garbageClassified; //Si può togliere
+        this.garbageClassified = garbageClassified;
         this.garbageType = garbageType;
     }
     public ClientManager(String photoPath, String postUrl, String garbageType) {
@@ -35,8 +38,6 @@ public class ClientManager implements Runnable {
     public void run() {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
-
-        MediaType mediaType = MediaType.parse("text/plain");
 
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("image",photoPath,
@@ -50,27 +51,23 @@ public class ClientManager implements Runnable {
                 .build();
 
         try {
-            Log.d(TAG, "request" + request);
+            Log.d(TAG, "request: " + request);
             Response response = client.newCall(request).execute();
             this.setGarbageType( response.body().string());
             System.out.println("Tipo di rifiuto: " + garbageType);
-            //responseText.setText("Tipo rifiuto:" + garbageType); TODO È nel posto sbagliato
-            //garbageClassified = true;
             if(garbageType!=null) {
-                Log.d(TAG, "Classificazione riuscita."); //Log.d("Classificazione", "Classificazione riuscita.");
+                Log.d(TAG, "Classificazione riuscita.");
             }
 
         } catch (IOException e) {
-
             e.printStackTrace();
-            Log.d(TAG, "Classificazione non riuscita."); //Log.d("Classificazione", "Classificazione non riuscita.");
-
+            Log.d(TAG, "Classificazione non riuscita.");
         }
     }
 
     public void setGarbageType(String garbageType) {
         this.garbageType = garbageType;
-        Log.d(TAG, "setGarbageType: " + this.garbageType);
+        Log.d(TAG, "garbageType: " + this.garbageType);
     }
 
     public String getGarbageType() {
