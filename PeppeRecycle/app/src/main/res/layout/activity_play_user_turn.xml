@@ -9,7 +9,7 @@
     android:layout_centerHorizontal="true"
     android:background="@drawable/bkgr_bins"
     android:animateLayoutChanges="true"
-    tools:context=".PlayUserTurnActivity">
+    tools:context=".game.PlayUserTurnActivity">
 
     <!--   android:background="@drawable/bkgr_bins_wrong"-->
     <TextView

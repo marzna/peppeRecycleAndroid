@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bkgr_bins_ask_confirm"
-    tools:context=".PepperTeachesActivity">
+    tools:context=".game.PepperTeachesActivity">
 
     <ImageButton
         android:id="@+id/buttonHome"

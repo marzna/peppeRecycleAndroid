@@ -25,34 +25,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar" >
         <activity
-            android:name=".PlayJudgeTurnActivity"
+            android:name=".game.PlayJudgeTurnActivity"
             android:exported="true" />
         <activity
-            android:name=".NextTurnActivity"
+            android:name=".game.NextTurnActivity"
             android:exported="true" />
         <activity
-            android:name=".TutorialEndActivity"
+            android:name=".tutorial.TutorialEndActivity"
             android:exported="true" />
         <activity
-            android:name=".PepperTeachesActivity"
+            android:name=".game.PepperTeachesActivity"
             android:exported="true" />
         <activity
-            android:name=".GameOverActivity"
+            android:name=".game.GameOverActivity"
             android:exported="true" />
         <activity
-            android:name=".PlayUserTurnActivity"
+            android:name=".game.PlayUserTurnActivity"
             android:exported="true" />
         <activity
-            android:name=".PlayPepperTurnActivity"
+            android:name=".game.PlayPepperTurnActivity"
             android:exported="true" />
         <activity
-            android:name=".TutorialActivity"
+            android:name=".tutorial.TutorialActivity"
             android:exported="true" />
         <activity
-            android:name=".PlayGameActivity"
+            android:name=".game.PlayGameActivity"
             android:exported="true" />
         <activity
-            android:name=".PlayIntroActivity"
+            android:name=".game.PlayIntroActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

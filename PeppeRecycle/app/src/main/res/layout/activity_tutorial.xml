@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bkgr_activity_main"
-    tools:context=".TutorialActivity">
+    tools:context=".tutorial.TutorialActivity">
 
     <TextView
         android:id="@+id/tvTutorialTitle"
