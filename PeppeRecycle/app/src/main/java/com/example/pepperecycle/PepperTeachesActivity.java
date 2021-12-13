@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+// Activity in cui Pepper racconta una curiosità relativa al rifiuto appena indovinato
 public class PepperTeachesActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
 
     String TAG = "PepperTeachesActivity";
