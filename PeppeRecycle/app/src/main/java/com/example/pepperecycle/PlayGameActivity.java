@@ -36,7 +36,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
 
     boolean isPepperTurn;
     // int N_PLAYERS = 2; int turn = new Random().nextInt(N_PLAYERS) ; //Ritorna un random int nel range [0, N_PLAYERS-1]
-    static final int N_ROUNDS = 6;
+    static final int N_TURNS = 6;
     byte currentRound;
     //    Map<String, Byte> scores = new HashMap<String, Byte>();
     Map<String, Byte> scores = new HashMap<>();

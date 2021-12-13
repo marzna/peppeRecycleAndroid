@@ -1,6 +1,6 @@
 package com.example.pepperecycle;
 
-import static com.example.pepperecycle.PlayGameActivity.N_ROUNDS;
+import static com.example.pepperecycle.PlayGameActivity.N_TURNS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;

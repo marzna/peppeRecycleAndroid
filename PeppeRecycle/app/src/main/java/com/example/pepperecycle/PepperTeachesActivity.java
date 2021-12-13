@@ -1,6 +1,6 @@
 package com.example.pepperecycle;
 
-import static com.example.pepperecycle.PlayGameActivity.N_ROUNDS;
+import static com.example.pepperecycle.PlayGameActivity.N_TURNS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;
@@ -415,7 +415,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 //                    .withText("Perfetto, allora proseguiamo con il gioco!") // Set the text to say.
                     .build(); // Build the say action.
 
-           /* if (currentRound<N_ROUNDS-1) {
+           /* if (currentRound<N_TURNS-1) {
                 sayNextTurn.run();
                 //Pepper dice chi è il prossimo giocatore
                 Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
