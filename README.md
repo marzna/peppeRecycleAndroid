@@ -1,5 +1,6 @@
 # PeppeRecycle
 >Progetto relativo alla tesi intitolata *"PeppeRecycle: un Serious Game per Imparare a Riciclare con il Social Robot Pepper"*
+>di Anna Marzella
 ## Strumenti utilizzati
 Gli ***IDE*** utilizzati per lo sviluppo dell'app sono stati *Android Studio* e *PyCharm*.
 Un altro strumento utile è ***ngrok***, per poter usufruire dell'URL Web fornito, in modo tale da permettere l'accesso al server da parte del robot. ngrok è scaricabile al seguente [link](https://ngrok.com/download). 
