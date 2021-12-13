@@ -31,25 +31,13 @@
             android:name=".NextTurnActivity"
             android:exported="true" />
         <activity
-            android:name=".JudgeConfirmResultActivity"
-            android:exported="true" />
-        <activity
             android:name=".TutorialEndActivity"
-            android:exported="true" />
-        <activity
-            android:name=".TestDBActivity"
             android:exported="true" />
         <activity
             android:name=".PepperTeachesActivity"
             android:exported="true" />
         <activity
-            android:name=".PepperClassifyingActivity"
-            android:exported="true" />
-        <activity
             android:name=".GameOverActivity"
-            android:exported="true" />
-        <activity
-            android:name=".JudgeConfirmActivity"
             android:exported="true" />
         <activity
             android:name=".PlayUserTurnActivity"
@@ -62,9 +50,6 @@
             android:exported="true" />
         <activity
             android:name=".PlayGameActivity"
-            android:exported="true" />
-        <activity
-            android:name=".TodoActivity"
             android:exported="true" />
         <activity
             android:name=".PlayIntroActivity"
