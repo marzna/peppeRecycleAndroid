@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_centerHorizontal="true"
     android:background="@drawable/bkgr_activity_main"
-    tools:context=".PlayIntroActivity">
+    tools:context=".game.PlayIntroActivity">
     <LinearLayout
         android:id="@+id/llControls"
         android:layout_width="wrap_content"

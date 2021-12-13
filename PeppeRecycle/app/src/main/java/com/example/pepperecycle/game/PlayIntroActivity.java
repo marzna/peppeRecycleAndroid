@@ -1,4 +1,4 @@
-package com.example.pepperecycle;
+package com.example.pepperecycle.game;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +23,10 @@ import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
+import com.example.pepperecycle.MainActivity;
+import com.example.pepperecycle.R;
+import com.example.pepperecycle.tutorial.TutorialActivity;
+import com.example.pepperecycle.utils.CommonUtils;
 
 /* Classe relativa alla parte introduttiva del gioco, in cui il robot chiede all'utente
  * se vuole ascoltare il tutorial o se vuole iniziare direttamente una nuova partita

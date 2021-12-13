@@ -1,13 +1,9 @@
-package com.example.pepperecycle;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.pepperecycle.game;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiContext;
@@ -28,9 +24,9 @@ import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.example.pepperecycle.MainActivity;
+import com.example.pepperecycle.R;
+import com.example.pepperecycle.utils.CommonUtils;
 
 /* Classe relativa al game over, in cui si mostrano i punteggi raggiunti
  * e il robot chiede all'utente se vuole giocare un'altra partita

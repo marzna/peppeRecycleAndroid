@@ -1,13 +1,13 @@
-package com.example.pepperecycle;
+package com.example.pepperecycle.game;
 
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_ORGANIC;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_CARDBOARD;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_GLASS;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_METAL;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_ORGANIC;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_PAPER;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_PLASTIC;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -42,6 +42,9 @@ import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
+import com.example.pepperecycle.MainActivity;
+import com.example.pepperecycle.R;
+import com.example.pepperecycle.utils.CommonUtils;
 
 //Activity relativa al turno del giudice, che deve verificare la correttezza della risposta del giocatore corrente
 public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {

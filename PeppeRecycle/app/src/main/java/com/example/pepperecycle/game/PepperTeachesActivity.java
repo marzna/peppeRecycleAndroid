@@ -1,15 +1,11 @@
-package com.example.pepperecycle;
+package com.example.pepperecycle.game;
 
-import static com.example.pepperecycle.PlayGameActivity.N_TURNS;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_ORGANIC;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
-import androidx.appcompat.app.AppCompatActivity;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_CARDBOARD;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_GLASS;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_METAL;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_ORGANIC;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_PAPER;
+import static com.example.pepperecycle.game.PlayPepperTurnActivity.TYPE_PLASTIC;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,9 +34,10 @@ import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
+import com.example.pepperecycle.MainActivity;
+import com.example.pepperecycle.R;
+import com.example.pepperecycle.utils.CommonUtils;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 // Activity in cui Pepper racconta una curiosità relativa al rifiuto appena indovinato

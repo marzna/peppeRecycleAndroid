@@ -1,32 +1,14 @@
-package com.example.pepperecycle;
+package com.example.pepperecycle.game;
 
-import static com.example.pepperecycle.PlayGameActivity.N_TURNS;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_ORGANIC;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC;
-import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
+import static com.example.pepperecycle.game.PlayGameActivity.N_TURNS;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.aldebaran.qi.sdk.QiContext;
@@ -34,23 +16,18 @@ import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
 import com.aldebaran.qi.sdk.builder.AnimateBuilder;
 import com.aldebaran.qi.sdk.builder.AnimationBuilder;
-import com.aldebaran.qi.sdk.builder.ListenBuilder;
-import com.aldebaran.qi.sdk.builder.PhraseSetBuilder;
 import com.aldebaran.qi.sdk.builder.SayBuilder;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.object.actuation.Animate;
 import com.aldebaran.qi.sdk.object.actuation.Animation;
-import com.aldebaran.qi.sdk.object.conversation.BodyLanguageOption;
-import com.aldebaran.qi.sdk.object.conversation.Listen;
-import com.aldebaran.qi.sdk.object.conversation.ListenResult;
-import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
-import com.aldebaran.qi.sdk.util.PhraseSetUtil;
+import com.example.pepperecycle.MainActivity;
+import com.example.pepperecycle.R;
+import com.example.pepperecycle.tutorial.TutorialEndActivity;
+import com.example.pepperecycle.utils.CommonUtils;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /* Activity relativa alla gestione del turno successivo.

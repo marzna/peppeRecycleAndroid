@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bkgr_game_over"
-    tools:context=".GameOverActivity">
+    tools:context=".game.GameOverActivity">
 
     <LinearLayout
         android:id="@+id/llControls"

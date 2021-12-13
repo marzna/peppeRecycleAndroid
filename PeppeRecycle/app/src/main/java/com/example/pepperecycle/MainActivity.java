@@ -28,7 +28,15 @@ import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
+import com.example.pepperecycle.game.PlayIntroActivity;
+import com.example.pepperecycle.utils.CommonUtils;
 
+/*
+ * TODO Importante -> INSERIMENTO URL SERVER:
+ * Per inserire il corretto url del server, cambiare la stringa ngrokUrl
+ * con quella aggiornata nel seguente file:
+ * com.example.pepperecycle.game.PlayPepperTurnActivity.java
+ */
 public class MainActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
 
     // Store the Animate action.

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bkgr_game_over"
-    tools:context=".PlayPepperTurnActivity">
+    tools:context=".game.PlayPepperTurnActivity">
 
     <org.opencv.android.JavaCameraView
         android:id="@+id/my_camera_view"

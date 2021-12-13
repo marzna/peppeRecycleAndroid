@@ -1,4 +1,4 @@
-package com.example.pepperecycle;
+package com.example.pepperecycle.utils;
 
 import android.util.Log;
 

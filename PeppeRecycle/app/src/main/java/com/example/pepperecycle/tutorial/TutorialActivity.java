@@ -1,4 +1,4 @@
-package com.example.pepperecycle;
+package com.example.pepperecycle.tutorial;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +27,9 @@ import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
+import com.example.pepperecycle.MainActivity;
+import com.example.pepperecycle.game.PlayUserTurnActivity;
+import com.example.pepperecycle.R;
 
 // Activity contenente il tutorial del gioco
 public class TutorialActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {

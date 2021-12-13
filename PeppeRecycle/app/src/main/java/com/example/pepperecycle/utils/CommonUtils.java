@@ -1,4 +1,4 @@
-package com.example.pepperecycle;
+package com.example.pepperecycle.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.pepperecycle.R;
 
 /* Classe contenente metodi comuni per tutto il gioco.
     Al momento, sono presenti solamente:

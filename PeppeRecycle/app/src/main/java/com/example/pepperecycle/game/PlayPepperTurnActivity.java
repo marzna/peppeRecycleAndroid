@@ -1,4 +1,4 @@
-package com.example.pepperecycle;
+package com.example.pepperecycle.game;
 
 import android.Manifest;
 import android.app.Activity;
@@ -41,6 +41,10 @@ import com.aldebaran.qi.sdk.object.conversation.ListenResult;
 import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
+import com.example.pepperecycle.MainActivity;
+import com.example.pepperecycle.R;
+import com.example.pepperecycle.utils.ClientManager;
+import com.example.pepperecycle.utils.CommonUtils;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
