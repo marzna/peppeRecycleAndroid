@@ -177,7 +177,7 @@ public class TutorialEndActivity extends RobotActivity implements RobotLifecycle
         activity2Intent.putExtra("roundTutorial", roundTutorial);
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("endOfTutorial", endOfTutorial);
-        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
+
 
         startActivity(activity2Intent);
         finish();
