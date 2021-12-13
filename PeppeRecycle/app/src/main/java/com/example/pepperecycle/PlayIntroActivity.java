@@ -24,11 +24,13 @@ import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
+/* Classe relativa alla parte introduttiva del gioco, in cui il robot chiede all'utente
+ * se vuole ascoltare il tutorial o se vuole iniziare direttamente una nuova partita
+ */
 public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
-    // Store the Animate action.
     private Animate animate;
     boolean tutorialEnabled = false;
-    byte trialState = -1; //TODO forse qui è inutile
+    byte trialState = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +107,6 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {       // Va direttamente al gioco, saltando il tutorial
             Say playGame= SayBuilder.with(qiContext) // Create the builder with the context.
-//                    .withText("Ochei, allora iniziamo subito a giocare!") // Set the text to say.
                     .withText("Ok, allora iniziamo subito una nuova partita.") // Set the text to say.
                     .build(); // Build the say action.
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -175,23 +176,22 @@ public class PlayIntroActivity extends RobotActivity implements RobotLifecycleCa
         return false;
     }
 
-    public void buttonPlay(View v) { //Pressione tasto "no" TODO Togli perché è un duplicato? [???]
+    public void buttonPlay(View v) { //Pressione tasto "no"
         Intent activity2Intent = new Intent(getApplicationContext(), PlayGameActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-    public void buttonTutorial(View v) { //Pressione tasto "yes" TODO Togli perché è un duplicato? [???]
+    public void buttonTutorial(View v) { //Pressione tasto "yes"
         Intent activity2Intent = new Intent(getApplicationContext(), TutorialActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-    public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+    public void buttonHome(View v) { //Pressione tasto "torna alla Home"
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
     public void buttonClose(View v) { //Pressione tasto "Chiudi"
         CommonUtils.showDialogExit(this);
-        //finish();
     }
 }
