@@ -1,6 +1,6 @@
 package com.example.pepperecycle;
 
-import static com.example.pepperecycle.PlayGameActivity.N_ROUNDS;
+import static com.example.pepperecycle.PlayGameActivity.N_TURNS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;
@@ -53,34 +53,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/* Activity relativa alla gestione del turno successivo.
+ * Gestisce l'incremento dei punteggi e dei turni;
+ *          inoltre, passa all'activity relativa al turno appena incrementato (utente/Pepper),
+ *          o a quella di Game Over (se il gioco è finito),
+ *          o, ancora, a quella in cui Pepper racconta una curiosità
+ *              (se, nel turno appena trascorso, ha classificato correttamente il tipo di rifiuto)
+ */
 public class NextTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
 
     private static final String TAG = "NextTurnActivity";
 
-    boolean isPepperTurn, isAnswerCorrect, pressed;
+    boolean isPepperTurn;
+    boolean isAnswerCorrect;
     byte wasteType, round;
-    TextView selectedBinIs;
-    ImageView selectedBin;
-    Map<String, Byte> scores = new HashMap<String, Byte>();
-    //    Map<Byte, String> tutorialStates = new HashMap<Byte, String>();
     static byte pepperScore, userScore;
-    QiContext qiContext;
-    String binType;
     String wasteTypeString;
-    String factAboutRecycle;
     boolean tutorialEnabled;
     boolean roundTutorial;
-    boolean pepperTeaches;
     TextView tvMessage;
-    Dialog dialog;
     String desc;
-    TextView textViewAskForConfirm, tvTutorialJudge;
-    byte currentRound;
+    TextView tvTutorialJudge;
+    byte currentTurn;
     byte tutorialState = -1;
     byte trialState;
     boolean endOfTutorial;
     boolean restartGame;
-    Button buttonPlay;
     TextView tvUserScore, tvPepperScore;
     ImageView imageViewUserScore,imageViewPepperScore;
     String exclamation;
@@ -93,7 +91,6 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             "Evvài, ho indovinato. ",
             "Mi sto impegnando. ",
             "Questa cosa la sapevo proprio bene. ",
-            "Si vede che ho studiato. ",
             "Certo che sono proprio bravo. "
     };
     String[] pepperWrongPhrase = {
@@ -117,21 +114,17 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
-        Log.d(TAG, "NextTurn iniziato");
+        //Log.d(TAG, "NextTurn");
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
         setContentView(R.layout.activity_next_turn);
-       /* selectedBinIs = findViewById(R.id.textViewSelectedBinIs);
-        selectedBin = findViewById(R.id.selectedBin);
-        textViewAskForConfirm = findViewById(R.id.textViewAskForConfirm);
-        tvTutorialJudge = findViewById(R.id.tvTutorialJudge);*/
-        trialState = -1;
+        trialState = -1; //Log.d(TAG, "TrialState: " + trialState);
         isFromPepperTeaches = false;
         pepperShouldTeach = false;
 
-        Log.d(TAG, "TrialState: " + trialState);
+
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
@@ -146,7 +139,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             endOfTutorial = extras.getBoolean("endOfTutorial");
             restartGame = extras.getBoolean("restartGame");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
             tutorialState = extras.getByte("tutorialState");
             trialState = extras.getByte("trialState");
             isFromPepperTeaches = extras.getBoolean("isFromPepperTeaches");
@@ -157,7 +150,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             handler.postDelayed(new Runnable() {
                 public void run() {
                     Intent activity2Intent;
-                    if(currentRound<6) {
+                    if(currentTurn<6) {
                         //nextTurn();
                         Log.d(TAG, "isFromPepperTeaches:" + isFromPepperTeaches + "parte in cui si ferma");
                         activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
@@ -170,7 +163,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     activity2Intent.putExtra("pepperScore", pepperScore);
                     activity2Intent.putExtra("userScore", userScore);
                     activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-                    activity2Intent.putExtra("currentRound", currentRound);
+                    activity2Intent.putExtra("currentTurn", currentTurn);
                     activity2Intent.putExtra("trialState", trialState);
                     activity2Intent.putExtra("isFromPepperTeaches", isFromPepperTeaches);
                     activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
@@ -179,14 +172,12 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 }
             }, 0); // 3000 millisecondi == 3 secondi*/dialog = new Dialog(this);
         } else {
-//            buttonPlay = findViewById(R.id.ivPlay);
             tvMessage = findViewById(R.id.tvMessage);
             tvUserScore = findViewById(R.id.textViewUserScore);
             tvPepperScore = findViewById(R.id.textViewPepperScore);
             tvTutorialJudge = findViewById(R.id.tvTutorialJudge);
             imageViewUserScore = findViewById(R.id.imageViewUserScore);
             imageViewPepperScore = findViewById(R.id.imageViewPepperScore);
-
 
             selectExclamation(isAnswerCorrect, isPepperTurn, trialState);
 
@@ -197,7 +188,6 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
-//                        if (isAnswerCorrect && !pepperShouldTeach) // Incremento punteggio
                         updateScore(isPepperTurn);
                     }
                 }, 1000);
@@ -205,20 +195,11 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    Log.d(TAG, "isFromPepperTeaches:" + isFromPepperTeaches + "parte in cui si ferma");
+                    //Log.d(TAG, "isFromPepperTeaches:" + isFromPepperTeaches + "parte in cui si ferma");
                     nextTurn();
                 }
             }, 5000); // 3000 millisecondi == 3 secondi*/
 
-
-           /* buttonPlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.e(TAG, "buttonPlay cliccato");
-                    pressed = true;
-                    nextTurn();
-                }
-            });*/
         }
     }
     void setScore () {
@@ -248,7 +229,6 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-//        if(!isFromPepperTeaches) {
         if(!isFromPepperTeaches) {
             Animation animation = AnimationBuilder.with(qiContext)
                     .withResources(resAnim)
@@ -265,18 +245,16 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
 
             Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText(exclamation) // Set the text to say.
-//                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
+                    //.withBodyLanguageOption(BodyLanguageOption.DISABLED) //per fare in modo che compia l'animazione scelta
                     .build(); // Build the say action.
 
-//            animate.async().run();
+            //animate.async().run(); //per fare in modo che compia l'animazione scelta
             sayResult.run();
 
             Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText(turnPhrase) // Set the text to say.
-//                    .withBodyLanguageOption(BodyLanguageOption.DISABLED)
                     .build(); // Build the say action.
 
-//            animateTurn.async().run();
             sayTurn.async().run();
 
         }
@@ -296,26 +274,14 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     public void updateScore(boolean isPepperTurn) {
         if(isAnswerCorrect) {
             if (isPepperTurn) {
-           /* if(pepperShouldTeach) {
-                startPepperTeacher();
-//            } else {*/
-//            if(!isFromPepperTeaches) {
                 ++pepperScore;
                 tvPepperScore.setText(" " + pepperScore);
                 pepperShouldTeach = true;
-//            }
-        /*} if(isFromPepperTeaches) {
-                ++pepperScore;
-                tvPepperScore.setText(" " + pepperScore);
-                isFromPepperTeaches=false;
-            } else {
-                startPepperTeacher();
-            }*/
-                Log.d(TAG, "Incrementato pepperScore");
+                // Log.d(TAG, "Incrementato pepperScore");
             } else {
                 ++userScore;
                 tvUserScore.setText("" + userScore);
-                Log.d(TAG, "Incrementato userScore");
+                // Log.d(TAG, "Incrementato userScore");
             }
         }
     }
@@ -324,7 +290,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             case 0:     // è appena stato effettuato il turno utente.
                 state = 1;
                 break;
-            case 1:     // è appena stato effettuato il turno di Pepper, perciò si va a 2, in cui si chiede di nuovo di iniziare il tutorial.
+            case 1:     // è appena stato effettuato il turno di Pepper, perciò si va a 2, in modo da chiedere di nuovo di iniziare il tutorial.
                 state = 2;
                 break;
             default: //case -1
@@ -334,7 +300,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     }
 
     void startPepperTeacher() {
-        Log.e(TAG, "Entrato nella funzione startPepperTeacher.");
+        // Log.e(TAG, "Entrato nella funzione startPepperTeacher.");
         Intent activity2Intent = new Intent(NextTurnActivity.this, PepperTeachesActivity.class);//TODO GameOverActivity
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("wasteType", wasteType);
@@ -342,12 +308,9 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         activity2Intent.putExtra("wasteTypeString", wasteTypeString);
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
-        // activity2Intent.putExtra("scores", (Serializable) scores);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
-        // activity2Intent.putExtra("tutorialEnabled", false);
-        // scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
 
         startActivity(activity2Intent);
         finish();
@@ -357,7 +320,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         Intent activity2Intent = null;
         trialState = nextTrialState(trialState); //TODO se si bugga, metti prima di questa riga if(!isFromPepperTeaches)
         if (trialState == 2) { // Se si è nel trial ed è finito
-            Log.e(TAG, "trialState = " + trialState);
+            //Log.e(TAG, "trialState = " + trialState);
             endTutorial();
         } else { // se si è nel gioco e si deve incrementare il turno
             // Tutorial finito
@@ -368,46 +331,45 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 activity2Intent.putExtra("pepperScore", pepperScore);
                 activity2Intent.putExtra("userScore", userScore);
                 activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-                activity2Intent.putExtra("currentRound", currentRound);
+                activity2Intent.putExtra("currentTurn", currentTurn);
                 activity2Intent.putExtra("trialState", trialState);
                 activity2Intent.putExtra("isFromPepperTeaches", isFromPepperTeaches);
                 activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
 
                 startActivity(activity2Intent);
                 finish();
-            } else { // if (!isFromPepperTeaches) {
+            } else {
                 if (isPepperTurn && isAnswerCorrect) {
                     isPepperTurn = !isPepperTurn; // Turno successivo
-                    ++currentRound;
+                    ++currentTurn;
                     startPepperTeacher();
                 } else {
                     if (!isFromPepperTeaches) {
                         isPepperTurn = !isPepperTurn; // Turno successivo
-                        ++currentRound;
-                        Log.d(TAG, "currentRound: " + currentRound);
-                        if (currentRound < N_ROUNDS) { // TODO sostituisci il 6 con una costante, tipo WINNER_SCORE o simili
+                        ++currentTurn;
+                        //Log.d(TAG, "currentTurn: " + currentTurn);
+                        if (currentTurn < N_TURNS) {
                             if (isPepperTurn) {     //Tocca a Pepper
                                 activity2Intent = new Intent(NextTurnActivity.this, PlayPepperTurnActivity.class);
-                                Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
+                                //Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
                             } else {                // Tocca all'utente
                                 activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
-                                Log.d(TAG, "trialState passato a UserTurn: " + trialState);
+                                //Log.d(TAG, "trialState passato a UserTurn: " + trialState);
                             }
                         } else {                    // Game over
                             activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);
                         }
                     } else { // Turno utente dopo che Pepper ha insegnato qualcosa
-                        if (currentRound < N_ROUNDS)
+                        if (currentTurn < N_TURNS)
                             activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
                         else
                             activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);
                     }
-
                     activity2Intent.putExtra("round", round);
                     activity2Intent.putExtra("pepperScore", pepperScore);
                     activity2Intent.putExtra("userScore", userScore);
                     activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-                    activity2Intent.putExtra("currentRound", currentRound);
+                    activity2Intent.putExtra("currentTurn", currentTurn);
                     activity2Intent.putExtra("trialState", trialState);
                     activity2Intent.putExtra("isFromPepperTeaches", isFromPepperTeaches);
                     activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
@@ -422,7 +384,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     public void endTutorial() {
         Intent activity2Intent = new Intent(NextTurnActivity.this, TutorialEndActivity.class);
         activity2Intent.putExtra("endOfTutorial", true); // Tutorial finito
-        activity2Intent.putExtra("pgIndex", 0); //TODO SOSTITUISCI NUMERO MAGICO
+        activity2Intent.putExtra("pgIndex", 0);
         activity2Intent.putExtra("trialState", trialState);
         startActivity(activity2Intent);
         finish();
@@ -433,7 +395,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             if (isTrue) {
                 exclamation = pepperCorrectPhrase[new Random().nextInt(pepperCorrectPhrase.length)];
                 resAnim = R.raw.nicereaction_a002;
-                Log.e(TAG, "turno di pepper, esclamazione sbagliata selezionata");
+                //Log.d(TAG, "turno di pepper, esclamazione sbagliata selezionata");
                 if(trialState == -1)
                     tvMessage.setText("Ho indovinato,\nperciò guadagno un punto!");
                 else
@@ -441,15 +403,14 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             } else {
                 exclamation = pepperWrongPhrase[new Random().nextInt(pepperWrongPhrase.length)];
                 resAnim = R.raw.sad_a001;
-                Log.e(TAG, "turno utente, esclamazione sbagliata selezionata");
+                //Log.d(TAG, "turno utente, esclamazione sbagliata selezionata");
                 if(trialState == -1)
                     tvMessage.setText("Ho sbagliato.\nNon mi è stato assegnato nessun punto.");
                 else
-                    tvMessage.setText("Ho sbagliato...");
+                    tvMessage.setText("Ho sbagliato.");
             }
-            if (currentRound < N_ROUNDS-1 && trialState == -1 && !isTrue)
+            if (currentTurn < N_TURNS-1 && trialState == -1 && !isTrue)
                 turnPhrase = "Ora tocca a te.";
-//                exclamation += "Ora tocca a te.";
 
         } else {
 
@@ -457,7 +418,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 exclamation = userCorrectPhrase[new Random().nextInt(userCorrectPhrase.length)];
                 resAnim = R.raw.nicereaction_a001;
 
-                Log.e(TAG, "turno di pepper, esclamazione corretta selezionata");
+                //Log.d(TAG, "turno di pepper, esclamazione corretta selezionata");
                 if(trialState == -1)
                     tvMessage.setText("Complimenti,\nhai guadagnato un punto!");
                 else
@@ -467,50 +428,28 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 exclamation = userWrongPhrase[new Random().nextInt(userWrongPhrase.length)];
                 resAnim = R.raw.sad_a001;
 
-                Log.e(TAG, "turno utente, esclamazione corretta selezionata");
+                //Log.d(TAG, "turno utente, esclamazione corretta selezionata");
                 if(trialState == -1)
                     tvMessage.setText("Hai sbagliato.\nNon ti è stato assegnato nessun punto.");
                 else
                     tvMessage.setText("La risposta era sbagliata.");
             }
 
-            if (currentRound < N_ROUNDS-1)
-//                exclamation += "Adesso è il mio turno. ";
+            if (currentTurn < N_TURNS-1)
                 turnPhrase = "Adesso è il mio turno. ";
         }
     }
 
-    /*public void buttonBack(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
-        Intent activity2Intent;//Per andare alla pagina principale
-        if(isPepperTurn) { //TODO Rimuovi il bottone back se il turno era di Pepper o lascialo se si vuole ri-scattare la foto?
-            activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
-        } else {
-            activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
-        }
-        activity2Intent.putExtra("round", round);
-        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
-        activity2Intent.putExtra("pepperScore", pepperScore);
-        activity2Intent.putExtra("userScore", userScore);
-        activity2Intent.putExtra("currentRound", currentRound);
-        activity2Intent.putExtra("trialState", trialState);
-        startActivity(activity2Intent); //Per andare alla pagina principale
-        finish();
-    }*/
-    public void buttonHelp(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
-//        showDialog(desc);
-
+    public void buttonHelp(View v) { //Pressione tasto "Help"
         CommonUtils.showDialog(NextTurnActivity.this, desc);
-        //showDialog(desc);
     }
-    public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+    public void buttonHome(View v) { //Pressione tasto "torna alla Home"
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
     }
-
     public void buttonClose(View v) { //Pressione tasto "Chiudi"
         CommonUtils.showDialogExit(this);
-        //finish();
     }
 
 }

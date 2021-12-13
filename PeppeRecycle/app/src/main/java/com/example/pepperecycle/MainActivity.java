@@ -1,21 +1,15 @@
 package com.example.pepperecycle;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.aldebaran.qi.Future;
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.QiSDK;
 import com.aldebaran.qi.sdk.RobotLifecycleCallbacks;
@@ -25,7 +19,6 @@ import com.aldebaran.qi.sdk.builder.ListenBuilder;
 import com.aldebaran.qi.sdk.builder.PhraseSetBuilder;
 import com.aldebaran.qi.sdk.builder.SayBuilder;
 import com.aldebaran.qi.sdk.design.activity.RobotActivity;
-import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition;
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy;
 import com.aldebaran.qi.sdk.object.actuation.Animate;
 import com.aldebaran.qi.sdk.object.actuation.Animation;
@@ -36,15 +29,10 @@ import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
-import org.opencv.android.JavaCameraView;
-
 public class MainActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{
 
     // Store the Animate action.
     private Animate animate;
-    private ImageView imageViewMainBackground;
-//    CommonUtils commonUtils = new CommonUtils();
-    //    private QiContext qiContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +41,6 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
 
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
-        //setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
         setContentView(R.layout.activity_main);
 
         if (!checkPermissions()) {
@@ -94,12 +81,9 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
 
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
-        /*// The robot focus is gained.
-        this.qiContext = qiContext;*/
         Animation hello = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.hello_a007)
                 .build();
-        //Animate animateHello = AnimateBuilder.with(qiContext)
         animate = AnimateBuilder.with(qiContext)
                 .withAnimation(hello)
                 .build();
@@ -117,23 +101,12 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .withText("\\rspd=95\\Accetti la sfida?") // Set the text to say.
                 .build(); // Build the say action.
 
-        /*Say sayOther = SayBuilder.with(qiContext) // Create the builder with the context.
-                .withText("Va bene, non giochiamo. Vuoi che ti racconti una storia?") // Set the text to say.
-                .build(); // Build the say action.*/
-
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Si", "sì", "sì Pepper", "pepper sì", "pepper si", "Voglio giocare", "Play", "Si Pepper", "Giochiamo", "Gioca", "Iniziamo", "Inizia")
                 .build();
 
-        PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
-                .withTexts("No", "Non voglio", "No Pepper", "Non mi va", "pepper no").build();
-
         PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
                 .withTexts("Ripeti", "Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
-                .build();
-
-        PhraseSet phraseSetStory = PhraseSetBuilder.with(qiContext)
-                .withTexts("Ricominciamo", "Ricomincia", "Da capo", "Non ho capito", "Puoi ripetere")
                 .build();
 
         PhraseSet phraseSetClose = PhraseSetBuilder.with(qiContext)
@@ -144,12 +117,8 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
                 .withPhraseSets(phraseSetYes, phraseSetRepeat, phraseSetClose) // Set the PhraseSets to listen to.
                 .build(); // Build the listen action
 
-/*
-        //Run Animazione Presentazione
-        Future<Void> animateFuture = animate.async().run();
-*/
         animate.async().run();
-        sayHello.run(); // animateHello.run(); -> Sbagliato (?)
+        sayHello.run();
         sayPresentation.run();
         sayPlay.run();
 
@@ -160,8 +129,7 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
         if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetYes)) {             // Risposta utente affermativa
             Intent activity2Intent = new Intent(getApplicationContext(), PlayIntroActivity.class);
             startActivity(activity2Intent); // fa partire il gioco
-            finish();/*} else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {     // Risposta utente negativa
-                            sayOther.run();*/
+            finish();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) { // Richiesta utente di ripetere
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
@@ -201,21 +169,9 @@ public class MainActivity extends RobotActivity implements RobotLifecycleCallbac
         return false;
     }
 
-    public void buttonPlay(View v) { //Pressione tasto  "giochiamo" TODO Thread?
+    public void buttonPlay(View v) { //Pressione tasto  "giochiamo"
         Intent activity2Intent = new Intent(getApplicationContext(), PlayIntroActivity.class);
         startActivity(activity2Intent); //Per andare alla seconda pagina
-        finish();
-    }
-
-    public void buttonStorytelling(View v) { //Pressione tasto "storytelling" TODO Thread?
-        Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent); //Per andare alla pagina relativa a storytelling
-        finish();
-    }
-
-    public void buttonScores(View v) { //Pressione tasto "scores" TODO Thread?
-        Intent activity2Intent = new Intent(getApplicationContext(), TodoActivity.class);
-        startActivity(activity2Intent); //Per andare alla pagina degli scores
         finish();
     }
 

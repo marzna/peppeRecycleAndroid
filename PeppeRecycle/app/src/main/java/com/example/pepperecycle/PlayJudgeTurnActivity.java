@@ -1,6 +1,5 @@
 package com.example.pepperecycle;
 
-import static com.example.pepperecycle.PlayGameActivity.N_ROUNDS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_CARDBOARD;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_GLASS;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_METAL;
@@ -9,31 +8,21 @@ import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PAPER_CARDBOARD;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC;
 import static com.example.pepperecycle.PlayPepperTurnActivity.TYPE_PLASTIC_METAL;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aldebaran.qi.sdk.QiContext;
 import com.aldebaran.qi.sdk.QiSDK;
@@ -54,61 +43,40 @@ import com.aldebaran.qi.sdk.object.conversation.PhraseSet;
 import com.aldebaran.qi.sdk.object.conversation.Say;
 import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
+//Activity relativa al turno del giudice, che deve verificare la correttezza della risposta del giocatore corrente
 public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
-    private static final String TAG = "PlayJudgeTurnActivity" ;//, CameraBridgeViewBase.CvCameraViewListener2{
+    private static final String TAG = "PlayJudgeTurnActivity" ;
 
     boolean isPepperTurn, isAnswerCorrect, pressed;
     byte wasteType, round;
     TextView selectedBinIs;
     ImageView selectedBin;
-    Map<String, Byte> scores = new HashMap<String, Byte>();
-    //    Map<Byte, String> tutorialStates = new HashMap<Byte, String>();
     static byte pepperScore, userScore;
-    QiContext qiContext;
     String binType;
     String wasteTypeString;
-    String factAboutRecycle;
     boolean tutorialEnabled;
     boolean roundTutorial;
-    boolean pepperTeaches;
     Dialog dialog;
     String desc;
     Button buttonYes, buttonNo;
     ImageButton buttonBack;
     TextView textViewAskForConfirm, tvTutorialJudge;
-    byte currentRound;
+    byte currentTurn;
     byte tutorialState = -1;
     byte trialState;
     boolean endOfTutorial;
     boolean restartGame;
     boolean pepperShouldTeach;
 
-    String exclamation;
-
-    String[] pepperExclamations = {
-            "Evvài, ho indovinato!",
-            "Mi sto impegnando!",
-            "Questa cosa la sapevo proprio bene! ",
-            "Si vede che ho studiato!",
-            "Certo che sono proprio bravo!"
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         QiSDK.register(this, this);
-        Log.d(TAG, "JudgeConfirm iniziato");
         //Per far sparire la barra grigia sopra
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
-        setContentView(R.layout.activity_judge_confirm);
+        setContentView(R.layout.activity_play_judge_turn);
 
         selectedBinIs = findViewById(R.id.textViewSelectedBinIs);
         selectedBin = findViewById(R.id.selectedBin);
@@ -116,7 +84,6 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
         tvTutorialJudge = findViewById(R.id.tvTutorialJudge);
 
         buttonYes = findViewById(R.id.buttonAnswerYes);
-//        buttonYes.setClickable(true);
         buttonNo = findViewById(R.id.buttonAnswerNo);
         buttonBack = findViewById(R.id.buttonBack);
 
@@ -132,10 +99,9 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            wasteType = extras.getByte("wasteType"); // The key argument here must match that used in the other activity
+            wasteType = extras.getByte("wasteType");
             round = extras.getByte("round");
             isPepperTurn = extras.getBoolean("isPepperTurn");
-            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
             wasteTypeString = extras.getString("wasteTypeString");
@@ -143,11 +109,10 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
             endOfTutorial = extras.getBoolean("endOfTutorial");
             restartGame = extras.getBoolean("restartGame");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
             tutorialState = extras.getByte("tutorialState");
             trialState = extras.getByte("trialState");
             pepperShouldTeach = extras.getBoolean("pepperShouldTeach");
-            //scores = (HashMap<String, String>) getIntent().getSerializableExtra("scores");
         }
         Log.d(TAG, "TrialState: "+ trialState);
         if(trialState == 0 || trialState == 1) {
@@ -168,12 +133,6 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
                 if(isPepperTurn)
                     pepperShouldTeach = true;
                 goToNextTurn();
-                /*
-                if(!isPepperTurn) //TODO???
-                    goToNextTurn();
-                else
-                    startPepperTeacher();
-                */
             }
         });
 
@@ -191,8 +150,6 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
 
             @Override
             public void onClick(View view) {
-                Log.e(TAG, "buttonBack cliccato");
-
                 Intent activity2Intent;//Per andare alla pagina principale
                 if (isPepperTurn) { //TODO Rimuovi il bottone back se il turno era di Pepper o lascialo se si vuole ri-scattare la foto?
                     activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
@@ -200,13 +157,10 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
                     activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
                 }
                 activity2Intent.putExtra("round", round);
-                //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
                 activity2Intent.putExtra("pepperScore", pepperScore);
                 activity2Intent.putExtra("userScore", userScore);
-                activity2Intent.putExtra("currentRound", currentRound);
+                activity2Intent.putExtra("currentTurn", currentTurn);
                 activity2Intent.putExtra("trialState", trialState);
-
-
                 activity2Intent.putExtra("roundTutorial", roundTutorial);
                 activity2Intent.putExtra("endOfTutorial", endOfTutorial);
                 activity2Intent.putExtra("restartGame", restartGame);
@@ -218,7 +172,6 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
                 finish();
             }
         });
-
 
         startJudgeConfirm();
 
@@ -297,27 +250,23 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetBack)) {   // Richiesta utente di tornare alla pagina precedente (selezione rifiuto o simile)
             Intent activity2Intent;//Per andare alla pagina precedente
-            if (isPepperTurn) { //TODO Rimuovi il bottone back se il turno era di Pepper o lascialo se si vuole ri-scattare la foto?
+            if (isPepperTurn) {
                 activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
             } else {
                 activity2Intent = new Intent(getApplicationContext(), PlayUserTurnActivity.class);
             }
             activity2Intent.putExtra("round", round);
-            //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
             activity2Intent.putExtra("pepperScore", pepperScore);
             activity2Intent.putExtra("userScore", userScore);
-            activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("currentTurn", currentTurn);
             activity2Intent.putExtra("trialState", trialState);
-
-
             activity2Intent.putExtra("roundTutorial", roundTutorial);
             activity2Intent.putExtra("endOfTutorial", endOfTutorial);
             activity2Intent.putExtra("restartGame", restartGame);
             activity2Intent.putExtra("roundTutorial", roundTutorial);
             activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
             activity2Intent.putExtra("tutorialState", tutorialState);
-            startActivity(activity2Intent); //Per andare alla pagina principale
-
+            startActivity(activity2Intent);
             finish();
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
             Animation correctAnswer = AnimationBuilder.with(qiContext)
@@ -326,9 +275,8 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
                     .withAnimation(correctAnswer).build();
             animateCorrect.run();
             Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(activity2Intent); //Per iniziare il gioco.
+            startActivity(activity2Intent);
             finish();
-
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.hello_a004).build();
@@ -395,28 +343,22 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
                 break;
             default:
                 typeBinSelectedIs = "Si è verificato un problema. Torniamo indietro e ripetiamo il turno.";
-
                 //Centrare il button
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams
                         .WRAP_CONTENT);
                 layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
                 this.selectedBinIs.setLayoutParams(layoutParams);
-
-                //"Questa era difficile. Non sono riuscito a capire il tipo di bidone. Torniamo indietro e ripetiamo il turno.";
                 selectedBinIs.setGravity(Gravity.CENTER);
                 textViewAskForConfirm.setVisibility(View.GONE); //View.INVISIBLE
                 selectedBin.setVisibility(View.GONE); //View.INVISIBLE
                 buttonYes.setVisibility(View.GONE); //View.INVISIBLE
                 buttonNo.setVisibility(View.GONE); //View.INVISIBLE
-                //TODO GOBACK
-                //selectedBinIs.setText("ERRORE.");
                 buttonBack.performClick();               ;
                 break;
         }
         selectedBinIs.setText(typeBinSelectedIs);
 
         if(pressed) {
-            // TODO Incrementa score
             goToNextTurn();
         }
 
@@ -443,7 +385,6 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
     }
 
     void goToNextTurn() {
-        // NB: dubito entri se Pepper indovina, perché fa startare pepperteaches..
         Intent activity2Intent = new Intent(PlayJudgeTurnActivity.this, NextTurnActivity.class);//TODO GameOverActivity
 
         activity2Intent.putExtra("wasteType", wasteType);
@@ -451,9 +392,8 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
-        //activity2Intent.putExtra("scores", (Serializable) scores);
         activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
@@ -464,21 +404,14 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
     public void buttonHelp(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
         CommonUtils.showDialog(PlayJudgeTurnActivity.this, desc);
     }
-    public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+    public void buttonHome(View v) { //Pressione tasto "torna alla Home"
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(activity2Intent); //Per andare alla pagina principale
+        startActivity(activity2Intent);
         finish();
     }
 
     public void buttonClose(View v) { //Pressione tasto "Chiudi"
         CommonUtils.showDialogExit(this);
-        //finish();
-    }
-
-    boolean pepperTeacher() {
-        //TODO Frasi che insegnano all'utente nozioni sulla raccolta differenziata
-        return true;
-
     }
 
     //Dissolvenza bidone (animazione quando il bidone viene selezionato)
@@ -500,10 +433,6 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
                 imageView.setBackground(res);
                 imageView.setMaxWidth(230);
                 imageView.setMaxHeight(338);
-
-                /*
-            android:layout_width="230dp"
-            android:layout_height="338dp"*/
             }
 
             @Override
@@ -512,23 +441,5 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
             }
 
         });
-    }
-
-    void startPepperTeacher() {
-
-        Log.e(TAG, "Entrato nella funzione startPepperTeacher.");
-        Intent activity2Intent = new Intent(PlayJudgeTurnActivity.this, PepperTeachesActivity.class);//TODO GameOverActivity
-        activity2Intent.putExtra("round", round);
-        activity2Intent.putExtra("wasteType", wasteType);
-        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
-        activity2Intent.putExtra("wasteTypeString", wasteTypeString);
-        activity2Intent.putExtra("pepperScore", pepperScore);
-        activity2Intent.putExtra("userScore", userScore);
-        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-        activity2Intent.putExtra("currentRound", currentRound);
-        activity2Intent.putExtra("trialState", trialState);
-
-        startActivity(activity2Intent);
-        finish();
     }
 }
