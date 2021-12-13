@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -56,35 +54,33 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
-import okhttp3.MultipartBody;
+// Activity relativa alla gestione del turno di Pepper
+// TODO Importante: cambiare ngrokUrl con quello aggiornato
 
 public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener, CameraBridgeViewBase.CvCameraViewListener2 {
     private static String TAG = "PlayPepperTurnActivity";
 
     // Indirizzo del server
-    private String postUrl = "http://8c98-193-204-189-14.ngrok.io/handle_request"; //http://127.0.0.1:5000/handle_request";
+    private String ngrokUrl = "http://8c98-193-204-189-14.ngrok.io";
+    private String postUrl = ngrokUrl + "/handle_request"; //http://127.0.0.1:5000/handle_request";
 
     //Parte relativa alla fotocamera
     private JavaCameraView javaCameraView;
     private Mat mRGBA, mRGBAT;
     private Bitmap mRGBATbitmap;
-    private int activeCamera = CameraBridgeViewBase.CAMERA_ID_FRONT; //Attiva la fotocamera frontale (?)
+    private int activeCamera = CameraBridgeViewBase.CAMERA_ID_FRONT; //Attiva la fotocamera frontale
     private static final int CAMERA_REQUEST = 1888;
-    private static final int MY_CAMERA_REQUEST_CODE = 100; //Per la richiesta dei permessi della fotocamera //TODO Togliere?
+    private static final int MY_CAMERA_REQUEST_CODE = 100; //Per la richiesta dei permessi della fotocamera
 
+    QiContext qiContext;
     private ImageView imageViewPepperPhoto;
     private boolean touched = false;
-    private String garbageType; //static
-    byte wasteType = -1; //TODO Gestisci meglio la cosa dei tipi di spazzatura, magari con una lista
+    private String garbageType;
+    byte wasteType = -1;
     static byte pepperScore, userScore;
     private boolean tutorialEnabled;
     byte trialState;
@@ -95,7 +91,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     private boolean isThreadStarted = false;
     private String photoName = "PhotoPeppeRecycle.jpg"; // nome con cui la foto sarà salvata temporaneamente in memoria
-    private String photoPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() ;
+    private String photoPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
 
     private TextView responseText;
 
@@ -107,7 +103,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     static final byte TYPE_CARDBOARD = 5;
     static final byte TYPE_PLASTIC = 6;
     static final byte TYPE_METAL = 7;
-    static final byte TYPE_WASTE = -1;
     static final byte CLASSIFICATION_ERROR = -1;
 
     static final String STRING_ORGANIC = "Organico";
@@ -123,18 +118,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     Mat dst;
 
-    QiContext qiContxt;
-    Map<String, Byte> scores = new HashMap<String, Byte>();
-    /*
-    private Mat mRGBA, mRGBAT, mGrey;
-    private TextView responseText;
-    private boolean loaded = false;
-    */
     byte round;
     byte currentTurn;
     boolean classified=false;
-    // Store the Animate action.
-    private Animate animate;
+    private Animate animate;    // Store the Animate action.
     Button buttonTakePicture;
     boolean endOfTutorial;
     byte tutorialState;
@@ -153,10 +140,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         setSpeechBarDisplayStrategy(SpeechBarDisplayStrategy.IMMERSIVE);
         setSpeechBarDisplayPosition(SpeechBarDisplayPosition.TOP);
 
-        buttonTakePicture = (Button) findViewById(R.id.buttonTakePicture);
-        javaCameraView = (JavaCameraView) findViewById(R.id.my_camera_view);
-        responseText = (TextView) findViewById(R.id.responseText); //Conterrà i mex che verranno stampati sotto al pulsante di connessione al server
-        imageViewPepperPhoto = (ImageView) findViewById(R.id.imageViewPepperPhoto);
+        buttonTakePicture = findViewById(R.id.buttonTakePicture);
+        javaCameraView = findViewById(R.id.my_camera_view);
+        responseText = findViewById(R.id.responseText); //Conterrà i messaggi che verranno stampati sotto al pulsante di connessione al server
+        imageViewPepperPhoto = findViewById(R.id.imageViewPepperPhoto);
         textViewUserScore = findViewById(R.id.textViewUserScore);
         textViewPepperScore = findViewById(R.id.textViewPepperScore);
         tvTutorialPepper = findViewById(R.id.tvTutorialPepper);
@@ -179,7 +166,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             initializeCamera((JavaCameraView) javaCameraView, activeCamera);
         } else {
             Log.d(TAG, "Permission prompt");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE); //RequestCode?
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 3);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 4); //??
@@ -191,7 +178,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             round = extras.getByte("round");
-            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
@@ -201,9 +187,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             restartGame = extras.getBoolean("restartGame");
             endOfTutorial = extras.getBoolean("endOfTutorial");
             tutorialState = extras.getByte("tutorialState");
-            Log.d(TAG, "Ricevuto trialState: "+ trialState);
         }
-
 
         if(trialState == 1) {
             tvTutorialPepper.setVisibility(View.VISIBLE);
@@ -211,13 +195,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             textViewPepperScore.setVisibility(View.INVISIBLE);
             imageViewUserScore.setVisibility(View.INVISIBLE);
             imageViewPepperScore.setVisibility(View.INVISIBLE);
-        /*}  else if (trialState == 0) {
-             textViewUserScore.setVisibility(View.INVISIBLE);
-                textViewPepperScore.setVisibility(View.INVISIBLE);
-                imageViewUserScore.setVisibility(View.INVISIBLE);
-                imageViewPepperScore.setVisibility(View.INVISIBLE);
-            tvTutorialPepper.setVisibility(View.INVISIBLE);
-            */
         } else {
             tvTutorialPepper.setVisibility(View.INVISIBLE);
             textViewUserScore.setVisibility(View.VISIBLE);
@@ -228,25 +205,18 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         showScore();
 
-/*        textViewPepperScore.setText(scores.get("score_pepper").toString());
-        textViewUserScore.setText(scores.get("score_user1").toString());*/
     }
 
     void showScore () {
         textViewPepperScore.setText("" + pepperScore);
         textViewUserScore.setText("" + userScore);
     }
-    public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+    public void buttonHome(View v) { //Pressione tasto "torna alla Home"
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(activity2Intent); //Per andare alla pagina principale
+        startActivity(activity2Intent);
         finish();
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-
-        return false;
-    }
     @Override
     public void onRobotFocusGained(QiContext qiContext) {
         setQiContext(qiContext);
@@ -264,7 +234,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .withBodyLanguageOption(BodyLanguageOption.DISABLED) //Movimento disabilitato per velocizzare lo scatto e farlo più stabile (?)
                 .build(); // Build the say action.
 
-        //TODO Help ... in una dialog
         Animation pepperTurn = AnimationBuilder.with(qiContext)
                 .withResources(R.raw.show_self_a001)
                 .build();
@@ -296,13 +265,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         if(currentTurn==0 && trialState==-1)
             sayPepperTurn.run();
-        if (trialState == 1) { // if (tutorialEnabled) {
+        if (trialState == 1) {
             sayPepperTurnTutorial.run();
         }
         showGarbage.run();
         Log.d(TAG, "TrialState: " + trialState);
-        //animatePepperTurn.run(); //rimosso perché sennò ci sono troppi movimenti
-
         Listen listenPlay = ListenBuilder
                 .with(qiContext)
                 .withPhraseSets(phraseSetYes, phraseSetNo, phraseSetRepeat, phraseSetClose, phraseSetHome)
@@ -317,107 +284,35 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             takePictureSaid = true;
 
             savePhoto(mRGBATbitmap);
-
-
-            /*SavePhoto savePhoto = new SavePhoto(mRGBATbitmap);
-            savePhoto.execute();*/
-
-
-//            buttonTakePicture.performClick();
-
-            Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
             try {
-                Log.d(TAG, "onrobotfocusgained clientManager lanciato.");
                 ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
                 Thread thread = new Thread(clientManager);
                 thread.start();
                 thread.join();
                 garbageType = clientManager.getGarbageType();
                 responseText.setText("Tipo rifiuto:" + garbageType);
-                Log.d(TAG, "onrobotfocusgained. Ottenuto garbagetype: " + garbageType);
+                //Log.d(TAG, "onrobotfocusgained. Ottenuto garbagetype: " + garbageType);
                 classified = true;
-                Log.d(TAG, "onrobotfocusgained. setwastetype");
                 setWasteType();
-                Log.d(TAG, "onrobotfocusgained. checkifphotoexists");
                 checkIfPhotoExists();
-                Log.d(TAG, "onrobotfocusgained. askforconfirm");
                 askForConfirm();
                 mediaPlayer.stop();
                 mediaPlayer.release();
-            /*else {
-                    restartActivity();
-                }*/
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-                        /*responseText.setText("Tipo rifiuto:" + garbageType);
-                setWasteType();
-                checkIfPhotoExists();
-            */
-
-
-           /* if(!classified) {
-                classify();
-                askForConfirm();
-            } else {
-                Log.e("CLASSIF", "ERRORE di classificazione.");
-            }*/
-            /*Say sayCapture = SayBuilder.with(qiContext) // Create the builder with the context.
-                    .withText("Bene, allora aspetto che il giudice mi mostri il rifiuto e prema il pulsante sul mio tablet, così da permettermi di vedere il rifiuto! ." ) // Set the text to say.
-                    .build(); // Build the say action.;
-            sayCapture.run();*/
-            //            setQiContext(qiContext);
-            /*Say sayPepperThinks = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                    .withText("Grazie!. Uhm, fammi pensare...") // Set the text to say.
-                    .build();
-            Animation pepperThinks = AnimationBuilder.with(qiContext)
-                    .withResources(R.raw.scratch_top_of_head_right_b001)
-                    .build();
-            Animate animatePepperThinks = AnimateBuilder.with(qiContext)
-                    .withAnimation(pepperThinks).build();
-
-            animatePepperThinks.run();
-            sayPepperThinks.run();*/
-//            this.buttonTakePicture.performClick();
-            /*if(!classified) {
-                classify();
-                askForConfirm();
-            } else {
-                Log.e("CLASSIF", "ERRORE di classificazione.");
-            }*/
-
-
-            /*Say sayPepperSelectBin = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-                    .withText("Ci sono!" + wasteTypeString) // Set the text to say.
-                    .build(); // Build the say action.
-            Animation pepperSelectsBin = AnimationBuilder.with(qiContext)
-                    .withResources(R.raw.scratch_top_of_head_right_b001)
-                    .build();
-            Animate animatePepperSelectBin = AnimateBuilder.with(qiContext)
-                    .withAnimation(pepperSelectsBin).build();
-
-            sayPepperSelectBin.run();
-            animatePepperSelectBin.run();*/
-
-            /*goToClassAct();*/
-
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetNo)) {      // Utente non vuole mostrare l'oggetto a Pepper
 
             Log.d(TAG, "OnRobotFocusGained: matched no");
-            // TODO chiede se si vuole interrompere il gioco
-            // Say sayPepperStopGame= SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
-            Say sayRepeat = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
+            Say sayRepeat = SayBuilder.with(qiContext) // Create the builder with the context.
                     .withText("Mi dispiace, ma senza questo procedimento, io non posso giocare. ") // Set the text to say.
                     .build(); // Build the say action.
-            // sayPepperStopGame.run();
             sayRepeat.run();
             restartActivity();
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetRepeat)) {   // Richiesta utente di ripetere il gioco dall'inizio
-            Log.d(TAG, "OnRobotFocusGained: matched repeat");
-
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.coughing_left_b001).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -428,8 +323,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             finish();
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetHome)) {     // Torna alla home
-            Log.d(TAG, "OnRobotFocusGained: matched home");
-
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.affirmation_a002).build();
             Animate animateCorrect = AnimateBuilder.with(qiContext)
@@ -440,8 +333,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             finish();
 
         } else if (PhraseSetUtil.equals(matchedPhraseSet, phraseSetClose)) {    // Chiude il gioco
-            Log.d(TAG, "OnRobotFocusGained: matched close");
-
             Animation correctAnswer = AnimationBuilder.with(qiContext)
                     .withResources(R.raw.hello_a004).build();
             animate = AnimateBuilder.with(qiContext)
@@ -471,9 +362,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     private boolean checkPermissions(){
         Log.d(TAG, "Controllo permessi...");
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1); //TODO Come si sceglie il requestCode?
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
         }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
@@ -499,25 +389,20 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // camera can be turned on
-                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
-                initializeCamera((JavaCameraView) javaCameraView, activeCamera);
+                Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show(); // camera can be turned on
+                initializeCamera(javaCameraView, activeCamera);
             } else {
                 // camera will stay off
                 Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
         }
-        //todo mancano storage e internet -> https://github.com/ahmedfgad/AndroidFlask/blob/master/Part%201/AndroidClient/app/src/main/java/gad/heartbeat/androidflask/easyupload/MainActivity.java
     }
 
     private void initializeCamera(JavaCameraView javaCameraView, int activeCamera) {
         javaCameraView.setCameraPermissionGranted();
         javaCameraView.setCameraIndex(activeCamera);
-
-        javaCameraView.setVisibility(CameraBridgeViewBase.VISIBLE); // --> non so a cosa serva #TODO
-        //javaCameraView.setVisibility(SurfaceView.INVISIBLE); //TODO Era SurfaceView.VISIBLE
+        javaCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         javaCameraView.setCvCameraViewListener(PlayPepperTurnActivity.this);
-
     }
 
     @Override
@@ -526,14 +411,9 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
         if (requestCode == CAMERA_REQUEST
                 && resultCode == Activity.RESULT_OK
-                // && requestCode == RESULT_OK
                 && data != null) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imageViewPepperPhoto.setImageBitmap(photo);
-
-
-            Uri uri = data.getData();
-
         }
     }
 
@@ -549,7 +429,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         if (mRGBA != null)
             mRGBA.release();
         if (mRGBAT != null)
-            mRGBAT.release(); //TODO???
+            mRGBAT.release();
     }
 
 
@@ -563,79 +443,24 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         Imgproc.resize(mRGBAT, dst, mRGBA.size());
 //        Log.e("TAG", "Immagine premuta, foto scattata.");
 
-        /*if (touched) {*/
-
-        //Potrebbe servire qui, prima del try...catch? -> mRGBATbitmap = Bitmap.createBitmap(javaCameraView.getWidth()/4,javaCameraView.getHeight()/4, Bitmap.Config.ARGB_8888);
         try {
             mRGBATbitmap = Bitmap.createBitmap(mRGBAT.cols(), mRGBAT.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(mRGBAT, mRGBATbitmap);
             imageViewPepperPhoto.setImageBitmap(mRGBATbitmap);
 
             if(takePictureSaid && !photoTaken) { //Se l'utente ha espresso il comando vocale e la foto non è stata scattata
-                Log.d(TAG, "(takePictureSaid && !photoTaken)==true");
                 savePhoto(mRGBATbitmap);
-//                takePictureSaid=false; TODO ELIMINA RIGA
                 photoTaken = true;
-                Log.d(TAG, "Foto scattata nell'oncameraframe");
-//                javaCameraView.disableView();
+                //Log.d(TAG, "Foto scattata nell'oncameraframe");
+                //javaCameraView.disableView();
             }
-            //imageViewPepperPhoto.invalidate();
-//                photoTaken=true;
-            //javaCameraView.disableView();
-//                canTakePhoto=false;
-//
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-            /* touched = false;
-        }else {
-            Log.e("TAG", "Immagine non premuta. No scatto.");
-        }*/
-
         mRGBA.release();
         mRGBAT.release();
         return dst;
-    }/*
-    @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-        mRGBA = inputFrame.rgba();
-
-        mRGBAT = mRGBA.t();
-        Core.flip(mRGBA, mRGBAT, 1);
-        Imgproc.resize(mRGBAT, mRGBAT, mRGBA.size());
-//        Log.e("TAG", "Immagine premuta, foto scattata.");
-
-        *//*if (touched) {*//*
-
-        //Potrebbe servire qui, prima del try...catch? -> mRGBATbitmap = Bitmap.createBitmap(javaCameraView.getWidth()/4,javaCameraView.getHeight()/4, Bitmap.Config.ARGB_8888);
-        try {
-            mRGBATbitmap = Bitmap.createBitmap(mRGBAT.cols(), mRGBAT.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(mRGBAT, mRGBATbitmap);
-            imageViewPepperPhoto.setImageBitmap(mRGBATbitmap);
-
-            if(takePictureSaid && !photoTaken) { //Se l'utente ha espresso il comando vocale e la foto non è stata scattata
-                Log.d(TAG, "(takePictureSaid && !photoTaken)==true");
-                savePhoto(mRGBATbitmap);
-//                takePictureSaid=false; TODO ELIMINA RIGA
-                photoTaken = true;
-                Log.d(TAG, "Foto scattata nell'oncameraframe");
-//                javaCameraView.disableView();
-            }
-            //imageViewPepperPhoto.invalidate();
-//                photoTaken=true;
-            //javaCameraView.disableView();
-//                canTakePhoto=false;
-//
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-            *//* touched = false;
-        }else {
-            Log.e("TAG", "Immagine non premuta. No scatto.");
-        }*//*
-
-        return mRGBAT;
-    }*/
+    }
 
     @Override
     public void onDestroy() {
@@ -669,11 +494,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             }
         }*/
 
-        /*
-        if (isThreadStarted) {
-            thread.interrupt();
-            isThreadStarted=false;
-        }*/
     }
 
     @Override
@@ -681,30 +501,18 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         super.onResume();
 
         if (OpenCVLoader.initDebug()) {
-            Log.d(TAG, "OpenCV is Configured or Connected Successfully.");
+            //Log.d(TAG, "OpenCV is Configured or Connected Successfully.");
             baseLoaderCallback.onManagerConnected(BaseLoaderCallback.SUCCESS);
         } else {
-            Log.d(TAG, "OpenCV not Working or Loaded");
+            //Log.d(TAG, "OpenCV not Working or Loaded");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, baseLoaderCallback);
         }
-    }
-
-    /*@Override
-    public boolean onTouch(View v, MotionEvent event) {
-        touched = true;
-        return true;
-    }*/
-
-    public boolean cliccato(View v) {
-        touched = true;
-        return true;
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-    QiContext qiContext;
 
     public QiContext getQiContext() {
         return qiContext;
@@ -715,112 +523,46 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     }
 
     public void buttonClassify(View v) {
-        Log.e(TAG, "ButtonClassify cliccato");
+        //Log.d(TAG, "ButtonClassify cliccato");
         buttonTakePicture.setClickable(false);
         mediaPlayer.start();
         buttonTakePicture.setVisibility(View.INVISIBLE);
         pbSavePhoto.setVisibility(View.VISIBLE);
         if(!classified) {
-            Log.e("CLASSIF", "Classificazione in corso...");
             classify();
             askForConfirm();
-            Log.e("CLASSIF", "Classificazione avvenuta con successo.");
+            Log.d(TAG, "Classificazione avvenuta con successo.");
         } else {
-            Log.e("CLASSIF", "ERRORE di classificazione.");
+            Log.e(TAG, "ERRORE di classificazione.");
         }
     }
 
-    /*public void classify() { //Dovrebbe funzionare ugualmente... Usa questo se l'altro dà problemi
-        responseText.setText("Classificazione in corso...");
-        Log.e("CLASSIF","Entrato in classify");
-        responseText.setText(postUrl);
-        MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888; //options.inPreferredConfig = Bitmap.Config.RGB_565;
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-        // Read BitMap by file path.
-        Bitmap bitmap = mRGBATbitmap;
-        try {
-            // SCATTO FOTO
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream); //TODO Rimuovi (o no?)
-            if(!photoTaken) {
-                savePhoto(mRGBATbitmap);
-            }
-            //photoTaken=true;
-            responseText.setText("L'immagine dovrebbe esser stata salvata in:" + photoPath);
-//            Log.e("CLASSIF","L'immagine dovrebbe esser stata salvata in:" + photoPath);
-
-
-            //CONNESSIONE SERVER
-            try {
-                Log.d(TAG, "Sto passando al clientManager photopath ==" + photoPath);
-                ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
-                Thread thread = new Thread(clientManager);
-                thread.start();
-                thread.join();
-                garbageType = clientManager.getGarbageType();
-                responseText.setText("Tipo rifiuto:" + garbageType);
-                classified = true;
-                setWasteType();
-                checkIfPhotoExists();
-            *//*else {
-                    restartActivity();
-                }*//*
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        } catch (Exception e) {
-            responseText.setText("Errore. L'immagine non è stata catturata in modo corretto.");
-            Log.e("CLASSIF","Errore. L'immagine non è stata catturata in modo corretto");
-//            restartActivity();
-            return;
-        }
-        try {
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
-
-    }*/
     public void classify() {
         responseText.setText("Classificazione in corso...");
-        Log.e("CLASSIF","Entrato in classify");
+        //Log.d(TAG,"Classificazione in corso...");
         responseText.setText(postUrl);
-        //MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-       // options.inSampleSize = 1; //loading a smaller version into memory, set inSampleSize to 1 TODO non va bene così, bisognerebbe fare altro
         options.inPreferredConfig = Bitmap.Config.ARGB_8888; //options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        // Read BitMap by file path.
         Bitmap bitmap = mRGBATbitmap;
         try {
             // SCATTO FOTO
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream); //TODO Rimuovi (o no?)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             if(!photoTaken) {
                 savePhoto(mRGBATbitmap);
             }
-            //photoTaken=true;
             responseText.setText("L'immagine dovrebbe esser stata salvata in:" + photoPath);
-            Log.e("CLASSIF","L'immagine dovrebbe esser stata salvata in:" + photoPath);
-
+            //Log.d(TAG,"L'immagine dovrebbe esser stata salvata in:" + photoPath);
             stream.close();
         } catch (Exception e) {
             responseText.setText("Errore. L'immagine non è stata catturata in modo corretto.");
-            Log.e("CLASSIF","Errore. L'immagine non è stata catturata in modo corretto");
-//            restartActivity();
+            //Log.d(TAG,"Errore. L'immagine non è stata catturata in modo corretto");
+            //restartActivity();
             return;
         } finally {
-
             //CONNESSIONE SERVER
             try {
                 ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
@@ -832,20 +574,15 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 classified = true;
                 setWasteType();
                 checkIfPhotoExists();
-            /*else {
-                    restartActivity();
-                }*/
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-//        javaCameraView.disableView(); //setVisibility(View.INVISIBLE); // Rende la cam invisibile
-
     }
 
-    void restartActivity() {
+    void restartActivity() { //Ripete la stessa activity
         Intent activity2Intent = new Intent(getApplicationContext(), PlayPepperTurnActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("round", round);
@@ -853,12 +590,11 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("roundTutorial", isPepperTurn);
         activity2Intent.putExtra("wasteTypeString", wasteTypeString);
-        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
-        startActivity(activity2Intent); //Per ripetere
+        startActivity(activity2Intent);
         finish();
     }
     void setWasteType() {
@@ -889,8 +625,8 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                     wasteTypeString = STRING_GLASS;
                     break;
                 default:
-                /*wasteType = TYPE_ORGANIC;
-                wasteTypeString = STRING_ORGANIC;*/
+                    /* wasteType = TYPE_ORGANIC;
+                    wasteTypeString = STRING_ORGANIC;*/
                     wasteType = CLASSIFICATION_ERROR;
                     wasteTypeString = STRING_CLASSIFICATION_ERROR;
                     break;
@@ -899,99 +635,41 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             wasteType = TYPE_ORGANIC;
             wasteTypeString = STRING_ORGANIC;
         }
-    }/* void setWasteType() {
-        switch (garbageType) {
-            case "organic":
-                wasteType = TYPE_ORGANIC;
-                wasteTypeString = STRING_ORGANIC;
-                break;
-            case "plastic":
-            case "metal":
-                wasteType = TYPE_PLASTIC_METAL;
-                wasteTypeString = STRING_PLASTIC_METAL;
-                break;
-            case "cardboard":
-            case "paper":
-                wasteType = TYPE_PAPER_CARDBOARD;
-                wasteTypeString = STRING_PAPER_CARDBOARD;
-                break;
-            case "glass":
-                wasteType = TYPE_GLASS;
-                wasteTypeString = STRING_GLASS;
-                break;
-            default:
-                *//*wasteType = TYPE_ORGANIC;
-                wasteTypeString = STRING_ORGANIC;*//*
-
-                wasteType = CLASSIFICATION_ERROR;
-                wasteTypeString = STRING_CLASSIFICATION_ERROR;
-                break;
-        }
-    }*/
-
-    void goToClassAct(){
-        Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, PepperClassifyingActivity.class);
-        activity2Intent.putExtra("wasteType", wasteType);
-        activity2Intent.putExtra("round", round);
-        activity2Intent.putExtra("isPepperTurn", isPepperTurn);
-        activity2Intent.putExtra("wasteTypeString", wasteTypeString);
-        activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
-        activity2Intent.putExtra("pepperScore", pepperScore);
-        activity2Intent.putExtra("userScore", userScore);
-        activity2Intent.putExtra("roundTutorial", isPepperTurn);
-        activity2Intent.putExtra("currentTurn", currentTurn);
-        activity2Intent.putExtra("trialState", trialState);
-
-        startActivity(activity2Intent);
-        finish();
     }
+
     void askForConfirm() {
-//        Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, JudgeConfirmActivity.class);
         Intent activity2Intent = new Intent(PlayPepperTurnActivity.this, PlayJudgeTurnActivity.class);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("wasteTypeString", wasteTypeString);
-        //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("roundTutorial", isPepperTurn);
-
-//        Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
-        Log.d(TAG, "trialstate passato da qui a judgeturn: " + trialState);
         startActivity(activity2Intent);
         mediaPlayer.stop();
         mediaPlayer.release();
         finish();
-        /* TODO Turno dell'utente:
-        Schermata con i bidoni. L'utente deve selezionare il bidone corretto.
-        Successivamente, c'è la schermata di richiesta conferma per il giudice
-        Se la risposta è affermativa, l'utente guadagna un punto.
-        */
     }
 
     //Elimina la foto, se esistente
     private void checkIfPhotoExists() {
-        Log.d(TAG, "checkifphotoexists");
         File myFile = new File(photoPath);
 
         if(myFile.exists()) {
             myFile.delete();
-
-            Log.e("CLASSIF","File eliminato dal path " + photoPath);
+            //Log.d(TAG,"File eliminato dal path " + photoPath);
         }
     }
-    /*private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
+
+    private void savePhoto(Bitmap bmp) {
         File pictureFile = getOutputMediaFile();
 
-        Log.d(TAG, "Entrata in savePhoto: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
         if (pictureFile == null) {
-            Log.d(TAG,
-                    "Error creating media file, check storage permissions: ");// e.getMessage());
+            //Log.e(TAG, "Errore nella creazione del file, ricontrollare i permessi relativi alla memoria.");
             return;
         }
         try {
@@ -1001,36 +679,12 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             fos.close();
             photoTaken = true;
         } catch (FileNotFoundException e) {
-            Log.d(TAG, "Impossibile salvare l'immagine. " + e.getMessage());
+            Log.e(TAG, "Impossibile salvare l'immagine. " + e.getMessage());
         } catch (IOException e) {
-            Log.d(TAG, "Impossibile accedere al file: " + e.getMessage());
-        }
-        photoPath = "storage/emulated/0/DCIM/" + photoName; //pictureFile.toString(); ///storage/emulated/0/DCIM/PhotoPepper0.jpg
-
-        Log.e("CLASSIF","SavePhoto eseguita");
-    }*/
-
-    private void savePhoto(Bitmap bmp) { //TODO per salvare in memoria interna -> https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
-        File pictureFile = getOutputMediaFile();
-
-        Log.d(TAG, "savePhoto:"); //+ " takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
-        if (pictureFile == null) {
-            Log.d(TAG, "Error creating media file, check storage permissions: ");// e.getMessage());
-            return;
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(pictureFile, false); //il "false" dovrebbe permettere di sovrascrivere l'immagine, se esiste
-            bmp = Bitmap.createScaledBitmap(bmp, 224, 224, true);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-            fos.close();
-            photoTaken = true;
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, "Impossibile salvare l'immagine. " + e.getMessage());
-        } catch (IOException e) {
-            Log.d(TAG, "Impossibile accedere al file: " + e.getMessage());
+            Log.e(TAG, "Impossibile accedere al file: " + e.getMessage());
         } finally {
             photoPath = "storage/emulated/0/DCIM/" + photoName; // /storage/emulated/0/DCIM/PhotoPepper0.jpg
-            Log.e("CLASSIF","SavePhoto eseguita");
+            //Log.d(TAG,"SavePhoto eseguita");
         }
 
     }
@@ -1050,88 +704,6 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         // Create a media file name
         File mediaFile = new File(mediaStorageDir.getPath() + File.separator + photoName);
         return mediaFile;
-    }
-
-
-
-
-
-
-    /*
-    private void savePhoto(Bitmap bmp) { //https://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage
-        File pictureFile = getOutputMediaFile();
-
-        Log.d(TAG, "Entrata in savePhoto:"); //+ " takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
-        if (pictureFile == null) {
-            Log.d(TAG, "Error creating media file, check storage permissions: ");// e.getMessage());
-            return;
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(pictureFile, false); //il "false" dovrebbe permettere di sovrascrivere l'immagine, se esiste
-            bmp = Bitmap.createScaledBitmap(bmp, 224, 224, true);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
-            fos.close();
-            photoTaken = true;
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, "Impossibile salvare l'immagine. " + e.getMessage());
-        } catch (IOException e) {
-            Log.d(TAG, "Impossibile accedere al file: " + e.getMessage());
-        } finally {
-            photoPath = "storage/emulated/0/DCIM/" + photoName; //pictureFile.toString(); ///storage/emulated/0/DCIM/PhotoPepper0.jpg
-            Log.e("CLASSIF","SavePhoto eseguita");
-        }
-
-    }
-
-    //Create a File for saving an image or video
-    private  File getOutputMediaFile(){
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
-
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                return null;
-            }
-        }
-        // Create a media file name
-        File mediaFile = new File(mediaStorageDir.getPath() + File.separator + photoName);
-        return mediaFile;
-    }*/
-
-    private void loadPhoto(ImageView imageViewPepperPhoto) {
-        File imgFile = new File(photoPath);
-
-        if( imgFile.exists() ) {
-            //Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            Bitmap myBitmap = BitmapFactory.decodeFile(photoPath);
-            //TODO DECOMMENTA SE LO TOGLI DALL'ONCREATE ImageView myImage = (ImageView) findViewById(R.id.imageViewPepperPhoto);
-
-            imageViewPepperPhoto.setImageBitmap(myBitmap);
-            Log.d(TAG, "Immagine caricata dal path: " + photoPath);
-        } else {
-            Log.d(TAG, "Non è stata trovata nessuna immagine nel path." + photoPath);
-        }
-    }
-
-
-    //Elimina tutta la cartella di PeppeRecycle contenente le foto scattate.
-    private boolean deleteDir(File dir) { //File dir = new File(imagesDir);
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i=0; i<children.length; i++) {
-                boolean success = deleteDir(dir);
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-
-        return dir.delete();
     }
 
     private BaseLoaderCallback baseLoaderCallback = new BaseLoaderCallback(PlayPepperTurnActivity.this) {
@@ -1153,83 +725,10 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
 
     public void buttonClose(View v) { //Pressione tasto "Chiudi"
         CommonUtils.showDialogExit(this);
-        //finish();
     }
 
-
-   /* class SavePhoto extends AsyncTask<Object, Void, Bitmap>{
-        private Bitmap bmp;
-
-        public SavePhoto(Bitmap bmp) {
-            this.bmp = bmp;
-        }
-        @Override
-        protected Bitmap doInBackground(Object... params) {
-            *//*File file = new File(
-                    Environment.getExternalStorageDirectory().getAbsolutePath() + path);
-
-            if(file.exists()){
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            }
-*//*          if(!photoTaken)
-                pbSavePhoto.setVisibility(View.VISIBLE);
-                savePhoto(bmp);
-            return bmp; //Inutile ma boh non so come altro fare
-        }
-        *//*@Override
-        protected Bitmap doInBackground(Object... params) {
-            Bitmap bitmap = null;
-            *//**//*File file = new File(
-                    Environment.getExternalStorageDirectory().getAbsolutePath() + path);
-
-            if(file.exists()){
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            }
-*//**//*
-            savePhoto(bmp);
-            return bitmap;
-        }*//*
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            Log.d(TAG, "after phraseSetYes: takePictureSaid: " + true + "\tphotoTaken: " + photoTaken);
-            try {
-                Log.d(TAG, "onrobotfocusgained clientManager lanciato.");
-                ClientManager clientManager = new ClientManager(photoPath, postUrl, garbageType);
-                Thread thread = new Thread(clientManager);
-                thread.start();
-                thread.join();
-                garbageType = clientManager.getGarbageType();
-                responseText.setText("Tipo rifiuto:" + garbageType);
-                Log.d(TAG, "onrobotfocusgained. Ottenuto garbagetype: " + garbageType);
-                classified = true;
-                Log.d(TAG, "onrobotfocusgained. setwastetype");
-                setWasteType();
-                Log.d(TAG, "onrobotfocusgained. checkifphotoexists");
-                checkIfPhotoExists();
-                Log.d(TAG, "onrobotfocusgained. askforconfirm");
-                askForConfirm();
-                mediaPlayer.stop();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            pbSavePhoto.setVisibility(View.INVISIBLE);
-            *//* if (!imv.getTag().toString().equals(path)) {
-     *//**//* The path is not same. This means that this
-                  image view is handled by some other async task.
-                  We don't do anything and return. *//**//*
-                return;
-            }
-
-            if(result != null && imv != null){
-                imv.setVisibility(View.VISIBLE);
-                imv.setImageBitmap(result);
-            }else{
-                imv.setVisibility(View.GONE);
-            }*//*
-        }
-
-    }*/
-
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return false;
+    }
 }
