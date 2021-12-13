@@ -32,9 +32,10 @@ import com.aldebaran.qi.sdk.util.PhraseSetUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameOverActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {//, CameraBridgeViewBase.CvCameraViewListener2{{
-
-    Map<String, Byte> scores = new HashMap<>();
+/* Classe relativa al game over, in cui si mostrano i punteggi raggiunti
+ * e il robot chiede all'utente se vuole giocare un'altra partita
+ */
+public class GameOverActivity extends RobotActivity implements RobotLifecycleCallbacks, View.OnTouchListener {
     byte round;
     boolean isPepperTurn;
     byte pepperScore;
@@ -42,9 +43,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     TextView tvGameOver;
     TextView tvResult;
     TextView tvPepperScore, tvUserScore; //score che verrà mostrato
-    String resultPhrase; //frase che dirà Pepper
-    //    ImageView imageViewResult;
-    String result;
+    String resultPhrase; // frase che dirà Pepper
     byte currentRound;
     int resAnim;
 
@@ -61,14 +60,12 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
         setContentView(R.layout.activity_game_over);
 
         tvGameOver = findViewById(R.id.tvGameOver);
-//        imageViewResult= findViewById(R.id.imageViewResult); TODO RIMUOVI ALTRE REFERENCES A QUESTA VARIABILE
         tvPepperScore = findViewById(R.id.textViewPepperScore);
         tvUserScore = findViewById(R.id.textViewUserScore);
         tvResult = findViewById(R.id.tvResult);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             round = extras.getByte("round");
             isPepperTurn = extras.getBoolean("isPepperTurn");
             pepperScore = extras.getByte("pepperScore");
@@ -77,21 +74,15 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
         }
 
         if (pepperScore > userScore ) { // Utente perde
-            // if (pepperScore == 3 ) { //if(scores.get("score_pepper") == 3 ) {
             userLoser();
-            // result = "Oh no, hai perso!";
         } else if(userScore > pepperScore){ // Utente vince
-            //} else if (scores.get("score_user1") == 3) {
             userWinner();
-            // result = "Congratulazioni, hai vinto!";
         } else {    // Pareggio
             userDraw();
-            // result = "Siamo stati bravissimi entrambi!";;
         }
 
         tvPepperScore.setText(" " + pepperScore + " ");
         tvUserScore.setText(" " + userScore + " ");
-//        showScore();
     }
 
     @Override
@@ -100,44 +91,33 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     }
 
     @Override
-    public void onRobotFocusGained(QiContext qiContext) { //TODO TESTARE TUTTA QUESTA FUNZIONE
-//        resultPhrase += "\\rspd=90\\Ti andrebbe di fare un'altra partita?";
+    public void onRobotFocusGained(QiContext qiContext) {
         Say sayResult = SayBuilder.with(qiContext) // Create the builder with the context.
                 .withText("La partita è finita. " + resultPhrase) // Set the text to say.
-                //.withText("\\rspd=95\\" + resultPhrase + "\\rspd=90\\Ti andrebbe di fare un'altra partita?") // Set the text to say.
                 .build(); // Build the say action.
         Say sayAskNewGame =  SayBuilder.with(qiContext) // Create the builder with the context.
-//                .withText(resultPhrase) // Set the text to say.
                 .withText("\\rspd=90\\Ti andrebbe di fare un'altra partita?") // Set the text to say.
                 .build();
 
-        Animation resultAnim = AnimationBuilder.with(qiContext)
-                .withResources(R.raw.question_right_hand_a001) //TODO Animazione triste
+        /*Animation resultAnim = AnimationBuilder.with(qiContext)
+                .withResources(R.raw.question_right_hand_a001)
                 .build();
         Animate animateResult = AnimateBuilder.with(qiContext)
                 .withAnimation(resultAnim)
-                .build();
+                .build();*/
 
         sayResult.run();
         sayAskNewGame.run();
-//      animateResult.run();
 
         PhraseSet phraseSetYes = PhraseSetBuilder.with(qiContext)
                 .withTexts("Sì Pepper", "Si Pepper", "Sì", "Si", "ok", "Giochiamo", "va bene", "certo",
                         "Voglio giocare", "Voglio fare un'altra partita", "facciamo un'altra partita",
                         "Rigiochiamo", "Rigioca", "Gioca", "Gioca di nuovo", "giochiamo di nuovo",
-                        "Voglio giocare di nuovo", "mi andrebbe")
+                        "Voglio giocare di nuovo", "mi andrebbe", "Ricominciamo", "Ricomincia", "Da capo", "dall'inizio")
                 .build();
-
-        /*PhraseSet phraseSetIdk = PhraseSetBuilder.with(qiContext)
-                .withTexts("Non lo so", "bo", "Aiutami Pepper").build(); //TODO idk */
 
         PhraseSet phraseSetNo = PhraseSetBuilder.with(qiContext)
                 .withTexts("No", "no Pepper", "Pepper no", "non mi va", "non posso", "non voglio", "non mi andrebbe", "non voglio giocare")
-                .build();
-
-        PhraseSet phraseSetRepeat = PhraseSetBuilder.with(qiContext)
-                .withTexts("Ripeti", /*"Ricominciamo", "Ricomincia",*/ "Da capo", "Non ho capito", "Puoi ripetere")
                 .build();
 
         PhraseSet phraseSetHome = PhraseSetBuilder.with(qiContext)
@@ -202,44 +182,34 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
     }
 
-    /*void showScore() {
-
-    }*/
     void userWinner() {
         resultPhrase = "Congratulazioni, hai vinto. Conosci molte informazioni sul riciclo."; //TODO metti una frase migliore per quando l'utente vince
         tvResult.setText("Hai vinto!");
-        /*tvGameOver.setText("Congratulazioni,\nhai vinto!\nPepper: " + pepperScore + "\nUser: " + userScore);
-        imageViewResult.setImageResource(R.drawable.trophy);*/
         resAnim = R.raw.right_hand_high_b001;
     }
     void userLoser() {
         resultPhrase = "Hai perso. Stavolta sono stato più bravo di te.";
         tvResult.setText("Hai perso!");
-        /*tvGameOver.setText("Uhm,\ncredo che sia meglio rivedere qualcosa!");
-        imageViewResult.setImageResource(R.drawable.sad_face);*/
         resAnim = R.raw.funny_a001;
     }
     void userDraw() { //In caso di pareggio
         if (userScore == 0 && pepperScore == 0) { // score == 0
             resultPhrase = "Oh no, non abbiamo indovinato neanche una volta. Dovremmo impegnarci di più.";
-            tvResult.setText("Pareggio!");
             resAnim = R.raw.sad_a001;
         } else if (userScore == 1 && pepperScore == 1) { // score == 3
             resultPhrase = "Oh no, abbiamo indovinato solo una volta. Dovremmo impegnarci di più.";
-            tvResult.setText("Pareggio!");
             resAnim = R.raw.sad_a001;
         } else if (userScore == 3 && pepperScore == 3) { // score == 3
             resultPhrase = "Uau, le abbiamo indovinate tutte. Siamo stati bravissimi entrambi.";
-            tvResult.setText("Pareggio!");
             resAnim = R.raw.right_hand_high_b001;
         } else { // score == 2
             resultPhrase = "Siamo stati bravissimi entrambi, e abbiamo avuto lo stesso punteggio.";
-            tvResult.setText("Pareggio!");
             resAnim = R.raw.funny_a001;
         }
+        tvResult.setText("Pareggio!");
     }
 
-    public void buttonHome(View v) { //Pressione tasto "torna alla Home" TODO Togli perché è un duplicato? [???]
+    public void buttonHome(View v) { //Pressione tasto "torna alla Home"
         Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(activity2Intent); //Per andare alla pagina principale
         finish();
@@ -247,16 +217,14 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
 
     public void buttonClose(View v) { //Pressione tasto "Chiudi"
         CommonUtils.showDialogExit(this);
-        //finish();
     }
 
-    void newGame() { //TODO Da testare
+    void newGame() {
         Byte trialState = -1;
         Byte round = 0;
         Intent activity2Intent = new Intent(GameOverActivity.this, PlayGameActivity.class); // PlayPepperTurnActivity.class);
         activity2Intent.putExtra("tutorialEnabled", false);
-        activity2Intent.putExtra("trialState", trialState); // TODO Ho messo trialstate = -1
-        Log.d("GameOverActivity", "trialState passato a PLAYGAME: " + trialState);
+        activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("round", round);
         activity2Intent.putExtra("roundTutorial", false);
         activity2Intent.putExtra("endOfTutorial", true);
