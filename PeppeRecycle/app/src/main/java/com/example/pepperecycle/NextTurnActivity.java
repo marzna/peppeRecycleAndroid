@@ -67,7 +67,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
     TextView tvMessage;
     String desc;
     TextView tvTutorialJudge;
-    byte currentRound;
+    byte currentTurn;
     byte tutorialState = -1;
     byte trialState;
     boolean endOfTutorial;
@@ -132,7 +132,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             endOfTutorial = extras.getBoolean("endOfTutorial");
             restartGame = extras.getBoolean("restartGame");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
             tutorialState = extras.getByte("tutorialState");
             trialState = extras.getByte("trialState");
             isFromPepperTeaches = extras.getBoolean("isFromPepperTeaches");
@@ -143,7 +143,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             handler.postDelayed(new Runnable() {
                 public void run() {
                     Intent activity2Intent;
-                    if(currentRound<6) {
+                    if(currentTurn<6) {
                         //nextTurn();
                         Log.d(TAG, "isFromPepperTeaches:" + isFromPepperTeaches + "parte in cui si ferma");
                         activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
@@ -156,7 +156,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     activity2Intent.putExtra("pepperScore", pepperScore);
                     activity2Intent.putExtra("userScore", userScore);
                     activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-                    activity2Intent.putExtra("currentRound", currentRound);
+                    activity2Intent.putExtra("currentTurn", currentTurn);
                     activity2Intent.putExtra("trialState", trialState);
                     activity2Intent.putExtra("isFromPepperTeaches", isFromPepperTeaches);
                     activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
@@ -302,7 +302,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
 
         startActivity(activity2Intent);
@@ -324,7 +324,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 activity2Intent.putExtra("pepperScore", pepperScore);
                 activity2Intent.putExtra("userScore", userScore);
                 activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-                activity2Intent.putExtra("currentRound", currentRound);
+                activity2Intent.putExtra("currentTurn", currentTurn);
                 activity2Intent.putExtra("trialState", trialState);
                 activity2Intent.putExtra("isFromPepperTeaches", isFromPepperTeaches);
                 activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
@@ -334,14 +334,14 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
             } else {
                 if (isPepperTurn && isAnswerCorrect) {
                     isPepperTurn = !isPepperTurn; // Turno successivo
-                    ++currentRound;
+                    ++currentTurn;
                     startPepperTeacher();
                 } else {
                     if (!isFromPepperTeaches) {
                         isPepperTurn = !isPepperTurn; // Turno successivo
-                        ++currentRound;
-                        //Log.d(TAG, "currentRound: " + currentRound);
-                        if (currentRound < N_TURNS) {
+                        ++currentTurn;
+                        //Log.d(TAG, "currentTurn: " + currentTurn);
+                        if (currentTurn < N_TURNS) {
                             if (isPepperTurn) {     //Tocca a Pepper
                                 activity2Intent = new Intent(NextTurnActivity.this, PlayPepperTurnActivity.class);
                                 //Log.d(TAG, "trialState passato a PepperTurn: " + trialState);
@@ -353,7 +353,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                             activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);
                         }
                     } else { // Turno utente dopo che Pepper ha insegnato qualcosa
-                        if (currentRound < N_TURNS)
+                        if (currentTurn < N_TURNS)
                             activity2Intent = new Intent(NextTurnActivity.this, PlayUserTurnActivity.class);
                         else
                             activity2Intent = new Intent(NextTurnActivity.this, GameOverActivity.class);
@@ -362,7 +362,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     activity2Intent.putExtra("pepperScore", pepperScore);
                     activity2Intent.putExtra("userScore", userScore);
                     activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-                    activity2Intent.putExtra("currentRound", currentRound);
+                    activity2Intent.putExtra("currentTurn", currentTurn);
                     activity2Intent.putExtra("trialState", trialState);
                     activity2Intent.putExtra("isFromPepperTeaches", isFromPepperTeaches);
                     activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
@@ -402,7 +402,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                 else
                     tvMessage.setText("Ho sbagliato.");
             }
-            if (currentRound < N_TURNS-1 && trialState == -1 && !isTrue)
+            if (currentTurn < N_TURNS-1 && trialState == -1 && !isTrue)
                 turnPhrase = "Ora tocca a te.";
 
         } else {
@@ -428,7 +428,7 @@ public class NextTurnActivity extends RobotActivity implements RobotLifecycleCal
                     tvMessage.setText("La risposta era sbagliata.");
             }
 
-            if (currentRound < N_TURNS-1)
+            if (currentTurn < N_TURNS-1)
                 turnPhrase = "Adesso è il mio turno. ";
         }
     }

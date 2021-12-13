@@ -131,7 +131,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
     private boolean loaded = false;
     */
     byte round;
-    byte currentRound;
+    byte currentTurn;
     boolean classified=false;
     // Store the Animate action.
     private Animate animate;
@@ -196,7 +196,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
             userScore = extras.getByte("userScore");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
             roundTutorial = extras.getBoolean("roundTutorial");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
             trialState = extras.getByte("trialState");
             restartGame = extras.getBoolean("restartGame");
             endOfTutorial = extras.getBoolean("endOfTutorial");
@@ -294,7 +294,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
                 .withTexts("Chiudi il gioco", "Esci", "Basta", "Stop")
                 .build();
 
-        if(currentRound==0 && trialState==-1)
+        if(currentTurn==0 && trialState==-1)
             sayPepperTurn.run();
         if (trialState == 1) { // if (tutorialEnabled) {
             sayPepperTurnTutorial.run();
@@ -856,7 +856,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
         startActivity(activity2Intent); //Per ripetere
         finish();
@@ -940,7 +940,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("roundTutorial", isPepperTurn);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
 
         startActivity(activity2Intent);
@@ -957,7 +957,7 @@ public class PlayPepperTurnActivity extends RobotActivity implements RobotLifecy
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("roundTutorial", isPepperTurn);
 

@@ -37,7 +37,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
     boolean isPepperTurn;
     // int N_PLAYERS = 2; int turn = new Random().nextInt(N_PLAYERS) ; //Ritorna un random int nel range [0, N_PLAYERS-1]
     static final int N_TURNS = 6;
-    byte currentRound;
+    byte currentTurn;
     //    Map<String, Byte> scores = new HashMap<String, Byte>();
     Map<String, Byte> scores = new HashMap<>();
     static byte pepperScore;
@@ -68,7 +68,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
             put(1, "d");
         }};*/
         isPepperTurn = new Random().nextBoolean() ; //Ritorna un random boolean (Serve per stabilire randomicamente chi inizia a giocare)
-        currentRound = 0;
+        currentTurn = 0;
         restartGame = false;
         pepperScore = 0;
         userScore = 0;
@@ -81,7 +81,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
             trialState = extras.getByte("trialState");
             restartGame = extras.getBoolean("restartGame");
             round = extras.getByte("round");
@@ -132,7 +132,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
 
         //isPepperTurn=false; //tocca all'utente //TODO RIMUOVI DOPO AVER TESTATO IL TURNO UTENTE
         //byte round = 0; //TODO non serve
-        currentRound = 0;
+        currentTurn = 0;
 //        while ( (scores.get("score_pepper") < 3 ) || (scores.get("score_user1") < 3) ) { TODO NON SERVE PERCHÉ IL CHECK VA FATTO IN JudgeConfirmActivity
         //TODO Unboxing of 'scores.get("score_pepper")' may produce 'NullPointerException'
         //TODO Unboxing of 'scores.get("score_user1")' may produce 'NullPointerException'
@@ -155,7 +155,7 @@ public class PlayGameActivity extends RobotActivity implements RobotLifecycleCal
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("restartGame", restartGame);
 

@@ -82,7 +82,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
     Button buttonYes, buttonNo;
     ImageButton buttonBack;
     TextView textViewAskForConfirm, tvTutorialJudge;
-    byte currentRound;
+    byte currentTurn;
     byte tutorialState = -1;
     byte trialState;
     boolean endOfTutorial;
@@ -143,7 +143,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
             endOfTutorial = extras.getBoolean("endOfTutorial");
             restartGame = extras.getBoolean("restartGame");
             tutorialEnabled = extras.getBoolean("tutorialEnabled");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
             tutorialState = extras.getByte("tutorialState");
             trialState = extras.getByte("trialState");
             pepperShouldTeach = extras.getBoolean("pepperShouldTeach");
@@ -203,7 +203,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
                 //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
                 activity2Intent.putExtra("pepperScore", pepperScore);
                 activity2Intent.putExtra("userScore", userScore);
-                activity2Intent.putExtra("currentRound", currentRound);
+                activity2Intent.putExtra("currentTurn", currentTurn);
                 activity2Intent.putExtra("trialState", trialState);
 
 
@@ -306,7 +306,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
             //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
             activity2Intent.putExtra("pepperScore", pepperScore);
             activity2Intent.putExtra("userScore", userScore);
-            activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("currentTurn", currentTurn);
             activity2Intent.putExtra("trialState", trialState);
 
 
@@ -453,7 +453,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
         activity2Intent.putExtra("userScore", userScore);
         //activity2Intent.putExtra("scores", (Serializable) scores);
         activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("pepperShouldTeach", pepperShouldTeach);
@@ -525,7 +525,7 @@ public class PlayJudgeTurnActivity extends RobotActivity implements RobotLifecyc
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("tutorialEnabled", tutorialEnabled);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
 
         startActivity(activity2Intent);

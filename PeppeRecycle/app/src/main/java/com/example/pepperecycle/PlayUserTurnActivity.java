@@ -67,7 +67,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
     String desc;
     ImageButton buttonHelp;
     boolean canCloseApp;
-    byte currentRound;
+    byte currentTurn;
     boolean restartGame;
     boolean roundTutorial;
     boolean endOfTutorial, tutorialState;
@@ -110,7 +110,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
             //scores = (Map<String, Byte>) getIntent().getSerializableExtra("scores");          //TODO Serializable(?)
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
             roundTutorial = extras.getBoolean("roundTutorial");
             trialState = extras.getByte("trialState");
             restartGame = extras.getBoolean("restartGame");
@@ -280,7 +280,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
                 .withTexts("Chiudi il gioco", "Esci", "Basta")
                 .build();
 
-        if(currentRound==0)
+        if(currentTurn==0)
             sayUserTurn.run();
         if(trialState == 0) {
             sayUserTurnTutorial.run();
@@ -429,7 +429,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         //activity2Intent.putExtra("scores", (Serializable) scores); //TODO Serializable(?)
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         Log.d(TAG, "trialstate passato da qui a judgeconfirm: " + trialState);
         startActivity(activity2Intent);
         finish();
@@ -450,7 +450,7 @@ public class PlayUserTurnActivity extends RobotActivity implements RobotLifecycl
         activity2Intent.putExtra("isPepperTurn", isPepperTurn);
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         startActivity(activity2Intent);
         finish();
         /* TODO Turno dell'utente:

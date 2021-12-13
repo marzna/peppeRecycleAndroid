@@ -44,7 +44,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
     TextView tvResult;
     TextView tvPepperScore, tvUserScore; //score che verrà mostrato
     String resultPhrase; // frase che dirà Pepper
-    byte currentRound;
+    byte currentTurn;
     int resAnim;
 
     @Override
@@ -70,7 +70,7 @@ public class GameOverActivity extends RobotActivity implements RobotLifecycleCal
             isPepperTurn = extras.getBoolean("isPepperTurn");
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
         }
 
         if (pepperScore > userScore ) { // Utente perde

@@ -47,7 +47,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 
     String TAG = "PepperTeachesActivity";
     boolean isPepperTurn, isAnswerCorrect, pressed;
-    byte wasteType, currentRound, round;
+    byte wasteType, currentTurn, round;
     TextView textViewRandomFact, textViewFactAbout;
     ImageView selectedBin;
     static byte pepperScore, userScore;
@@ -324,7 +324,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         if (extras != null) {
             wasteType = extras.getByte("wasteType"); // The key argument here must match that used in the other activity
             round = extras.getByte("round");
-            currentRound = extras.getByte("currentRound");
+            currentTurn = extras.getByte("currentTurn");
             isPepperTurn = extras.getBoolean("isPepperTurn");
             pepperScore = extras.getByte("pepperScore");
             userScore = extras.getByte("userScore");
@@ -415,7 +415,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
 //                    .withText("Perfetto, allora proseguiamo con il gioco!") // Set the text to say.
                     .build(); // Build the say action.
 
-           /* if (currentRound<N_TURNS-1) {
+           /* if (currentTurn<N_TURNS-1) {
                 sayNextTurn.run();
                 //Pepper dice chi è il prossimo giocatore
                 Say sayTurn = SayBuilder.with(qiContext) // Create the builder with the context. //TODO scelta di una fra più frasi
@@ -435,7 +435,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
             Intent activity2Intent = new Intent(getApplicationContext(), PepperTeachesActivity.class);
             activity2Intent.putExtra("wasteType", wasteType);
             activity2Intent.putExtra("round", round);
-            activity2Intent.putExtra("currentRound", currentRound);
+            activity2Intent.putExtra("currentTurn", currentTurn);
             activity2Intent.putExtra("isPepperTurn", isPepperTurn);
             activity2Intent.putExtra("pepperScore", pepperScore);
             activity2Intent.putExtra("userScore", userScore);
@@ -578,7 +578,7 @@ public class PepperTeachesActivity extends RobotActivity implements RobotLifecyc
         activity2Intent.putExtra("pepperScore", pepperScore);
         activity2Intent.putExtra("userScore", userScore);
         activity2Intent.putExtra("tutorialEnabled", false); // Tutorial finito
-        activity2Intent.putExtra("currentRound", currentRound);
+        activity2Intent.putExtra("currentTurn", currentTurn);
         activity2Intent.putExtra("trialState", trialState);
         activity2Intent.putExtra("wasteType", wasteType);
         activity2Intent.putExtra("isAnswerCorrect", true);
